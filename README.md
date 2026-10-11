@@ -12,18 +12,44 @@ Le dossier s'appelle `ENGAGEMENT`, mais le module s'affiche sous le nom **GREFFE
 
 ## Installation
 
-1. Télécharger le module : bouton **Code → Download ZIP** sur GitHub, ou la dernière version dans **Releases**.
-2. Décompresser l'archive et **renommer le dossier obtenu en `ENGAGEMENT`**. Le nom compte : les liens du module l'utilisent.
-3. Le copier dans `Modules/Custom/` de l'installation IANSEO, ce qui donne `C:\ianseo\htdocs\Modules\Custom\ENGAGEMENT\menu.php`. C'est le seul dossier que les mises à jour d'IANSEO ne réécrivent pas.
+Il faut une installation IANSEO qui fonctionne (PHP 8, MySQL ou MariaDB).
 
-   Avec Git : `git clone https://github.com/CorentinA1/GreffeModuleIanseo.git ENGAGEMENT`, lancé depuis `Modules/Custom/`.
+Le module doit se trouver dans `Modules/Custom/ENGAGEMENT`. Le nom du dossier, `ENGAGEMENT`, compte : les liens du module l'utilisent. `Modules/Custom/` est le seul dossier que les mises à jour d'IANSEO ne réécrivent pas.
 
-4. Ouvrir une compétition. Le menu **Modules → GREFFE** apparaît, et les onglets Tarifs · Paiements · Reporting permettent ensuite de passer d'une page à l'autre.
-5. Les tables du module se créent toutes seules à l'ouverture de la première page.
+### Windows
 
-**Mise à jour :** remplacer les fichiers du dossier `ENGAGEMENT` par ceux de la nouvelle version. Les tarifs et les paiements, enregistrés en base, sont conservés.
+1. Télécharger `ENGAGEMENT-vX.Y.Z.zip` dans **Releases**. Le dossier y est déjà nommé `ENGAGEMENT`.
+2. Le décompresser dans `C:\ianseo\htdocs\Modules\Custom\`, ce qui donne `C:\ianseo\htdocs\Modules\Custom\ENGAGEMENT\menu.php`.
 
-Prérequis : PHP 8 et MySQL ou MariaDB, ceux d'IANSEO.
+Le bouton **Code → Download ZIP** convient aussi, à condition de renommer en `ENGAGEMENT` le dossier `GreffeModuleIanseo-main` obtenu.
+
+### Linux (ligne de commande)
+
+Adapter le chemin à votre installation (par exemple `/var/www/html/ianseo`) :
+
+```bash
+cd /var/www/html/ianseo/Modules/Custom
+sudo git clone https://github.com/CorentinA1/GreffeModuleIanseo.git ENGAGEMENT
+```
+
+Sans Git :
+
+```bash
+cd /var/www/html/ianseo/Modules/Custom
+wget https://github.com/CorentinA1/GreffeModuleIanseo/archive/refs/heads/main.tar.gz
+tar xzf main.tar.gz && mv GreffeModuleIanseo-main ENGAGEMENT && rm main.tar.gz
+```
+
+### Premier lancement
+
+Ouvrir une compétition dans IANSEO : le menu **Modules → GREFFE** apparaît. Les onglets Tarifs · Paiements · Reporting permettent ensuite de passer d'une page à l'autre. Les tables du module se créent toutes seules à l'ouverture de la première page.
+
+### Mise à jour
+
+- **Windows :** remplacer le contenu du dossier `ENGAGEMENT` par celui de la nouvelle version.
+- **Linux, installé avec Git :** `cd /var/www/html/ianseo/Modules/Custom/ENGAGEMENT && sudo git pull`
+
+Les tarifs et les paiements, enregistrés en base, sont conservés.
 
 ## Utilisation
 
@@ -88,43 +114,9 @@ Ce sont des **reçus, pas des factures** : il n'y a pas de numérotation légale
 - **Tarifs et Paiements :** droit IANSEO « Participants » en **écriture**.
 - **Reporting et reçus :** même droit, en **lecture**.
 
-## Écritures en base
+## Base de données
 
-Le module **n'écrit jamais dans les tables d'IANSEO**. Il les lit seulement : `Entries`, `Qualifications`, `Countries`, `Divisions`, `Classes`, `Tournament`.
-
-Il crée et utilise deux tables à lui, déclarées dans `version.json` :
-
-| Table | Contenu | Écrite par |
-|---|---|---|
-| `EngagementConfig` | Une ligne par compétition : tarif de base, grille par défaut et règles (JSON). | Enregistrement de la page Tarifs |
-| `EngagementPayments` | L'historique des paiements, une ligne par paiement. | Payer, Régler un club, Régulariser (insertion) ; Annuler, Régulariser (date d'annulation) |
-
-- **Aucune suppression :** une annulation renseigne `EpCancelled` et `EpCancelBy` au lieu d'effacer la ligne. Le paiement actif d'un archer est sa dernière ligne non annulée.
-- **Montant figé :** le montant enregistré (`EpAmount`) est le dû au moment du clic, recalculé par le serveur.
-- **Auteur :** `EpBy` contient l'utilisateur connecté si le module d'authentification AUTH est installé, sinon il reste vide.
-- **Heures :** les dates sont en heure locale de la compétition, car IANSEO règle la connexion MySQL sur son fuseau.
-- **Désinstallation :** supprimer le dossier, puis les deux tables :
-
-```sql
-DROP TABLE IF EXISTS EngagementConfig, EngagementPayments;
-```
-
-## Pour les développeurs
-
-| Fichier | Rôle |
-|---|---|
-| `menu.php` | Entrées du menu Modules → GREFFE. |
-| `tarifs.php`, `paiements.php`, `reporting.php`, `recu.php` | Les pages. |
-| `lib/boot.php` | Amorçage commun : IANSEO, droits, tables, jeton CSRF, mise en forme. |
-| `lib/schema.php` | Création des tables. |
-| `lib/pricing.php` | Moteur de calcul des prix (fonctions pures). |
-| `lib/accounts.php` | Comptes des archers, statuts, paiements. |
-| `lib/report.php` | Agrégats du reporting (fonction pure). |
-| `lib/pdf.php` | Mise en page PDF, sur la base de la classe `IanseoPdf`. |
-
-Deux pièges d'IANSEO à connaître :
-- **Noms :** `Entries.EnFirstName` contient le **nom de famille** et `EnName` le **prénom**.
-- **Dates :** PHP est forcé en UTC, mais la connexion MySQL est réglée sur le fuseau de la compétition. Pour dater, utiliser `NOW()` en SQL (ou `eng_db_now()`), jamais `date()`.
+Le module **ne modifie aucune table d'IANSEO** : il se contente de les lire. Il crée deux tables qui lui sont propres, `EngagementConfig` (les tarifs) et `EngagementPayments` (l'historique des paiements).
 
 ## Licence
 
