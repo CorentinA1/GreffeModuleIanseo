@@ -1,0 +1,25 @@
+{
+    "version": "1.0.0",
+    "date": "2026-10-11",
+    "notes": "GREFFE 1.0.0 — frais d'inscription : tarifs par règle et nombre de départs, pointage des paiements (règlement par club, exonérations, écarts), reporting (bilan financier, état complet, état des chèques, CSV) et reçus PDF par archer et par club.",
+    "tables": [
+        "EngagementConfig",
+        "EngagementPayments"
+    ],
+    "files": [
+        "menu.php",
+        "tarifs.php",
+        "paiements.php",
+        "reporting.php",
+        "recu.php",
+        "lib/boot.php",
+        "lib/schema.php",
+        "lib/pricing.php",
+        "lib/accounts.php",
+        "lib/report.php",
+        "lib/pdf.php",
+        "README.md",
+        "LICENSE",
+        "version.json"
+    ]
+}
