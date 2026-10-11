@@ -1,14 +1,14 @@
-# GREFFE — frais d'inscription pour IANSEO
+# Greffe — frais d'inscription pour IANSEO
 
-**Version 1.0.0**
+**Version 1.0.1**
 
 Module IANSEO pour gérer les frais d'inscription d'une compétition :
 - **Tarifs** : les prix, selon la catégorie de l'archer et son nombre de départs ;
 - **Paiements** : le pointage des règlements ;
-- **Reporting** : l'état des encaissements, avec exports CSV et PDF ;
+- **Rapport - Bilan** : l'état des encaissements, avec exports CSV et PDF ;
 - **Reçus PDF** : un reçu par archer, un récapitulatif par club.
 
-Le dossier s'appelle `ENGAGEMENT`, mais le module s'affiche sous le nom **GREFFE**.
+Le dossier s'appelle `ENGAGEMENT`, mais le module s'affiche sous le nom **Greffe**.
 
 ## Installation
 
@@ -42,7 +42,7 @@ tar xzf main.tar.gz && mv GreffeModuleIanseo-main ENGAGEMENT && rm main.tar.gz
 
 ### Premier lancement
 
-Ouvrir une compétition dans IANSEO : le menu **Modules → GREFFE** apparaît. Les onglets Tarifs · Paiements · Reporting permettent ensuite de passer d'une page à l'autre. Les tables du module se créent toutes seules à l'ouverture de la première page.
+Ouvrir une compétition dans IANSEO : le menu **Modules → Greffe** apparaît. Les onglets Tarifs · Paiements · Rapport - Bilan permettent ensuite de passer d'une page à l'autre. Les tables du module se créent toutes seules à l'ouverture de la première page.
 
 ### Mise à jour
 
@@ -53,7 +53,7 @@ Les tarifs et les paiements, enregistrés en base, sont conservés.
 
 ## Utilisation
 
-### 1. Tarifs (Modules → GREFFE → Tarifs)
+### 1. Tarifs (Modules → Greffe → Tarifs)
 
 Une **règle** regroupe un libellé (« Jeunes », « Adultes »…), des divisions (armes), des classes (catégories) et une **grille de prix**.
 
@@ -63,7 +63,7 @@ Une **règle** regroupe un libellé (« Jeunes », « Adultes »…), des divisi
 - **Si aucune règle ne correspond :** la **grille par défaut** s'applique. Si elle est vide, c'est le **tarif de base**, multiplié par le nombre de départs.
 - **Aperçu :** le cadre « Aperçu » calcule le prix d'une catégorie et d'un nombre de départs sur la saisie en cours, avant même l'enregistrement.
 
-### 2. Paiements (Modules → GREFFE → Paiements)
+### 2. Paiements (Modules → Greffe → Paiements)
 
 Une ligne par archer, identifié par sa **licence** (un archer sans licence est repéré par son numéro d'inscription IANSEO). Le nombre de départs est le nombre d'inscriptions de cette licence dans la compétition.
 
@@ -89,7 +89,7 @@ Signalements ⚠ :
 - **grille plus courte que le nombre de départs :** le dernier prix saisi s'applique ;
 - **« ne paie pas » coché sur une partie seulement des inscriptions.**
 
-### 3. Reporting (Modules → GREFFE → Reporting)
+### 3. Rapport - Bilan (Modules → Greffe → Rapport - Bilan)
 
 - **Synthèse :** archers, inscriptions, total dû, encaissé, exonéré, reste à encaisser, et trop-perçu s'il y en a. On a toujours **dû = encaissé + exonéré + reste − trop-perçu**.
 - **Ventilations :** par moyen de paiement, par club, par règle, par nombre de départs et par départ (session).
@@ -112,7 +112,7 @@ Ce sont des **reçus, pas des factures** : il n'y a pas de numérotation légale
 ## Droits d'accès
 
 - **Tarifs et Paiements :** droit IANSEO « Participants » en **écriture**.
-- **Reporting et reçus :** même droit, en **lecture**.
+- **Rapport - Bilan et reçus :** même droit, en **lecture**.
 
 ## Base de données
 

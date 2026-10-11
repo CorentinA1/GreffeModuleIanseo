@@ -191,7 +191,7 @@ function eng_cell($v, $type, $moneyFn)
 if (isset($_GET['bilan'])) {
     require_once __DIR__ . '/lib/pdf.php';
     $t = $report['totals'];
-    $pdf = eng_pdf_new('GREFFE - Bilan financier');
+    $pdf = eng_pdf_new('Greffe - Bilan financier');
     $pdf->SetFont($pdf->FontStd, 'B', 14);
     $pdf->Cell(eng_pdf_width($pdf), 8, 'Bilan financier', 0, 1, 'L');
     $pdf->SetFont($pdf->FontStd, '', 8);
@@ -240,7 +240,7 @@ if (isset($_GET['bilan'])) {
 if (isset($_GET['cheques'])) {
     require_once __DIR__ . '/lib/pdf.php';
     $ch = eng_cheques($accounts);
-    $pdf = eng_pdf_new('GREFFE - État des chèques');
+    $pdf = eng_pdf_new('Greffe - État des chèques');
     $pdf->SetFont($pdf->FontStd, 'B', 14);
     $pdf->Cell(eng_pdf_width($pdf), 8, 'État des chèques', 0, 1, 'L');
     $pdf->SetFont($pdf->FontStd, '', 8);
@@ -288,7 +288,7 @@ if (isset($_GET['cheques'])) {
 // ── Export PDF ───────────────────────────────────────────────────────────────
 if (isset($_GET['pdf'])) {
     require_once __DIR__ . '/lib/pdf.php';
-    $pdf = eng_pdf_new('GREFFE - État des inscriptions');
+    $pdf = eng_pdf_new('Greffe - État des inscriptions');
     $pdf->SetFont($pdf->FontStd, 'B', 14);
     $pdf->Cell(eng_pdf_width($pdf), 8, 'État des inscriptions et des paiements', 0, 1, 'L');
     $pdf->SetFont($pdf->FontStd, '', 8);
@@ -318,7 +318,7 @@ if (isset($_GET['pdf'])) {
 
 // ── Page ─────────────────────────────────────────────────────────────────────
 $t = $report['totals'];
-$PAGE_TITLE = 'GREFFE - Reporting';
+$PAGE_TITLE = 'Greffe - Rapport - Bilan';
 include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
 ?>
 <style>

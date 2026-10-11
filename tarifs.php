@@ -131,7 +131,7 @@ function eng_rule_block($i, array $r, array $divs, array $clss, $sessions)
         . '</div>';
 }
 
-$PAGE_TITLE = 'GREFFE - Tarifs';
+$PAGE_TITLE = 'Greffe - Tarifs';
 include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
 ?>
 <style>

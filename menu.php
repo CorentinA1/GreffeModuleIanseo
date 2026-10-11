@@ -7,11 +7,12 @@
 if (!empty($on) && !empty($_SESSION['TourId'])
     && subFeatureAcl($acl, AclParticipants, 'pEntries') >= AclReadOnly) {
 
-    if (!isset($ret['MODS']['GREFFE'])) $ret['MODS']['GREFFE'][] = 'GREFFE';
+    // Même clé partout ('Greffe') : le premier élément est le titre du sous-menu.
+    if (!isset($ret['MODS']['Greffe'])) $ret['MODS']['Greffe'][] = 'Greffe';
 
     if (subFeatureAcl($acl, AclParticipants, 'pEntries') >= AclReadWrite) {
-        $ret['MODS']['GREFFE'][] = 'Tarifs|' . $CFG->ROOT_DIR . 'Modules/Custom/ENGAGEMENT/tarifs.php';
-        $ret['MODS']['GREFFE'][] = 'Paiements|' . $CFG->ROOT_DIR . 'Modules/Custom/ENGAGEMENT/paiements.php';
+        $ret['MODS']['Greffe'][] = 'Tarifs|' . $CFG->ROOT_DIR . 'Modules/Custom/ENGAGEMENT/tarifs.php';
+        $ret['MODS']['Greffe'][] = 'Paiements|' . $CFG->ROOT_DIR . 'Modules/Custom/ENGAGEMENT/paiements.php';
     }
-    $ret['MODS']['GREFFE'][] = 'Reporting|' . $CFG->ROOT_DIR . 'Modules/Custom/ENGAGEMENT/reporting.php';
+    $ret['MODS']['Greffe'][] = 'Rapport - Bilan|' . $CFG->ROOT_DIR . 'Modules/Custom/ENGAGEMENT/reporting.php';
 }

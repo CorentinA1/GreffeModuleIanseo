@@ -172,7 +172,7 @@ if (isset($_GET['account'])) {
         http_response_code(404);
         exit('Archer introuvable dans cette compétition.');
     }
-    $pdf = eng_pdf_new('GREFFE - Reçu d\'inscription');
+    $pdf = eng_pdf_new('Greffe - Reçu d\'inscription');
     eng_receipt($pdf, $a, $tour, $methods, $divs, $clss, $printed);
     $pdf->Output('recu_' . $safeName($a['name'] . '_' . $a['first']) . '.pdf', 'I');
     exit;
@@ -193,7 +193,7 @@ if (isset($_GET['club'])) {
         exit('Club introuvable ou sans archer dans cette compétition.');
     }
 
-    $pdf = eng_pdf_new('GREFFE - Récapitulatif club');
+    $pdf = eng_pdf_new('Greffe - Récapitulatif club');
     foreach ($ids as $k => $id) {
         if ($k > 0) {
             $pdf->startPageGroup();   // pagination propre à chaque club

@@ -172,7 +172,7 @@ function eng_nav($current)
     $pages = [
         'tarifs'    => ['Tarifs', $write],
         'paiements' => ['Paiements', $write],
-        'reporting' => ['Reporting', true],
+        'reporting' => ['Rapport - Bilan', true],
     ];
     $h = '<style>
 #eng .eng-head { display:flex; flex-wrap:wrap; align-items:center; gap:6px 18px; margin:6px 0 14px; }
@@ -182,7 +182,7 @@ function eng_nav($current)
                   background:#fff; font-weight:600; font-size:13px; text-decoration:none; }
 #eng .eng-nav a:hover { background:#f0f4ff; }
 #eng .eng-nav a.on { background:#0254a8; color:#fff; cursor:default; }
-</style><div class="eng-head"><h2>GREFFE</h2><nav class="eng-nav">';
+</style><div class="eng-head"><h2>Greffe</h2><nav class="eng-nav">';
     foreach ($pages as $key => $p) {
         if (!$p[1]) continue;
         $h .= '<a href="' . eng_h($ENG_ROOT . $key . '.php') . '"' . ($key === $current ? ' class="on" aria-current="page"' : '')

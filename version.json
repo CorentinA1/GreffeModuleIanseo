@@ -1,7 +1,7 @@
 {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "date": "2026-10-11",
-    "notes": "GREFFE 1.0.0 — frais d'inscription : tarifs par règle et nombre de départs, pointage des paiements (règlement par club, exonérations, écarts), reporting (bilan financier, état complet, état des chèques, CSV) et reçus PDF par archer et par club.",
+    "notes": "1.0.1 — Libellés : menu « Greffe », page et onglet « Rapport - Bilan » (ex-Reporting), titres « Greffe - … » ; README avec installation Linux. 1.0.0 — frais d'inscription : tarifs, paiements, rapport et bilan, reçus PDF.",
     "tables": [
         "EngagementConfig",
         "EngagementPayments"

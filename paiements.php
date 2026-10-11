@@ -133,7 +133,7 @@ function eng_method_select(array $methods, $selected)
     return $h . '</select>';
 }
 
-$PAGE_TITLE = 'GREFFE - Paiements';
+$PAGE_TITLE = 'Greffe - Paiements';
 include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
 ?>
 <style>
