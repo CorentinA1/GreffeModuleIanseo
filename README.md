@@ -1,6 +1,6 @@
 # Greffe — frais d'inscription pour IANSEO
 
-**Version 1.1.0**
+**Version 1.2.0**
 
 Module IANSEO pour gérer les frais d'inscription d'une compétition :
 - **Tarifs** : les prix, selon la catégorie de l'archer et son nombre de départs ;
@@ -58,6 +58,15 @@ Le serveur web doit pouvoir écrire dans le dossier `ENGAGEMENT` (sous Linux : `
 - **Depuis une version 1.0.x,** qui n'a pas encore cette page : une seule fois, remplacer le contenu du dossier `ENGAGEMENT` par celui de la nouvelle version.
 
 Les tarifs et les paiements, enregistrés en base, sont toujours conservés.
+
+### Désinstallation
+
+**Modules → Greffe → Mise à jour du module → Désinstaller le module** (administrateur). L'écran de confirmation :
+- indique ce qui sera supprimé : le dossier du module et, **seulement si vous cochez la case**, ses deux tables (tarifs et paiements de toutes les compétitions) ;
+- propose de **télécharger une sauvegarde** des tables (.sql) avant de les supprimer ;
+- demande de taper le nom du module (`ENGAGEMENT`) pour confirmer.
+
+Les tables d'IANSEO ne sont jamais touchées. Si vous conservez les tables, une réinstallation retrouve les tarifs et les paiements.
 
 ## Utilisation
 

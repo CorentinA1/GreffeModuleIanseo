@@ -113,5 +113,12 @@ include $CFG->DOCUMENT_PATH . 'Common/Templates/head.php';
             enregistrés en base, ne sont pas touchés. Le serveur web doit avoir le droit d'écrire dans le dossier du module.</p>
     </div>
     <?php endif; ?>
+
+    <details class="card" style="border-color:#e8b4ae;background:#fdf6f5">
+        <summary style="color:#c0392b;font-weight:600;cursor:pointer">Désinstaller le module</summary>
+        <p style="margin:10px 0">Supprime le dossier du module. Ses tables (tarifs et paiements) sont conservées,
+            sauf si vous demandez leur suppression sur l'écran de confirmation.</p>
+        <a href="uninstall.php" style="display:inline-block;background:#c0392b;color:#fff;padding:8px 18px;border-radius:6px;font-weight:600;text-decoration:none">Désinstaller…</a>
+    </details>
 </div>
 <?php include $CFG->DOCUMENT_PATH . 'Common/Templates/tail.php'; ?>
