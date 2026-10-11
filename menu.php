@@ -15,4 +15,12 @@ if (!empty($on) && !empty($_SESSION['TourId'])
         $ret['MODS']['Greffe'][] = 'Paiements|' . $CFG->ROOT_DIR . 'Modules/Custom/ENGAGEMENT/paiements.php';
     }
     $ret['MODS']['Greffe'][] = 'Rapport - Bilan|' . $CFG->ROOT_DIR . 'Modules/Custom/ENGAGEMENT/reporting.php';
+
+    // Administrateur seulement. Avec un module de comptes (AUTH), AclRoot ne
+    // suffit pas : il faut aussi la vue administrateur serveur (AUTH_ROOT).
+    if (subFeatureAcl($acl, AclRoot, '') >= AclReadWrite
+        && (empty($_SESSION['AUTH_User']) || !empty($_SESSION['AUTH_ROOT']))) {
+        $ret['MODS']['Greffe'][] = MENU_DIVIDER;
+        $ret['MODS']['Greffe'][] = 'Mise à jour du module|' . $CFG->ROOT_DIR . 'Modules/Custom/ENGAGEMENT/admin/update.php';
+    }
 }

@@ -1,6 +1,6 @@
 # Greffe — frais d'inscription pour IANSEO
 
-**Version 1.0.1**
+**Version 1.1.0**
 
 Module IANSEO pour gérer les frais d'inscription d'une compétition :
 - **Tarifs** : les prix, selon la catégorie de l'archer et son nombre de départs ;
@@ -38,6 +38,7 @@ Sans Git :
 cd /var/www/html/ianseo/Modules/Custom
 wget https://github.com/CorentinA1/GreffeModuleIanseo/archive/refs/heads/main.tar.gz
 tar xzf main.tar.gz && mv GreffeModuleIanseo-main ENGAGEMENT && rm main.tar.gz
+sudo chown -R www-data:www-data ENGAGEMENT   # pour les mises à jour depuis IANSEO
 ```
 
 ### Premier lancement
@@ -46,10 +47,17 @@ Ouvrir une compétition dans IANSEO : le menu **Modules → Greffe** apparaît. 
 
 ### Mise à jour
 
-- **Windows :** remplacer le contenu du dossier `ENGAGEMENT` par celui de la nouvelle version.
-- **Linux, installé avec Git :** `cd /var/www/html/ianseo/Modules/Custom/ENGAGEMENT && sudo git pull`
+**Depuis IANSEO** (à partir de la version 1.1.0) : **Modules → Greffe → Mise à jour du module**, réservé à l'administrateur.
+1. **Vérifier les mises à jour** compare la version installée à celle de GitHub et affiche les nouveautés.
+2. **Mettre à jour** télécharge et remplace les fichiers du module. Tous les fichiers sont récupérés avant d'en remplacer un seul : en cas d'échec, rien n'est modifié.
 
-Les tarifs et les paiements, enregistrés en base, sont conservés.
+Le serveur web doit pouvoir écrire dans le dossier `ENGAGEMENT` (sous Linux : `chown www-data`, voir l'installation). La source est indiquée dans `module.json`, que les mises à jour ne remplacent jamais.
+
+**Autres cas :**
+- **Installé avec `git clone` :** `cd /var/www/html/ianseo/Modules/Custom/ENGAGEMENT && sudo git pull`. La page d'IANSEO refuse les dossiers gérés par Git, pour ne pas les désynchroniser.
+- **Depuis une version 1.0.x,** qui n'a pas encore cette page : une seule fois, remplacer le contenu du dossier `ENGAGEMENT` par celui de la nouvelle version.
+
+Les tarifs et les paiements, enregistrés en base, sont toujours conservés.
 
 ## Utilisation
 

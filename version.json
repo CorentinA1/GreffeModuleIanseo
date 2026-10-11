@@ -1,7 +1,7 @@
 {
-    "version": "1.0.1",
+    "version": "1.1.0",
     "date": "2026-10-11",
-    "notes": "1.0.1 — Libellés : menu « Greffe », page et onglet « Rapport - Bilan » (ex-Reporting), titres « Greffe - … » ; README avec installation Linux. 1.0.0 — frais d'inscription : tarifs, paiements, rapport et bilan, reçus PDF.",
+    "notes": "1.1.0 — Mise à jour du module depuis IANSEO (Modules → Greffe → Mise à jour du module, administrateur). 1.0.1 — Libellés « Greffe » et « Rapport - Bilan ». 1.0.0 — Frais d'inscription : tarifs, paiements, rapport et bilan, reçus PDF.",
     "tables": [
         "EngagementConfig",
         "EngagementPayments"
@@ -18,6 +18,8 @@
         "lib/accounts.php",
         "lib/report.php",
         "lib/pdf.php",
+        "lib/update.php",
+        "admin/update.php",
         "README.md",
         "LICENSE",
         "version.json"
