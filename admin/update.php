@@ -89,6 +89,7 @@ include $CFG->DOCUMENT_PATH . 'Common/Templates/head.php';
                     <?= $check['date'] !== '' ? '<span class="sub">(' . $h($check['date']) . ')</span>' : '' ?>
                     <span class="badge <?= $check['update'] ? 'new' : 'same' ?>"><?= $check['update'] ? 'Mise à jour disponible' : '✓ À jour' ?></span></p>
                 <?php if ($check['notes'] !== ''): ?><div class="notes"><?= $h($check['notes']) ?></div><?php endif; ?>
+                <?php if ($cfg['github_url'] !== ''): ?><p class="sub" style="margin:6px 0 0"><a href="<?= $h(rtrim($cfg['github_url'], '/') . '/blob/main/docs/NOUVEAUTES.md') ?>" target="_blank" rel="noopener">Toutes les nouveautés</a></p><?php endif; ?>
             <?php endif; ?>
         <?php endif; ?>
     </div>

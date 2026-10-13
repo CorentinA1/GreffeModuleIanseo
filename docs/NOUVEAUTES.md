@@ -1,5 +1,10 @@
 # Nouveautés de chaque version
 
+## 1.2.2
+
+- **Mise à jour du module** : seules les nouveautés de la version disponible s'affichent, avec un lien
+  « Toutes les nouveautés » vers cette page.
+
 ## 1.2.1
 
 - **À lire avant d'utiliser le module** ([AVERTISSEMENT.md](AVERTISSEMENT.md)) : le module est indépendant d'IANSEO

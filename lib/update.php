@@ -155,9 +155,31 @@ function eng_upd_remote(array $cfg)
 }
 
 /**
+ * Nouveautés d'une seule version, extraites des notes de version.json. Les notes
+ * enchaînent toutes les versions, la plus récente d'abord : « 1.3.2 — … 1.3.1 — … ».
+ * Fonction pure.
+ *
+ * @return string La partie de $version (sans le numéro), sinon la première ; tout le
+ *                texte s'il n'a pas ce format.
+ */
+function eng_upd_version_notes($notes, $version)
+{
+    $notes = trim((string) $notes);
+    if (!preg_match_all('/(?:^|\s)(\d+\.\d+\.\d+) — /u', $notes, $m, PREG_OFFSET_CAPTURE)) return $notes;
+    $parts = [];
+    foreach ($m[1] as $i => [$v, $pos]) {
+        $start = $pos + strlen($v . ' — ');
+        $end = isset($m[1][$i + 1]) ? $m[1][$i + 1][1] : strlen($notes);
+        $parts[$v] = trim(substr($notes, $start, $end - $start));
+    }
+    return $parts[(string) $version] ?? reset($parts);
+}
+
+/**
  * État de la mise à jour.
  *
- * @return array local (version|null), remote (version|null), notes, date,
+ * @return array local (version|null), remote (version|null), notes (de la version
+ *               disponible seulement), date,
  *               update (bool), dev (installation Git), error (message|null).
  */
 function eng_upd_check($dir)
@@ -172,7 +194,7 @@ function eng_upd_check($dir)
     return [
         'local'  => $lv,
         'remote' => $remote['version'],
-        'notes'  => (string) ($remote['notes'] ?? ''),
+        'notes'  => eng_upd_version_notes($remote['notes'] ?? '', $remote['version']),   // la dernière version seulement
         'date'   => (string) ($remote['date'] ?? ''),
         'update' => $lv === null || version_compare($remote['version'], $lv, '>'),
         'dev'    => is_dir($dir . '/.git'),
