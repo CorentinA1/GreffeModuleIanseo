@@ -1,7 +1,7 @@
 {
-    "version": "1.2.0",
-    "date": "2026-10-11",
-    "notes": "1.2.0 — Désinstallation depuis IANSEO : suppression des tables au choix, sauvegarde SQL, confirmation par le nom du module. 1.1.0 — Mise à jour du module depuis IANSEO. 1.0.1 — Libellés « Greffe » et « Rapport - Bilan ». 1.0.0 — Frais d'inscription : tarifs, paiements, rapport et bilan, reçus PDF.",
+    "version": "1.2.1",
+    "date": "2026-10-14",
+    "notes": "1.2.1 — Avertissement : module indépendant d’IANSEO, sans garantie ni SAV, sauvegarde des tarifs et paiements (absents de l’export de compétition), licences IANSEO et module (docs/AVERTISSEMENT.md, README, encadré sur la page Tarifs). Documentation : README court, détails dans docs/ (installation, utilisation, données, nouveautés), lien « Mode d’emploi » sur la page Tarifs. Mise à jour du module : fichiers téléchargés depuis la version publiée (plus de fichiers anciens juste après une publication). 1.2.0 — Désinstallation depuis IANSEO : suppression des tables au choix, sauvegarde SQL, confirmation par le nom du module. 1.1.0 — Mise à jour du module depuis IANSEO. 1.0.1 — Libellés « Greffe » et « Rapport - Bilan ». 1.0.0 — Frais d'inscription : tarifs, paiements, rapport et bilan, reçus PDF.",
     "tables": [
         "EngagementConfig",
         "EngagementPayments"
@@ -24,6 +24,11 @@
         "admin/uninstall.php",
         "README.md",
         "LICENSE",
-        "version.json"
+        "version.json",
+        "docs/AVERTISSEMENT.md",
+        "docs/INSTALLATION.md",
+        "docs/UTILISATION.md",
+        "docs/DONNEES.md",
+        "docs/NOUVEAUTES.md"
     ]
 }

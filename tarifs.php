@@ -198,6 +198,14 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
         une par nombre de départs. Les prix sont des <b>totaux</b> (ex. 2 départs = 17 €), pas des prix par départ.
     </div>
 
+    <?php $engAdmin = hasFullACL(AclRoot, '', AclReadWrite) && (trim((string) ($_SESSION['AUTH_User'] ?? '')) === '' || !empty($_SESSION['AUTH_ROOT'])); ?>
+    <div class="msg warn"><b>Module indépendant d'IANSEO, sans garantie ni SAV</b> : il n'est pas développé par l'équipe
+        IANSEO et peut contenir des bugs ; vérifiez les montants. <b>Sauvegardez les tarifs et paiements</b> : ils ne sont
+        pas dans l'export de la compétition<?= $engAdmin ? ' (<a href="' . eng_h($ENG_ROOT . 'admin/uninstall.php?backup=1') . '">télécharger une sauvegarde .sql</a>)' : ' (sauvegarde par l\'administrateur)' ?>.
+        Détails : <a href="https://github.com/CorentinA1/GreffeModuleIanseo/blob/main/docs/AVERTISSEMENT.md" target="_blank" rel="noopener">À lire avant d'utiliser le module</a>.</div>
+    <div class="msg" style="background:var(--bleu-clair);border:1px solid var(--bleu)">📖 <b>Mode d'emploi</b> : tarifs, paiements, rapport et
+        bilan, reçus et droits d'accès sont décrits dans l'<a href="https://github.com/CorentinA1/GreffeModuleIanseo/blob/main/docs/UTILISATION.md" target="_blank" rel="noopener">utilisation</a>.</div>
+
     <?php if ($flash): ?>
         <div class="msg ok"><?= eng_h($flash['ok']) ?></div>
     <?php endif; ?>

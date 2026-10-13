@@ -56,12 +56,14 @@ function eng_upd_config($dir)
 /**
  * Adresse « raw » d'un fichier du module sur GitHub.
  *
+ * @param string $ref Tag ou branche à lire ; vide = la branche de module.json.
  * @return string Vide si l'adresse du dépôt est inutilisable.
  */
-function eng_upd_raw_url(array $cfg, $rel)
+function eng_upd_raw_url(array $cfg, $rel, $ref = '')
 {
     if (!preg_match('#github\.com/([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+?)(?:\.git)?/?$#i', $cfg['github_url'], $m)) return '';
     $branch = preg_match('#^[A-Za-z0-9_./-]+$#', $cfg['github_branch']) ? $cfg['github_branch'] : 'main';
+    if ($ref !== '' && preg_match('#^[A-Za-z0-9_.-]+$#', $ref)) $branch = $ref;
     $path = trim($cfg['github_path'], '/');
     if ($path !== '' && !eng_upd_safe_path($path)) return '';
     return 'https://raw.githubusercontent.com/' . $m[1] . '/' . $m[2] . '/' . $branch . '/'
@@ -199,10 +201,14 @@ function eng_upd_apply($dir, $force = false)
         return ['ok' => true, 'files' => 0, 'message' => 'Le module est déjà à jour (' . $lv . ').'];
     }
 
-    // 1. Tout télécharger d'abord.
+    // 1. Tout télécharger d'abord, depuis le tag de la version (« v1.2.0 ») : la branche est
+    // gardée en cache 5 minutes par GitHub, qui servait des fichiers de l'ancienne version juste
+    // après une publication. Sans tag publié, on lit la branche.
     $content = [];
+    $ref = 'v' . $remote['version'];
+    if (eng_upd_http_get(eng_upd_raw_url($cfg, 'version.json', $ref), $cfg['github_token']) === false) $ref = '';
     foreach ($remote['files'] as $rel) {
-        $body = eng_upd_http_get(eng_upd_raw_url($cfg, $rel), $cfg['github_token']);
+        $body = eng_upd_http_get(eng_upd_raw_url($cfg, $rel, $ref), $cfg['github_token']);
         if ($body === false || $body === '') {
             return ['ok' => false, 'files' => 0, 'message' => 'Téléchargement impossible : ' . $rel . '. Aucun fichier n\'a été modifié.'];
         }
