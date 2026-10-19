@@ -1,5 +1,12 @@
 # Nouveautés de chaque version
 
+## 1.3.1
+
+- **Liste papier du greffe** (page Paiements, bouton « Éditer la liste ») : PDF des archers avec le montant dû, le reste
+  à régler et une colonne de pointage à remplir à la main. Tous départs confondus, par départ ou pour un seul départ ;
+  tous les archers ou seulement ceux qui doivent ; tri par nom ou par club. Par départ, chaque archer figure à son
+  premier départ, où il règle, et il est rappelé sur les feuilles de ses départs suivants.
+
 ## 1.3.0
 
 - **Tarifs — critère « Clubs »** : une règle peut viser tous les clubs, le **club organisateur** de la compétition,

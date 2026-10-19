@@ -162,3 +162,76 @@ function eng_cheques(array $accounts)
         'missing' => count(array_filter($list, function ($c) { return $c['number'] === ''; })),
     ];
 }
+
+/** Premier départ d'un compte (le plus petit départ placé), 0 s'il n'est placé nulle part. */
+function eng_first_session(array $a)
+{
+    $placed = array_filter($a['sessions'], function ($s) { return $s > 0; });
+    return $placed ? min($placed) : 0;
+}
+
+/**
+ * Liste papier du greffe : les archers et ce qu'ils doivent, tous départs confondus ou par départ.
+ *
+ * Par départ, un archer figure dans le tableau de son PREMIER départ, celui où il règle : les totaux
+ * s'additionnent sans doublon. Sur les feuilles de ses départs suivants, il est rappelé dans « also »
+ * (déjà attendu à un départ précédent), pour qu'on ne lui fasse pas payer deux fois.
+ * Un archer placé nulle part va dans la section « Non placés » (session 0).
+ *
+ * @param array $accounts Comptes (eng_build_accounts) ; ceux sans inscription sont ignorés.
+ * @param string|int $scope 'all' (une seule liste), 'each' (une section par départ) ou un numéro de départ.
+ * @param string $only 'all' ou 'unpaid' (seulement les archers qui ont encore quelque chose à régler).
+ * @param string $sort 'name' (nom, prénom) ou 'club' (club, puis nom).
+ * @param int $sessions Nombre de départs de la compétition.
+ * @return array Sections : ['session' => null (tous) | 0 (non placés) | n, 'rows' => comptes,
+ *               'also' => [['account' => compte, 'first' => départ où il est attendu]],
+ *               'due' => total dû de rows, 'left' => total restant de rows].
+ */
+function eng_greffe_list(array $accounts, $scope, $only, $sort, $sessions)
+{
+    $keep = [];
+    foreach ($accounts as $a) {
+        if ($a['n'] === 0) continue;
+        if ($only === 'unpaid' && eng_account_amounts($a)['left'] <= 0) continue;
+        $keep[] = $a;
+    }
+    if ($sort === 'club') {
+        // usort n'est pas stable avant PHP 8 : l'indice d'origine (ordre par nom) départage.
+        $i = 0;
+        foreach ($keep as &$a) $a['_i'] = $i++;
+        unset($a);
+        usort($keep, function ($x, $y) {
+            return strcasecmp($x['club_name'] . ' ' . $x['club_code'], $y['club_name'] . ' ' . $y['club_code']) ?: $x['_i'] <=> $y['_i'];
+        });
+        foreach ($keep as &$a) unset($a['_i']);
+        unset($a);
+    }
+
+    $section = function ($session, array $rows, array $also) {
+        $due = $left = 0.0;
+        foreach ($rows as $a) {
+            $m = eng_account_amounts($a);
+            $due = round($due + $m['due'], 2);
+            $left = round($left + $m['left'], 2);
+        }
+        return ['session' => $session, 'rows' => $rows, 'also' => $also, 'due' => $due, 'left' => $left];
+    };
+    if ($scope === 'all') return [$section(null, $keep, [])];
+
+    $wanted = $scope === 'each' ? range(1, max(1, (int) $sessions)) : [(int) $scope];
+    $out = [];
+    foreach ($wanted as $s) {
+        $rows = $also = [];
+        foreach ($keep as $a) {
+            $first = eng_first_session($a);
+            if ($first === $s) $rows[] = $a;
+            elseif ($first > 0 && $first < $s && in_array($s, $a['sessions'], true)) $also[] = ['account' => $a, 'first' => $first];
+        }
+        if ($rows || $also || $scope !== 'each') $out[] = $section($s, $rows, $also);
+    }
+    if ($scope === 'each') {
+        $rows = array_values(array_filter($keep, function ($a) { return eng_first_session($a) === 0; }));
+        if ($rows) $out[] = $section(0, $rows, []);
+    }
+    return $out;
+}

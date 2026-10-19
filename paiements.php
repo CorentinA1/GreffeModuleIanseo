@@ -259,6 +259,26 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
         <div class="kpi waived"><span>Exonéré · <?= $tot['nwaived'] ?> archer<?= $tot['nwaived'] > 1 ? 's' : '' ?></span><b><?= eng_money($tot['waived']) ?></b></div>
     </div>
 
+    <form class="club print" method="get" action="<?= eng_h($ENG_ROOT . 'liste.php') ?>" target="_blank">
+        <b>Liste papier du greffe (PDF)</b> — les archers et ce qu'ils doivent, avec une colonne pour pointer à la main.<br><br>
+        <select name="depart">
+            <option value="all">Tous les départs confondus</option>
+            <option value="each">Par départ (une page par départ)</option>
+            <?php for ($s = 1; $s <= $tour->Sessions; $s++): ?><option value="<?= $s ?>"<?= $f['ses'] === $s ? ' selected' : '' ?>>Départ <?= $s ?> seulement</option><?php endfor; ?>
+        </select>
+        <select name="only">
+            <option value="all">Tous les archers</option>
+            <option value="unpaid">Seulement ceux qui doivent encore</option>
+        </select>
+        <select name="sort">
+            <option value="name">Tri par nom</option>
+            <option value="club">Tri par club</option>
+        </select>
+        <button type="submit" class="pay">Éditer la liste</button>
+        <div class="sub" style="margin-top:6px">Par départ, chaque archer figure au départ où il règle (son premier départ) ;
+            ses départs suivants le rappellent, pour ne pas le faire payer deux fois.</div>
+    </form>
+
     <?php if ($clubUnpaid): ?>
     <form class="club" method="post" action="<?= eng_h(eng_self_url($self, $f)) ?>" id="payclub">
         <?= eng_token_field() ?><input type="hidden" name="action" value="payclub">

@@ -33,6 +33,18 @@ Une ligne par archer, identifié par sa **licence** (un archer sans licence est 
 - **Tri :** un clic sur l'en-tête d'une colonne trie la liste (archer, club, départ, catégorie, règle, dû, statut,
   date du paiement) ; un second clic inverse l'ordre. Le tri et les filtres restent en place après chaque paiement.
 - **Reçu / Récap. :** sous le montant de chaque archer, ce lien ouvre son reçu PDF.
+- **Liste papier du greffe (PDF)** : cadre « Liste papier du greffe », bouton « Éditer la liste ». Une ligne par archer :
+  licence, club, départ(s), catégorie, **montant dû**, **reste à régler** (ou « Réglé », « Exonéré »), et une colonne
+  **Pointage** vide pour noter le règlement à la main (elle indique le moyen et la date d'un paiement déjà enregistré).
+  Total en bas de chaque liste. Choix :
+  - **Tous les départs confondus**, **Par départ** (une page par départ, puis les archers non placés) ou **un seul départ** ;
+  - **Tous les archers** ou **seulement ceux qui doivent encore** ;
+  - **tri par nom** ou **par club**.
+
+  **Par départ, chaque archer figure au départ où il règle : son premier départ.** Les totaux des départs
+  s'additionnent donc sans doublon. Sur la feuille de ses départs suivants, il est rappelé dans un encadré « Aussi à ce
+  départ, déjà attendus à un départ précédent », pour ne pas le faire payer deux fois. La liste montre l'état au moment
+  de l'édition : les paiements enregistrés ensuite n'y figurent pas.
 
 Statuts possibles :
 
