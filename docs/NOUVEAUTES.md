@@ -1,5 +1,19 @@
 # Nouveautés de chaque version
 
+## 1.3.0
+
+- **Tarifs — critère « Clubs »** : une règle peut viser tous les clubs, le **club organisateur** de la compétition,
+  les autres clubs, ou des clubs choisis. Exemple : un tarif réduit pour les archers du club organisateur. L'aperçu
+  calcule aussi le prix selon le club. Les règles existantes valent « tous les clubs ».
+- **Mention en pied de reçu** (page Tarifs, cadre « Reçus ») : texte libre imprimé sur les reçus et récapitulatifs,
+  vide par défaut, avec la mention habituelle des associations (article 293 B du CGI) proposée en un clic.
+- **Paiements** : tri par colonne (clic sur l'en-tête), filtres par départ et par nombre de départs. Tri et filtres
+  restent en place après chaque paiement.
+- **Nouvelle page Sauvegarde** : deux fichiers `.json` séparés, les **tarifs** et l'**historique complet des
+  paiements**, à garder avec l'export de la compétition ou à importer sur un autre serveur (test vers compétition). Import avec aperçu,
+  rattachement par licence, aucun archer déjà pointé n'est modifié, un import rejoué n'ajoute rien.
+- **Thème** : les pages suivent la palette et le mode sombre du module THEME d'IANSEO.
+
 ## 1.2.2
 
 - **Mise à jour du module** : seules les nouveautés de la version disponible s'affichent, avec un lien

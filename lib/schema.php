@@ -14,7 +14,8 @@
  * et peut manquer sur une installation qui n'a que GREFFE.
  */
 
-if (!defined('ENG_SCHEMA_VERSION')) define('ENG_SCHEMA_VERSION', 1);
+// v2 (1.3.0) : EngagementConfig.EcReceiptNote, mention en pied de reçu.
+if (!defined('ENG_SCHEMA_VERSION')) define('ENG_SCHEMA_VERSION', 2);
 
 /**
  * Crée les tables si besoin.
@@ -39,8 +40,16 @@ function eng_schema()
         EcBase       DECIMAL(8,2)  NOT NULL DEFAULT 0,
         EcDefault    TEXT          NULL,
         EcRules      TEXT          NULL,
+        EcReceiptNote TEXT         NULL,
         EcUpdated    TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    // Table créée par une version antérieure à 1.3.0 : colonne ajoutée. SHOW COLUMNS
+    // répond quelle que soit la casse des noms de tables du serveur (lower_case_table_names).
+    $rs = safe_r_sql("SHOW COLUMNS FROM EngagementConfig LIKE 'EcReceiptNote'");
+    if (!safe_num_rows($rs)) {
+        safe_w_sql("ALTER TABLE EngagementConfig ADD COLUMN EcReceiptNote TEXT NULL AFTER EcRules");
+    }
 
     // Historique des paiements. Le paiement actif d'un compte est sa dernière
     // ligne non annulée ; une annulation date la ligne, elle ne la supprime pas.

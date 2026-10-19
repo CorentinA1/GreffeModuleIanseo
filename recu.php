@@ -18,7 +18,9 @@ require_once __DIR__ . '/lib/pdf.php';
 $tour     = eng_tournament();
 $methods  = eng_methods();
 $statuses = eng_statuses();
-$accounts = eng_load_accounts($ENG_TOUR, eng_load_config());
+$config   = eng_load_config();
+$accounts = eng_load_accounts($ENG_TOUR, $config);
+$note     = $config['note'];   // mention en pied de reçu (page Tarifs)
 $divs     = eng_codes('div');
 $clss     = eng_codes('cls');
 $printed  = eng_local_time(eng_db_now(), 'd/m/Y à H:i');
@@ -42,12 +44,14 @@ function eng_doc_title(IanseoPdf $pdf, $title, $printed)
 }
 
 /**
- * Mention finale : document non fiscal, cachet de l'organisateur.
+ * Mention finale : document non fiscal, organisateur, mention saisie sur la
+ * page Tarifs, cachet de l'organisateur.
  *
+ * @param string $note Mention en pied de reçu, vide = aucune.
  * @param bool $isReceipt Vrai si rien ne reste à régler : cadre pour le cachet.
  * @param bool $waived Exonération : la mention ne parle pas de règlement.
  */
-function eng_doc_footer(IanseoPdf $pdf, $tour, $isReceipt, $waived = false)
+function eng_doc_footer(IanseoPdf $pdf, $tour, $note, $isReceipt, $waived = false)
 {
     $pdf->SetY($pdf->GetY() + 4);
     $pdf->SetFont($pdf->FontStd, 'I', 8);
@@ -57,7 +61,8 @@ function eng_doc_footer(IanseoPdf $pdf, $tour, $isReceipt, $waived = false)
             : ($isReceipt
                 ? 'Ce reçu atteste le règlement des droits d\'inscription. Il ne constitue pas une facture.'
                 : 'Ce document récapitule les droits d\'inscription. Il ne constitue pas une facture.'))
-        . ($org !== '' ? "\nOrganisateur : " . $org : '');
+        . ($org !== '' ? "\nOrganisateur : " . $org : '')
+        . ($note !== '' ? "\n" . $note : '');
     $pdf->MultiCell(eng_pdf_width($pdf), 4, $txt, 0, 'L');
     if ($isReceipt) {
         if (!$pdf->SamePage(30)) $pdf->AddPage();
@@ -70,7 +75,7 @@ function eng_doc_footer(IanseoPdf $pdf, $tour, $isReceipt, $waived = false)
 }
 
 /** Reçu (ou récapitulatif) d'un archer, sur la page courante. */
-function eng_receipt(IanseoPdf $pdf, array $a, $tour, array $methods, array $divs, array $clss, $printed)
+function eng_receipt(IanseoPdf $pdf, array $a, $tour, $note, array $methods, array $divs, array $clss, $printed)
 {
     $p = $a['payment'];
     $settled = in_array($a['status'], ['paid', 'waived', 'diff'], true);
@@ -122,11 +127,11 @@ function eng_receipt(IanseoPdf $pdf, array $a, $tour, array $methods, array $div
 
     // Cachet de l'organisateur seulement si rien ne reste à régler.
     $cleared = in_array($a['status'], ['paid', 'waived', 'exempt'], true) ||($a['status'] === 'diff' && $a['diff'] < 0);
-    eng_doc_footer($pdf, $tour, $cleared, in_array($a['status'], ['waived', 'exempt'], true));
+    eng_doc_footer($pdf, $tour, $note, $cleared, in_array($a['status'], ['waived', 'exempt'], true));
 }
 
 /** Récapitulatif d'un club, sur la page courante. */
-function eng_club_recap(IanseoPdf $pdf, array $club, array $list, $tour, array $methods, array $statuses, $printed)
+function eng_club_recap(IanseoPdf $pdf, array $club, array $list, $tour, $note, array $methods, array $statuses, $printed)
 {
     eng_doc_title($pdf, 'Récapitulatif club', $printed);
     eng_pdf_kv($pdf, 'Club', trim($club['name'] . ($club['code'] !== '' ? ' (' . $club['code'] . ')' : '')) ?: '(sans club)', true);
@@ -160,7 +165,7 @@ function eng_club_recap(IanseoPdf $pdf, array $club, array $list, $tour, array $
     eng_pdf_box($pdf, $club['left'] > 0 ? 'Reste à régler : ' . eng_pdf_money($club['left']) : 'Club entièrement réglé',
         $club['left'] > 0 ? [253, 236, 234] : [234, 250, 240]);
 
-    eng_doc_footer($pdf, $tour, $club['left'] <= 0);
+    eng_doc_footer($pdf, $tour, $note, $club['left'] <= 0);
 }
 
 $safeName = function ($s) { return trim(preg_replace('/[^A-Za-z0-9_-]+/', '_', (string) $s), '_'); };
@@ -173,7 +178,7 @@ if (isset($_GET['account'])) {
         exit('Archer introuvable dans cette compétition.');
     }
     $pdf = eng_pdf_new('Greffe - Reçu d\'inscription');
-    eng_receipt($pdf, $a, $tour, $methods, $divs, $clss, $printed);
+    eng_receipt($pdf, $a, $tour, $note, $methods, $divs, $clss, $printed);
     $pdf->Output('recu_' . $safeName($a['name'] . '_' . $a['first']) . '.pdf', 'I');
     exit;
 }
@@ -199,7 +204,7 @@ if (isset($_GET['club'])) {
             $pdf->startPageGroup();   // pagination propre à chaque club
             $pdf->AddPage();
         }
-        eng_club_recap($pdf, $report['clubs'][$id], $byClub[$id], $tour, $methods, $statuses, $printed);
+        eng_club_recap($pdf, $report['clubs'][$id], $byClub[$id], $tour, $note, $methods, $statuses, $printed);
     }
     $club = $report['clubs'][$ids[0]];
     $pdf->Output($all ? 'recapitulatifs_clubs.pdf' : 'recapitulatif_' . $safeName($club['name'] ?: $club['code']) . '.pdf', 'I');

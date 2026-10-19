@@ -117,7 +117,8 @@ function eng_build_accounts(array $rows, array $payments, array $config)
         }
         $pays = $payN === $n ? 'yes' : ($payN === 0 ? 'no' : 'partial');
 
-        $price = eng_price($config, $ref['EnDivision'] ?? '', $ref['EnClass'] ?? '', $n);
+        // Club de l'inscription de référence, comme la division et la classe.
+        $price = eng_price($config, $ref['EnDivision'] ?? '', $ref['EnClass'] ?? '', $n, $ref['CoCode'] ?? '');
         $due = $price['total'];
 
         $payment = $payments[$key] ?? null;
@@ -169,6 +170,69 @@ function eng_build_accounts(array $rows, array $payments, array $config)
 function eng_sessions_text(array $a)
 {
     return implode(', ', array_map(function ($s) { return $s ? (string) $s : '?'; }, $a['sessions']));
+}
+
+/** Colonnes triables de la page des paiements : clé => libellé de l'en-tête. */
+function eng_sort_columns()
+{
+    return [
+        'name'   => 'Archer',
+        'club'   => 'Club',
+        'dep'    => 'Départ(s)',
+        'cat'    => 'Catégorie',
+        'rule'   => 'Règle',
+        'due'    => 'Dû',
+        'status' => 'Statut',
+        'pay'    => 'Paiement',
+    ];
+}
+
+/**
+ * Trie des comptes pour l'affichage.
+ *
+ * Tri stable : à valeur égale, l'ordre par nom (celui d'eng_build_accounts) est
+ * gardé. Les comptes sans inscription restent en fin de liste. « Départ(s) » :
+ * premier départ, archer non placé en dernier. « Statut » : ordre du pointage
+ * (non payé, écart, payé, exonéré). « Paiement » : date d'enregistrement, les
+ * comptes sans paiement en dernier.
+ *
+ * @param array $accounts Comptes (eng_build_accounts).
+ * @param string $key Clé d'eng_sort_columns ; inconnue = nom.
+ * @param string $dir 'asc' ou 'desc'.
+ * @return array Comptes triés, clés conservées.
+ */
+function eng_sort_accounts(array $accounts, $key, $dir = 'asc')
+{
+    if (!isset(eng_sort_columns()[$key])) $key = 'name';
+    $sign = $dir === 'desc' ? -1 : 1;
+    $statusOrder = ['unpaid' => 0, 'diff' => 1, 'paid' => 2, 'waived' => 3, 'exempt' => 4];
+    $value = function (array $a) use ($key, $statusOrder) {
+        switch ($key) {
+            case 'club':   return mb_strtolower($a['club_name'] . ' ' . $a['club_code']);
+            case 'dep':    return $a['sessions'] ? (min($a['sessions']) ?: PHP_INT_MAX) : PHP_INT_MAX;
+            case 'cat':    return mb_strtolower(implode(' / ', $a['cats']));
+            case 'rule':   return mb_strtolower($a['price']['label']);
+            case 'due':    return (float) $a['due'];
+            case 'status': return $statusOrder[$a['status']] ?? 9;
+            case 'pay':    return $a['payment'] ? (string) $a['payment']['EpCreated'] : null;
+            default:       return mb_strtolower($a['name'] . ' ' . $a['first']);
+        }
+    };
+    $rows = [];
+    $i = 0;
+    foreach ($accounts as $k => $a) $rows[] = [$k, $a, $value($a), $i++];
+    usort($rows, function ($x, $y) use ($sign) {
+        // Sans inscription : toujours à la fin ; valeur absente (null) : après les autres.
+        $c = ($x[1]['n'] === 0) <=> ($y[1]['n'] === 0);
+        if ($c) return $c;
+        $c = ($x[2] === null) <=> ($y[2] === null);
+        if ($c) return $c;
+        $c = is_string($x[2]) ? strnatcmp($x[2], $y[2]) : $x[2] <=> $y[2];
+        return $c ? $sign * $c : $x[3] <=> $y[3];
+    });
+    $out = [];
+    foreach ($rows as $r) $out[$r[0]] = $r[1];
+    return $out;
 }
 
 /**
@@ -233,6 +297,30 @@ function eng_fetch_active_payments($tourId)
     $out = [];
     while ($r = safe_fetch_assoc($rs)) $out[$r['EpAccount']] = $r;   // le dernier l'emporte
     return $out;
+}
+
+/** Tout l'historique des paiements de la compétition (annulations comprises), par EpId. */
+function eng_fetch_payment_history($tourId)
+{
+    $rs = safe_r_sql("SELECT EpId, EpAccount, EpMethod, EpAmount, EpNote, EpBy, EpCreated, EpCancelled, EpCancelBy
+        FROM EngagementPayments WHERE EpTournament = " . StrSafe_DB($tourId) . " ORDER BY EpId");
+    $out = [];
+    while ($r = safe_fetch_assoc($rs)) $out[] = $r;
+    return $out;
+}
+
+/**
+ * Écrit une ligne d'historique importée (lib/transfer.php, eng_import_plan),
+ * avec ses dates et auteurs d'origine.
+ */
+function eng_insert_imported_payment($tourId, array $r)
+{
+    safe_w_sql("INSERT INTO EngagementPayments
+            (EpTournament, EpAccount, EpMethod, EpAmount, EpNote, EpBy, EpCreated, EpCancelled, EpCancelBy)
+        VALUES (" . StrSafe_DB($tourId) . ", " . StrSafe_DB($r['target']) . ", " . StrSafe_DB($r['method']) . ", "
+        . StrSafe_DB(number_format($r['amount'], 2, '.', '')) . ", " . StrSafe_DB($r['note']) . ", " . StrSafe_DB($r['by']) . ", "
+        . StrSafe_DB($r['created']) . ", " . ($r['cancelled'] === null ? 'NULL' : StrSafe_DB($r['cancelled'])) . ", "
+        . StrSafe_DB($r['cancel_by']) . ")");
 }
 
 /** Comptes de la compétition ouverte. */

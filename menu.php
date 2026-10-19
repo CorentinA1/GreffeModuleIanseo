@@ -15,6 +15,9 @@ if (!empty($on) && !empty($_SESSION['TourId'])
         $ret['MODS']['Greffe'][] = 'Paiements|' . $CFG->ROOT_DIR . 'Modules/Custom/ENGAGEMENT/paiements.php';
     }
     $ret['MODS']['Greffe'][] = 'Rapport - Bilan|' . $CFG->ROOT_DIR . 'Modules/Custom/ENGAGEMENT/reporting.php';
+    if (subFeatureAcl($acl, AclParticipants, 'pEntries') >= AclReadWrite) {
+        $ret['MODS']['Greffe'][] = 'Sauvegarde|' . $CFG->ROOT_DIR . 'Modules/Custom/ENGAGEMENT/sauvegarde.php';
+    }
 
     // Administrateur seulement. Avec un module de comptes (AUTH), AclRoot ne
     // suffit pas : il faut aussi la vue administrateur serveur (AUTH_ROOT).

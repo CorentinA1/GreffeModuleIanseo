@@ -10,22 +10,31 @@
  *
  *     [
  *       'sessions' => 3,                        // taille des grilles = ToNumSession
+ *       'org'      => 'C86012',                 // code du club organisateur (ToCommitee), '' si inconnu
  *       'base'     => 8.0,                      // tarif de base, PAR départ
  *       'default'  => [1 => 10.0, 2 => 17.0, 3 => null],   // grille par défaut
  *       'rules'    => [
  *         ['label' => 'Jeunes',
  *          'div'   => ['CL', 'CO'],            // vide = toutes les divisions
  *          'cls'   => ['U11H', 'U11F'],        // vide = toutes les classes
+ *          'club'  => 'all',                   // 'all' | 'org' | 'other' | 'list'
+ *          'clubs' => [],                      // codes de club, pour 'list'
  *          'grid'  => [1 => 7.0, 2 => 12.0, 3 => 15.0]],
  *       ],
+ *       'note'     => '',                       // mention en pied de reçu
  *     ]
  *
  * Une grille donne le prix TOTAL selon le nombre de départs (pas un prix par
  * départ). Une case vide vaut null.
  *
+ * Critère de club d'une règle : tous les clubs, le club organisateur (code
+ * ToCommitee de la compétition), les autres clubs, ou une liste de codes.
+ * Sans club organisateur renseigné, « organisateur » ne retient personne et
+ * « autres clubs » retient tout le monde.
+ *
  * Ordre de résolution pour un archer :
- *   1. la première règle qui correspond à sa division et à sa classe, si sa
- *      grille sait tarifer ce nombre de départs ;
+ *   1. la première règle qui correspond à sa division, sa classe et son club,
+ *      si sa grille sait tarifer ce nombre de départs ;
  *   2. sinon la grille par défaut, si elle est saisie ;
  *   3. sinon le tarif de base × nombre de départs.
  *
@@ -102,11 +111,37 @@ function eng_clean_codes($codes)
     return $out;
 }
 
+/** Critères de club d'une règle : code => libellé. */
+function eng_club_modes()
+{
+    return [
+        'all'   => 'Tous les clubs',
+        'org'   => 'Club organisateur',
+        'other' => 'Autres clubs que l\'organisateur',
+        'list'  => 'Clubs choisis',
+    ];
+}
+
+/** Longueur maximale de la mention en pied de reçu. */
+if (!defined('ENG_NOTE_MAX')) define('ENG_NOTE_MAX', 500);
+
+/**
+ * Mention en pied de reçu : texte libre, retours à la ligne conservés (au plus
+ * trois lignes consécutives), espaces superflus retirés.
+ */
+function eng_clean_note($note)
+{
+    $s = str_replace(["\r\n", "\r"], "\n", is_scalar($note) ? (string) $note : '');
+    $s = preg_replace('/[ \t]+/', ' ', $s);
+    $s = preg_replace("/\n{3,}/", "\n\n", trim(implode("\n", array_map('trim', explode("\n", $s)))));
+    return mb_substr($s, 0, ENG_NOTE_MAX);
+}
+
 /**
  * Normalise une configuration, quelle que soit sa provenance (formulaire,
- * JSON décodé, ligne de base).
+ * JSON décodé, ligne de base, fichier de sauvegarde).
  *
- * @param array $raw Clés 'base', 'default', 'rules' ; toutes facultatives.
+ * @param array $raw Clés 'base', 'default', 'rules', 'note', 'org' ; toutes facultatives.
  * @param int $sessions Nombre de sessions de la compétition (ToNumSession).
  * @return array Configuration normalisée (voir en tête de fichier).
  */
@@ -119,19 +154,27 @@ function eng_normalize_config(array $raw, $sessions)
     foreach ((is_array($raw['rules'] ?? null) ? $raw['rules'] : []) as $r) {
         if (is_object($r)) $r = (array) $r;
         if (!is_array($r)) continue;
+        $club = (string) ($r['club'] ?? 'all');
+        $clubs = eng_clean_codes($r['clubs'] ?? []);
+        if (!isset(eng_club_modes()[$club])) $club = 'all';
+        if ($club !== 'list') $clubs = [];
         $rules[] = [
             'label' => trim((string) ($r['label'] ?? '')),
             'div'   => eng_clean_codes($r['div'] ?? []),
             'cls'   => eng_clean_codes($r['cls'] ?? []),
+            'club'  => $club,
+            'clubs' => $clubs,
             'grid'  => eng_clean_grid($r['grid'] ?? [], $sessions),
         ];
     }
 
     return [
         'sessions' => $sessions,
+        'org'      => strtoupper(trim((string) ($raw['org'] ?? ''))),
         'base'     => $base === null ? 0.0 : $base,
         'default'  => eng_clean_grid($raw['default'] ?? [], $sessions),
         'rules'    => $rules,
+        'note'     => eng_clean_note($raw['note'] ?? ''),
     ];
 }
 
@@ -139,11 +182,12 @@ function eng_normalize_config(array $raw, $sessions)
  * Configuration à partir d'une ligne EngagementConfig (ou null si la
  * compétition n'a encore rien saisi).
  *
- * @param array|object|null $row Colonnes EcBase, EcDefault, EcRules.
+ * @param array|object|null $row Colonnes EcBase, EcDefault, EcRules, EcReceiptNote.
  * @param int $sessions Nombre de sessions de la compétition.
+ * @param string $org Code du club organisateur de la compétition (ToCommitee).
  * @return array Configuration normalisée.
  */
-function eng_config_from_row($row, $sessions)
+function eng_config_from_row($row, $sessions, $org = '')
 {
     if (is_object($row)) $row = (array) $row;
     if (!is_array($row)) $row = [];
@@ -153,6 +197,8 @@ function eng_config_from_row($row, $sessions)
         'base'    => $row['EcBase'] ?? 0,
         'default' => is_array($default) ? $default : [],
         'rules'   => is_array($rules) ? $rules : [],
+        'note'    => $row['EcReceiptNote'] ?? '',
+        'org'     => $org,
     ], $sessions);
 }
 
@@ -185,6 +231,8 @@ function eng_rules_to_json(array $rules)
             'label' => $r['label'],
             'div'   => array_values($r['div']),
             'cls'   => array_values($r['cls']),
+            'club'  => $r['club'] ?? 'all',
+            'clubs' => array_values($r['clubs'] ?? []),
             'grid'  => json_decode(eng_grid_to_json($r['grid'])),
         ];
     }
@@ -192,16 +240,33 @@ function eng_rules_to_json(array $rules)
 }
 
 /**
- * La règle s'applique-t-elle à cette division et cette classe ?
+ * La règle s'applique-t-elle à cette division, cette classe et ce club ?
  * Une liste vide accepte tout.
+ *
+ * @param string $club Code du club de l'archer (CoCode), '' si aucun.
+ * @param string $org Code du club organisateur, '' si non renseigné.
  */
-function eng_rule_matches(array $rule, $division, $class)
+function eng_rule_matches(array $rule, $division, $class, $club = '', $org = '')
 {
     $d = strtoupper(trim((string) $division));
     $c = strtoupper(trim((string) $class));
     if (!empty($rule['div']) && !in_array($d, $rule['div'], true)) return false;
     if (!empty($rule['cls']) && !in_array($c, $rule['cls'], true)) return false;
-    return true;
+    return eng_club_matches($rule, $club, $org);
+}
+
+/** Le club de l'archer satisfait-il le critère de club de la règle ? */
+function eng_club_matches(array $rule, $club, $org)
+{
+    $k = strtoupper(trim((string) $club));
+    $o = strtoupper(trim((string) $org));
+    $isOrg = $k !== '' && $o !== '' && $k === $o;
+    switch ($rule['club'] ?? 'all') {
+        case 'org':   return $isOrg;
+        case 'other': return !$isOrg;
+        case 'list':  return $k !== '' && in_array($k, $rule['clubs'] ?? [], true);
+        default:      return true;
+    }
 }
 
 /**
@@ -229,6 +294,7 @@ function eng_grid_total(array $grid, $n)
  * @param string $division Division (arme), ex. « CL ».
  * @param string $class Classe (catégorie), ex. « U18H ».
  * @param int $n Nombre de départs.
+ * @param string $club Code du club de l'archer (CoCode), pour le critère de club des règles.
  * @return array [
  *     'total'  => float,       // montant dû
  *     'source' => string,      // 'rule' | 'default' | 'base' | 'none' (0 départ)
@@ -237,7 +303,7 @@ function eng_grid_total(array $grid, $n)
  *     'short'  => bool,        // grille trop courte : dernier total appliqué
  * ]
  */
-function eng_price(array $config, $division, $class, $n)
+function eng_price(array $config, $division, $class, $n, $club = '')
 {
     $n = (int) $n;
     if ($n <= 0) {
@@ -245,7 +311,7 @@ function eng_price(array $config, $division, $class, $n)
     }
 
     foreach ($config['rules'] as $i => $rule) {
-        if (!eng_rule_matches($rule, $division, $class)) continue;
+        if (!eng_rule_matches($rule, $division, $class, $club, $config['org'] ?? '')) continue;
         $t = eng_grid_total($rule['grid'], $n);
         if ($t === null) continue;   // règle sans prix pour ce nombre de départs
         $label = $rule['label'] !== '' ? $rule['label'] : 'Règle ' . ($i + 1);
@@ -267,16 +333,20 @@ function eng_price(array $config, $division, $class, $n)
  * sont ignorées : c'est le cas d'une règle ajoutée puis abandonnée. L'ordre
  * des règles est celui du formulaire.
  *
- * @param array $post $_POST : 'base', 'default'[n], 'rules'[i]['label'|'div'|'cls'|'grid'].
+ * @param array $post $_POST : 'base', 'default'[n], 'note',
+ *                    'rules'[i]['label'|'div'|'cls'|'club'|'clubs'|'grid'].
  * @param int $sessions Nombre de sessions de la compétition.
+ * @param string $org Code du club organisateur de la compétition.
  * @return array Configuration normalisée.
  */
-function eng_config_from_post(array $post, $sessions)
+function eng_config_from_post(array $post, $sessions, $org = '')
 {
     return eng_normalize_config([
         'base'    => $post['base'] ?? '',
         'default' => $post['default'] ?? [],
         'rules'   => eng_posted_rules($post),
+        'note'    => $post['note'] ?? '',
+        'org'     => $org,
     ], $sessions);
 }
 
@@ -295,6 +365,7 @@ function eng_posted_rules(array $post)
         $grid = is_array($r['grid'] ?? null) ? $r['grid'] : [];
         $blank = trim((string) ($r['label'] ?? '')) === ''
               && empty($r['div']) && empty($r['cls'])
+              && in_array((string) ($r['club'] ?? 'all'), ['', 'all'], true)
               && trim(implode('', array_map('strval', $grid))) === '';
         if (!$blank) $rules[$k] = $r;
     }
@@ -344,8 +415,16 @@ function eng_validate_config(array $config, array $raw = [])
         if ($missing) {
             $errors[] = 'Règle ' . $name($i, $r) . ' : prix manquant pour ' . eng_departs_text($missing) . '.';
         }
-        if (empty($r['div']) && empty($r['cls']) && $i < $last) {
-            $warnings[] = 'La règle ' . $name($i, $r) . ' accepte toutes les divisions et toutes les classes : '
+        $club = $r['club'] ?? 'all';
+        if ($club === 'list' && empty($r['clubs'])) {
+            $errors[] = 'Règle ' . $name($i, $r) . ' : « Clubs choisis » sans aucun club coché.';
+        }
+        if ($club === 'org' && ($config['org'] ?? '') === '') {
+            $warnings[] = 'Règle ' . $name($i, $r) . ' : le club organisateur n\'est pas renseigné dans la compétition '
+                . '(Compétition › Informations) ; la règle ne s\'appliquera à personne.';
+        }
+        if (empty($r['div']) && empty($r['cls']) && $club === 'all' && $i < $last) {
+            $warnings[] = 'La règle ' . $name($i, $r) . ' accepte toutes les divisions, toutes les classes et tous les clubs : '
                 . 'les règles placées après elle ne s\'appliqueront jamais.';
         }
         if (!$missing && eng_grid_decreases($r['grid'])) {

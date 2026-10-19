@@ -60,8 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'unins
         include $CFG->DOCUMENT_PATH . 'Common/Templates/head.php';
         echo '<div style="max-width:700px;font-size:13px;margin:10px">';
         echo $gone
-            ? '<h2 style="color:#1e5e33">Greffe est désinstallé.</h2><p>Le dossier du module a été supprimé.</p>'
-            : '<h2 style="color:#b3261e">Suppression incomplète</h2><p>Supprimez à la main le dossier <code>' . $h($target) . '</code>.</p>';
+            ? '<h2 style="color:var(--vert)">Greffe est désinstallé.</h2><p>Le dossier du module a été supprimé.</p>'
+            : '<h2 style="color:var(--rouge)">Suppression incomplète</h2><p>Supprimez à la main le dossier <code>' . $h($target) . '</code>.</p>';
         echo $dropped ? '<p>Tables supprimées : ' . $h(implode(', ', $dropped)) . '.</p>' : '<p>Les tables du module ont été conservées.</p>';
         echo '<p><a href="' . $h($CFG->ROOT_DIR) . '">Retour à ianseo</a></p></div>';
         include $CFG->DOCUMENT_PATH . 'Common/Templates/tail.php';
@@ -75,18 +75,30 @@ $PAGE_TITLE = 'Greffe - Désinstallation';
 include $CFG->DOCUMENT_PATH . 'Common/Templates/head.php';
 ?>
 <style>
-#eng-uns { max-width:760px; color:#4c4e50; font-size:13px; }
-#eng-uns h2 { color:#b3261e; font-size:18px; margin:6px 0 14px; }
-#eng-uns .box { border:1px solid #e8b4ae; background:#fdf6f5; border-radius:8px; padding:16px 20px; margin-bottom:14px; }
+#eng-uns {
+    /* Couleurs : variables d'IANSEO (Common/Styles/colors.css), redéfinies par le module THEME pour chaque palette
+       et pour le mode sombre. États : --text-success / --text-danger / --text-warning mêlées à --black (texte) ou à
+       --row-background (fonds), lisibles dans les deux modes. */
+    --bleu:var(--header-dark); --sur-bleu:var(--row-main-text); --bleu-fonce:var(--main-text); --bleu-clair:var(--table-background);
+    --bleu-survol:color-mix(in srgb, var(--header-dark) 82%, var(--black)); --lien:var(--thm-link, var(--header-dark));
+    --gris:var(--text-dark); --sous:var(--text-muted); --bord:var(--input-border); --fond:var(--header-light);
+    --carte:var(--row-background); --champ:var(--text-white); --champ-texte:var(--black);
+    --vert:color-mix(in srgb, var(--text-success) 60%, var(--black)); --ok-fond:color-mix(in srgb, var(--text-success) 14%, var(--row-background)); --ok-bord:color-mix(in srgb, var(--text-success) 45%, var(--row-background));
+    --rouge:color-mix(in srgb, var(--text-danger) 70%, var(--black)); --err-fond:color-mix(in srgb, var(--text-danger) 14%, var(--row-background)); --err-bord:color-mix(in srgb, var(--text-danger) 45%, var(--row-background));
+    --orange:color-mix(in srgb, var(--text-warning) 50%, var(--black)); --warn-fond:color-mix(in srgb, var(--text-warning) 16%, var(--row-background)); --warn-bord:color-mix(in srgb, var(--text-warning) 55%, var(--row-background));
+}
+#eng-uns { max-width:760px; color:var(--gris); font-size:13px; }
+#eng-uns h2 { color:var(--rouge); font-size:18px; margin:6px 0 14px; }
+#eng-uns .box { border:1px solid var(--err-bord); background:var(--err-fond); border-radius:8px; padding:16px 20px; margin-bottom:14px; }
 #eng-uns ul { margin:6px 0 12px; padding-left:20px; line-height:1.8; }
-#eng-uns code { background:#fff; border:1px solid #eadad8; border-radius:3px; padding:1px 5px; }
-#eng-uns .msg { border-radius:6px; padding:10px 14px; margin-bottom:12px; background:#fdecea; border:1px solid #e6a19b; color:#b3261e; }
-#eng-uns .warn { background:#fff4e5; border-left:3px solid #f5a623; padding:10px 14px; border-radius:0 6px 6px 0; margin:12px 0; }
+#eng-uns code { background:var(--carte); border:1px solid var(--err-bord); border-radius:3px; padding:1px 5px; }
+#eng-uns .msg { border-radius:6px; padding:10px 14px; margin-bottom:12px; background:var(--err-fond); border:1px solid var(--err-bord); color:var(--rouge); }
+#eng-uns .warn { background:var(--warn-fond); border-left:3px solid var(--orange); padding:10px 14px; border-radius:0 6px 6px 0; margin:12px 0; }
 #eng-uns label.drop { display:flex; gap:8px; align-items:flex-start; margin:12px 0; }
-#eng-uns input[type=text] { padding:7px 10px; border:1px solid #c8b4b0; border-radius:5px; font-size:13px; width:220px; }
+#eng-uns input[type=text] { background:var(--champ); color:var(--champ-texte); padding:7px 10px; border:1px solid var(--bord); border-radius:5px; font-size:13px; width:220px; }
 #eng-uns button, #eng-uns a.btn { border-radius:6px; cursor:pointer; padding:8px 18px; font-size:13px; font-weight:600; text-decoration:none; display:inline-block; }
-#eng-uns button.danger { background:#c0392b; border:1px solid #c0392b; color:#fff; }
-#eng-uns a.btn { background:#fff; border:1px solid #0254a8; color:#0254a8; }
+#eng-uns button.danger { background:var(--rouge); border:1px solid var(--rouge); color:var(--champ); }
+#eng-uns a.btn { background:var(--carte); border:1px solid var(--bleu); color:var(--lien); }
 #eng-uns a.cancel { margin-left:10px; }
 </style>
 

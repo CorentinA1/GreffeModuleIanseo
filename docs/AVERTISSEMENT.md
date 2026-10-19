@@ -25,10 +25,13 @@ C'est indispensable : **avant la compétition, pendant (après chaque série de 
 d'IANSEO ou du module.
 
 1. **Tarifs et paiements** : ils sont rangés dans deux tables propres au module (`EngagementConfig`,
-   `EngagementPayments`), qui **ne sont pas dans l'export de compétition d'IANSEO**. Pour les sauvegarder :
-   **Modules → Greffe → Mise à jour du module → Désinstaller le module → Télécharger une sauvegarde (.sql)**
-   (administrateur ; le téléchargement ne désinstalle rien). Le fichier contient les tarifs et paiements de toutes
-   les compétitions ; on le restaure en l'important dans la base `ianseo` (phpMyAdmin par exemple).
+   `EngagementPayments`), qui **ne sont pas dans l'export de compétition d'IANSEO**. Deux façons de les sauvegarder :
+   - **par compétition** : **Modules → Greffe → Sauvegarde**, deux fichiers `.json` : les **tarifs** et
+     l'**historique des paiements**. On les restaure, dans la même compétition ou sur un autre serveur, depuis la
+     même page (voir [Utilisation](UTILISATION.md#5-sauvegarde)) ;
+   - **toutes les compétitions** : **Modules → Greffe → Mise à jour du module → Désinstaller le module →
+     Télécharger une sauvegarde (.sql)** (administrateur ; le téléchargement ne désinstalle rien). On la restaure en
+     l'important dans la base `ianseo` (phpMyAdmin par exemple).
 2. **La compétition elle-même** (archers, inscriptions) : **Compétition › Exports › Export de la compétition**,
    rechargée avec **Compétition › Import d'une compétition**.
 

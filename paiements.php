@@ -30,13 +30,30 @@ $f = [
     'club' => intval($_GET['club'] ?? 0),
     'rule' => (string) ($_GET['rule'] ?? ''),
     'view' => isset($views[$_GET['view'] ?? '']) ? (string) $_GET['view'] : '',
+    'ses'  => intval($_GET['ses'] ?? 0),    // départ : 1…N, -1 = non placé, 0 = tous
+    'nb'   => max(0, intval($_GET['nb'] ?? 0)),   // nombre de départs, 0 = tous
     'q'    => trim((string) ($_GET['q'] ?? '')),
+    'sort' => isset(eng_sort_columns()[$_GET['sort'] ?? '']) && $_GET['sort'] !== 'name' ? (string) $_GET['sort'] : '',
+    'dir'  => ($_GET['dir'] ?? '') === 'desc' ? 'desc' : '',
 ];
-/** URL de la page avec les filtres courants. */
+/** URL de la page avec les filtres et le tri courants (valeurs par défaut omises). */
 function eng_self_url($self, array $f)
 {
     $q = http_build_query(array_filter($f, function ($v) { return $v !== '' && $v !== 0; }));
     return $self . ($q !== '' ? '?' . $q : '');
+}
+
+/** En-tête de colonne triable : lien qui trie par cette colonne, ou inverse le sens. */
+function eng_sort_th($self, array $f, $key, $label, $class = '')
+{
+    $cur = ($f['sort'] ?: 'name') === $key;
+    $g = $f;
+    $g['sort'] = $key === 'name' ? '' : $key;
+    $g['dir'] = $cur && $f['dir'] !== 'desc' ? 'desc' : '';
+    $arrow = $cur ? ($f['dir'] === 'desc' ? ' ▼' : ' ▲') : '';
+    return '<th' . ($class !== '' ? ' class="' . $class . '"' : '') . ($cur ? ' aria-sort="' . ($f['dir'] === 'desc' ? 'descending' : 'ascending') . '"' : '')
+        . '><a href="' . eng_h(eng_self_url($self, $g)) . '" title="Trier par ' . eng_h(mb_strtolower($label)) . '">'
+        . eng_h($label) . $arrow . '</a></th>';
 }
 
 // ── Actions (POST) ───────────────────────────────────────────────────────────
@@ -87,8 +104,12 @@ $lastMethod = $_SESSION['ENG_LAST_METHOD'] ?? 'especes';
 
 // Listes des filtres, et clubs ayant des comptes non payés (règlement groupé).
 $clubs = $rulesSeen = $clubUnpaid = [];
+$maxN = 1;
+$unplaced = false;
 foreach ($accounts as $a) {
     if ($a['n'] === 0) continue;
+    $maxN = max($maxN, $a['n']);
+    if (in_array(0, $a['sessions'], true)) $unplaced = true;
     $clubs[$a['club_id']] = trim($a['club_code'] . ' — ' . $a['club_name'], ' —');
     $rulesSeen[eng_rule_key($a['price'])] = $a['price']['label'];
     if ($a['status'] === 'unpaid') {
@@ -106,12 +127,15 @@ $shown = array_filter($accounts, function ($a) use ($f) {
     if ($f['view'] === 'exempt' && !in_array($a['status'], ['waived', 'exempt'], true)) return false;
     if ($f['view'] === 'mixed' && !$a['mixed']) return false;
     if ($f['view'] === 'norule' && !in_array($a['price']['source'], ['default', 'base'], true)) return false;
+    if ($f['ses'] && !in_array($f['ses'] > 0 ? $f['ses'] : 0, $a['sessions'], true)) return false;
+    if ($f['nb'] && $a['n'] !== $f['nb']) return false;
     if ($f['q'] !== '') {
         $hay = mb_strtolower($a['key'] . ' ' . $a['name'] . ' ' . $a['first'] . ' ' . $a['first'] . ' ' . $a['name'] . ' ' . $a['club_name']);
         if (mb_strpos($hay, mb_strtolower($f['q'])) === false) return false;
     }
     return true;
 });
+$shown = eng_sort_accounts($shown, $f['sort'] ?: 'name', $f['dir'] ?: 'asc');
 
 // Totaux de la sélection affichée.
 $tot = ['n' => 0, 'due' => 0.0, 'paid' => 0.0, 'left' => 0.0, 'unpaid' => 0, 'waived' => 0.0, 'nwaived' => 0];
@@ -137,46 +161,58 @@ $PAGE_TITLE = 'Greffe - Paiements';
 include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
 ?>
 <style>
-#eng { --bleu:#0254a8; --bleu-fonce:#01367c; --bleu-clair:#f0f4ff; --gris:#4c4e50;
-       --bord:#d2d4d6; --fond:#f7f7f7; --rouge:#b3261e; --orange:#8a5a00; --vert:#1e5e33;
-       color:var(--gris); font-size:13px; }
+#eng {
+    /* Couleurs : variables d'IANSEO (Common/Styles/colors.css), redéfinies par le module THEME pour chaque palette
+       et pour le mode sombre. États : --text-success / --text-danger / --text-warning mêlées à --black (texte) ou à
+       --row-background (fonds), lisibles dans les deux modes. */
+    --bleu:var(--header-dark); --sur-bleu:var(--row-main-text); --bleu-fonce:var(--main-text); --bleu-clair:var(--table-background);
+    --bleu-survol:color-mix(in srgb, var(--header-dark) 82%, var(--black)); --lien:var(--thm-link, var(--header-dark));
+    --gris:var(--text-dark); --sous:var(--text-muted); --bord:var(--input-border); --fond:var(--header-light);
+    --carte:var(--row-background); --champ:var(--text-white); --champ-texte:var(--black);
+    --vert:color-mix(in srgb, var(--text-success) 60%, var(--black)); --ok-fond:color-mix(in srgb, var(--text-success) 14%, var(--row-background)); --ok-bord:color-mix(in srgb, var(--text-success) 45%, var(--row-background));
+    --rouge:color-mix(in srgb, var(--text-danger) 70%, var(--black)); --err-fond:color-mix(in srgb, var(--text-danger) 14%, var(--row-background)); --err-bord:color-mix(in srgb, var(--text-danger) 45%, var(--row-background));
+    --orange:color-mix(in srgb, var(--text-warning) 50%, var(--black)); --warn-fond:color-mix(in srgb, var(--text-warning) 16%, var(--row-background)); --warn-bord:color-mix(in srgb, var(--text-warning) 55%, var(--row-background));
+    color:var(--gris); font-size:13px; }
 #eng .msg { border-radius:6px; padding:10px 14px; margin-bottom:12px; }
-#eng .msg.ok  { background:#eafaf0; border:1px solid #9bd3ad; color:var(--vert); }
-#eng .msg.err { background:#fdecea; border:1px solid #e6a19b; color:var(--rouge); }
-#eng .msg.warn { background:#fff8e1; border:1px solid #e0c46c; color:var(--orange); }
+#eng .msg.ok  { background:var(--ok-fond); border:1px solid var(--ok-bord); color:var(--vert); }
+#eng .msg.err { background:var(--err-fond); border:1px solid var(--err-bord); color:var(--rouge); }
+#eng .msg.warn { background:var(--warn-fond); border:1px solid var(--warn-bord); color:var(--orange); }
 #eng .bar { display:flex; flex-wrap:wrap; gap:8px; align-items:center; background:var(--bleu-clair);
             border-left:4px solid var(--bleu); border-radius:0 6px 6px 0; padding:10px 14px; margin-bottom:12px; }
-#eng select, #eng input[type=text], #eng input[type=search] { padding:5px 7px; border:1px solid var(--bord);
+#eng select, #eng input[type=text], #eng input[type=search] { padding:5px 7px; border:1px solid var(--bord); background:var(--champ); color:var(--champ-texte);
             border-radius:5px; font-size:13px; }
 #eng .kpis { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:12px; }
-#eng .kpi { background:#fff; border:1px solid var(--bord); border-radius:6px; padding:8px 14px; min-width:130px; }
-#eng .kpi span { display:block; font-size:11px; color:#7d8183; }
+#eng .kpi { background:var(--carte); border:1px solid var(--bord); border-radius:6px; padding:8px 14px; min-width:130px; }
+#eng .kpi span { display:block; font-size:11px; color:var(--sous); }
 #eng .kpi b { font-size:18px; color:var(--bleu-fonce); }
 #eng .kpi.left b { color:var(--rouge); }
 #eng .kpi.waived b { color:var(--gris); }
-#eng table.acc { border-collapse:collapse; width:100%; background:#fff; }
-#eng table.acc th { background:var(--bleu); color:#fff; text-align:left; padding:6px 8px; font-size:12px;
+#eng table.acc { border-collapse:collapse; width:100%; background:var(--carte); }
+#eng table.acc th { background:var(--bleu); color:var(--sur-bleu); text-align:left; padding:6px 8px; font-size:12px;
                     position:sticky; top:0; z-index:1; }
-#eng table.acc td { border-bottom:1px solid #e2e5ea; padding:5px 8px; vertical-align:middle; }
-#eng table.acc tr:target td { background:#fff8e1; }
+#eng table.acc td { border-bottom:1px solid var(--bleu-clair); padding:5px 8px; vertical-align:middle; }
+#eng table.acc tr:target td { background:var(--warn-fond); }
+#eng table.acc th a { color:inherit; text-decoration:none; display:block; }
+#eng table.acc th a:hover { text-decoration:underline; }
+#eng table.acc th.num { text-align:right; }
 #eng td.num { text-align:right; white-space:nowrap; }
-#eng small, #eng .sub { color:#7d8183; font-size:11px; }
+#eng small, #eng .sub { color:var(--sous); font-size:11px; }
 #eng .flag { color:var(--orange); font-weight:bold; cursor:help; }
 #eng .badge { display:inline-block; border-radius:10px; padding:1px 9px; font-size:11px; font-weight:600; white-space:nowrap; }
-#eng .badge.unpaid { background:#fdecea; color:var(--rouge); }
-#eng .badge.paid   { background:#eafaf0; color:var(--vert); }
-#eng .badge.diff   { background:#fff1d6; color:var(--orange); }
-#eng .badge.exempt, #eng .badge.waived { background:#eef0f2; color:var(--gris); }
+#eng .badge.unpaid { background:var(--err-fond); color:var(--rouge); }
+#eng .badge.paid   { background:var(--ok-fond); color:var(--vert); }
+#eng .badge.diff   { background:var(--warn-fond); color:var(--orange); }
+#eng .badge.exempt, #eng .badge.waived { background:var(--fond); color:var(--gris); }
 #eng form.inline { display:flex; gap:4px; align-items:center; margin:0; flex-wrap:wrap; }
 #eng form.inline input[name=note] { width:110px; }
 #eng button { border-radius:5px; cursor:pointer; padding:4px 10px; font-size:12px; font-weight:600; }
-#eng button.pay { background:var(--bleu); border:1px solid var(--bleu); color:#fff; }
-#eng button.pay:hover { background:var(--bleu-fonce); }
-#eng button.ghost { background:#fff; border:1px solid var(--bord); color:var(--gris); }
-#eng button.warn { background:#fff; border:1px solid var(--orange); color:var(--orange); }
-#eng .club { border:1px solid var(--bord); border-radius:6px; background:#fff; padding:10px 14px; margin:0 0 12px; }
+#eng button.pay { background:var(--bleu); border:1px solid var(--bleu); color:var(--sur-bleu); }
+#eng button.pay:hover { background:var(--bleu-survol); }
+#eng button.ghost { background:var(--carte); border:1px solid var(--bord); color:var(--gris); }
+#eng button.warn { background:var(--carte); border:1px solid var(--orange); color:var(--orange); }
+#eng .club { border:1px solid var(--bord); border-radius:6px; background:var(--carte); padding:10px 14px; margin:0 0 12px; }
 #eng .club b { color:var(--bleu-fonce); }
-#eng .empty { padding:20px; text-align:center; color:#7d8183; }
+#eng .empty { padding:20px; text-align:center; color:var(--sous); }
 </style>
 
 <div id="eng">
@@ -200,8 +236,18 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
         <select name="view">
             <?php foreach ($views as $k => $l): ?><option value="<?= eng_h($k) ?>"<?= $f['view'] === $k ? ' selected' : '' ?>><?= eng_h($l) ?></option><?php endforeach; ?>
         </select>
+        <select name="ses" title="Archers inscrits à ce départ"><option value="0">Tous les départs</option>
+            <?php for ($s = 1; $s <= $tour->Sessions; $s++): ?><option value="<?= $s ?>"<?= $f['ses'] === $s ? ' selected' : '' ?>>Départ <?= $s ?></option><?php endfor; ?>
+            <?php if ($unplaced || $f['ses'] === -1): ?><option value="-1"<?= $f['ses'] === -1 ? ' selected' : '' ?>>Non placés</option><?php endif; ?>
+        </select>
+        <select name="nb" title="Nombre de départs de l'archer"><option value="0">Tout nombre de départs</option>
+            <?php for ($n = 1; $n <= max($maxN, $f['nb']); $n++): ?><option value="<?= $n ?>"<?= $f['nb'] === $n ? ' selected' : '' ?>><?= $n ?> départ<?= $n > 1 ? 's' : '' ?></option><?php endfor; ?>
+        </select>
+        <?php if ($f['sort'] !== ''): ?><input type="hidden" name="sort" value="<?= eng_h($f['sort']) ?>"><?php endif; ?>
+        <?php if ($f['dir'] !== ''): ?><input type="hidden" name="dir" value="<?= eng_h($f['dir']) ?>"><?php endif; ?>
         <button type="submit" class="ghost">Filtrer</button>
-        <?php if ($f !== ['club' => 0, 'rule' => '', 'view' => '', 'q' => '']): ?><a href="<?= eng_h($self) ?>">Réinitialiser</a><?php endif; ?>
+        <?php if (array_diff_key(array_filter($f, function ($v) { return $v !== '' && $v !== 0; }), ['sort' => 1, 'dir' => 1])): ?>
+            <a href="<?= eng_h(eng_self_url($self, ['sort' => $f['sort'], 'dir' => $f['dir']])) ?>">Réinitialiser</a><?php endif; ?>
         <?php if ($f['club']): ?><a href="<?= eng_h($ENG_ROOT . 'recu.php?club=' . $f['club']) ?>" target="_blank">Récapitulatif du club (PDF)</a><?php endif; ?>
     </form>
 
@@ -235,8 +281,7 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
     <?php else: ?>
     <table class="acc">
         <thead><tr>
-            <th>Archer</th><th>Club</th><th>Départ(s)</th><th>Catégorie</th><th>Règle</th>
-            <th class="num">Dû</th><th>Statut</th><th>Paiement</th>
+            <?php foreach (eng_sort_columns() as $k => $l) echo eng_sort_th($self, $f, $k, $l, $k === 'due' ? 'num' : ''); ?>
         </tr></thead>
         <tbody>
         <?php foreach ($shown as $a):

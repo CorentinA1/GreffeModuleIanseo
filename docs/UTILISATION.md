@@ -5,13 +5,20 @@
 
 ## 1. Tarifs (Modules → Greffe → Tarifs)
 
-Une **règle** regroupe un libellé (« Jeunes », « Adultes »…), des divisions (armes), des classes (catégories) et une **grille de prix**.
+Une **règle** regroupe un libellé (« Jeunes », « Adultes »…), des divisions (armes), des classes (catégories), des clubs et une **grille de prix**.
 
 - **Divisions et classes :** si aucune case n'est cochée, la règle s'applique à toutes.
+- **Clubs :** tous les clubs (par défaut), le **club organisateur**, les **autres clubs**, ou des **clubs choisis**
+  (cases à cocher). Le club organisateur est celui déclaré dans la compétition (**Compétition › Informations**,
+  code du club organisateur) ; s'il n'est pas renseigné, « Club organisateur » ne retient personne. Exemple de tarif
+  réduit : une règle « Jeunes — club organisateur » placée **avant** la règle « Jeunes ».
 - **Grille :** elle a une case par session de la compétition. Chaque case contient le prix **total** pour ce nombre de départs (exemple : 1 départ = 10 €, 2 départs = 17 €), pas un prix par départ. Les centimes sont acceptés (« 7,50 »).
 - **Choix de la règle :** pour chaque archer, **la première règle qui correspond** s'applique. L'ordre compte : placez les règles les plus précises en haut (boutons ▲ ▼).
 - **Si aucune règle ne correspond :** la **grille par défaut** s'applique. Si elle est vide, c'est le **tarif de base**, multiplié par le nombre de départs.
-- **Aperçu :** le cadre « Aperçu » calcule le prix d'une catégorie et d'un nombre de départs sur la saisie en cours, avant même l'enregistrement.
+- **Aperçu :** le cadre « Aperçu » calcule le prix d'une catégorie, d'un club et d'un nombre de départs sur la saisie en cours, avant même l'enregistrement.
+- **Mention en pied de reçu :** texte libre imprimé en bas des reçus et récapitulatifs (cadre « Reçus »). Vide par
+  défaut. Le bouton « Insérer la mention habituelle des associations » propose « Association loi 1901 — TVA non
+  applicable, article 293 B du Code général des impôts » : ne l'utilisez que si elle s'applique à votre club.
 
 ## 2. Paiements (Modules → Greffe → Paiements)
 
@@ -21,7 +28,10 @@ Une ligne par archer, identifié par sa **licence** (un archer sans licence est 
 - **Annuler :** le compte repasse à « non payé ». Le paiement annulé reste dans l'historique.
 - **Payé — écart :** le montant dû a changé après le paiement (départ ajouté ou retiré, tarifs modifiés). « Régulariser » réenregistre le paiement au nouveau montant, avec le même moyen.
 - **Règlement d'un club en une fois :** tous les archers non payés du club passent à payé avec le même moyen.
-- **Filtres :** club, règle, statut, catégories mixtes, archers sans règle, plus une recherche par nom, licence ou club.
+- **Filtres :** club, règle, statut, catégories mixtes, archers sans règle, **départ** (archers inscrits à ce départ,
+  ou non placés), **nombre de départs**, plus une recherche par nom, licence ou club.
+- **Tri :** un clic sur l'en-tête d'une colonne trie la liste (archer, club, départ, catégorie, règle, dû, statut,
+  date du paiement) ; un second clic inverse l'ordre. Le tri et les filtres restent en place après chaque paiement.
 - **Reçu / Récap. :** sous le montant de chaque archer, ce lien ouvre son reçu PDF.
 
 Statuts possibles :
@@ -59,9 +69,31 @@ Ce sont des **reçus, pas des factures** : il n'y a pas de numérotation légale
 - **Archer non réglé :** « Récapitulatif d'inscription » avec le reste dû.
 - **Club :** liste de ses archers, montants, statuts et bilan.
 
+La mention saisie sur la page Tarifs (cadre « Reçus ») s'imprime en bas de chacun.
+
+## 5. Sauvegarde (Modules → Greffe → Sauvegarde)
+
+Les tarifs et paiements **ne sont pas dans l'export de compétition d'IANSEO** : cette page les met dans **deux
+fichiers `.json` séparés**, à garder avec l'export `.ianseo`, ou à importer sur un autre serveur (par exemple d'un
+serveur de test vers celui de la compétition).
+
+- **Télécharger les tarifs :** règles, grilles, tarif de base, mention de reçu. Réutilisable d'une compétition à
+  l'autre (mêmes tarifs chaque année, par exemple).
+- **Télécharger l'historique :** **toutes les lignes** de paiement de la compétition, annulations comprises, avec
+  leurs dates et auteurs.
+- **Restaurer ou importer :** envoyer un fichier (tarifs ou historique : le module reconnaît lequel) affiche
+  d'abord un **aperçu** ; rien n'est écrit avant « Importer ».
+  - Les paiements sont rattachés par **licence**. Sans licence : par nom, prénom et club, s'il n'y a qu'une
+    inscription qui correspond.
+  - Un archer qui a **déjà des paiements** dans la compétition n'est pas modifié ; il est listé pour vérification.
+  - Un archer **introuvable** (licence non inscrite ici) ou **ambigu** n'est pas importé ; il est listé.
+  - **Rejouer un import n'ajoute rien :** les lignes déjà présentes sont ignorées.
+  - Fichier de tarifs : il **remplace** les tarifs de la compétition. Avant, l'aperçu signale ce qui ne correspond
+    pas à la compétition : moins de départs, divisions, classes ou clubs absents, club organisateur différent.
+
 ## Droits d'accès
 
-- **Tarifs et Paiements :** droit IANSEO « Participants » en **écriture**.
+- **Tarifs, Paiements et Sauvegarde :** droit IANSEO « Participants » en **écriture**.
 - **Rapport - Bilan et reçus :** même droit, en **lecture**.
 
 ---

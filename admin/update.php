@@ -43,22 +43,34 @@ $PAGE_TITLE = 'Greffe - Mise à jour du module';
 include $CFG->DOCUMENT_PATH . 'Common/Templates/head.php';
 ?>
 <style>
-#eng-upd { max-width:760px; color:#4c4e50; font-size:13px; }
-#eng-upd h2 { color:#01367c; font-size:18px; margin:6px 0 14px; }
-#eng-upd .card { border:1px solid #d2d4d6; border-radius:6px; background:#fff; padding:14px 16px; margin-bottom:14px; }
-#eng-upd .card h3 { margin:0 0 10px; font-size:14px; color:#01367c; }
+#eng-upd {
+    /* Couleurs : variables d'IANSEO (Common/Styles/colors.css), redéfinies par le module THEME pour chaque palette
+       et pour le mode sombre. États : --text-success / --text-danger / --text-warning mêlées à --black (texte) ou à
+       --row-background (fonds), lisibles dans les deux modes. */
+    --bleu:var(--header-dark); --sur-bleu:var(--row-main-text); --bleu-fonce:var(--main-text); --bleu-clair:var(--table-background);
+    --bleu-survol:color-mix(in srgb, var(--header-dark) 82%, var(--black)); --lien:var(--thm-link, var(--header-dark));
+    --gris:var(--text-dark); --sous:var(--text-muted); --bord:var(--input-border); --fond:var(--header-light);
+    --carte:var(--row-background); --champ:var(--text-white); --champ-texte:var(--black);
+    --vert:color-mix(in srgb, var(--text-success) 60%, var(--black)); --ok-fond:color-mix(in srgb, var(--text-success) 14%, var(--row-background)); --ok-bord:color-mix(in srgb, var(--text-success) 45%, var(--row-background));
+    --rouge:color-mix(in srgb, var(--text-danger) 70%, var(--black)); --err-fond:color-mix(in srgb, var(--text-danger) 14%, var(--row-background)); --err-bord:color-mix(in srgb, var(--text-danger) 45%, var(--row-background));
+    --orange:color-mix(in srgb, var(--text-warning) 50%, var(--black)); --warn-fond:color-mix(in srgb, var(--text-warning) 16%, var(--row-background)); --warn-bord:color-mix(in srgb, var(--text-warning) 55%, var(--row-background));
+}
+#eng-upd { max-width:760px; color:var(--gris); font-size:13px; }
+#eng-upd h2 { color:var(--bleu-fonce); font-size:18px; margin:6px 0 14px; }
+#eng-upd .card { border:1px solid var(--bord); border-radius:6px; background:var(--carte); padding:14px 16px; margin-bottom:14px; }
+#eng-upd .card h3 { margin:0 0 10px; font-size:14px; color:var(--bleu-fonce); }
 #eng-upd .msg { border-radius:6px; padding:10px 14px; margin-bottom:12px; }
-#eng-upd .ok   { background:#eafaf0; border:1px solid #9bd3ad; color:#1e5e33; }
-#eng-upd .err  { background:#fdecea; border:1px solid #e6a19b; color:#b3261e; }
-#eng-upd .warn { background:#fff8e1; border:1px solid #e0c46c; color:#8a5a00; }
+#eng-upd .ok   { background:var(--ok-fond); border:1px solid var(--ok-bord); color:var(--vert); }
+#eng-upd .err  { background:var(--err-fond); border:1px solid var(--err-bord); color:var(--rouge); }
+#eng-upd .warn { background:var(--warn-fond); border:1px solid var(--warn-bord); color:var(--orange); }
 #eng-upd .badge { display:inline-block; border-radius:10px; padding:1px 9px; font-size:11px; font-weight:600; margin-left:6px; }
-#eng-upd .badge.new { background:#fff1d6; color:#8a5a00; }
-#eng-upd .badge.same { background:#eafaf0; color:#1e5e33; }
-#eng-upd .notes { background:#f7f7f7; border-left:3px solid #0254a8; padding:8px 12px; margin:10px 0 0; white-space:pre-line; }
+#eng-upd .badge.new { background:var(--warn-fond); color:var(--orange); }
+#eng-upd .badge.same { background:var(--ok-fond); color:var(--vert); }
+#eng-upd .notes { background:var(--fond); border-left:3px solid var(--bleu); padding:8px 12px; margin:10px 0 0; white-space:pre-line; }
 #eng-upd button { border-radius:6px; cursor:pointer; padding:8px 18px; font-size:13px; font-weight:600; }
-#eng-upd button.primary { background:#0254a8; border:1px solid #0254a8; color:#fff; }
-#eng-upd button.ghost { background:#fff; border:1px solid #0254a8; color:#0254a8; }
-#eng-upd .sub { color:#7d8183; font-size:12px; }
+#eng-upd button.primary { background:var(--bleu); border:1px solid var(--bleu); color:var(--sur-bleu); }
+#eng-upd button.ghost { background:var(--carte); border:1px solid var(--bleu); color:var(--lien); }
+#eng-upd .sub { color:var(--sous); font-size:12px; }
 #eng-upd details { margin-top:10px; }
 </style>
 
@@ -115,11 +127,11 @@ include $CFG->DOCUMENT_PATH . 'Common/Templates/head.php';
     </div>
     <?php endif; ?>
 
-    <details class="card" style="border-color:#e8b4ae;background:#fdf6f5">
-        <summary style="color:#c0392b;font-weight:600;cursor:pointer">Désinstaller le module</summary>
+    <details class="card" style="border-color:var(--err-bord);background:var(--err-fond)">
+        <summary style="color:var(--rouge);font-weight:600;cursor:pointer">Désinstaller le module</summary>
         <p style="margin:10px 0">Supprime le dossier du module. Ses tables (tarifs et paiements) sont conservées,
             sauf si vous demandez leur suppression sur l'écran de confirmation.</p>
-        <a href="uninstall.php" style="display:inline-block;background:#c0392b;color:#fff;padding:8px 18px;border-radius:6px;font-weight:600;text-decoration:none">Désinstaller…</a>
+        <a href="uninstall.php" style="display:inline-block;background:var(--rouge);color:var(--champ);padding:8px 18px;border-radius:6px;font-weight:600;text-decoration:none">Désinstaller…</a>
     </details>
 </div>
 <?php include $CFG->DOCUMENT_PATH . 'Common/Templates/tail.php'; ?>

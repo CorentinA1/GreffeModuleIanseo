@@ -322,35 +322,44 @@ $PAGE_TITLE = 'Greffe - Rapport - Bilan';
 include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
 ?>
 <style>
-#eng { --bleu:#0254a8; --bleu-fonce:#01367c; --bleu-clair:#f0f4ff; --gris:#4c4e50;
-       --bord:#d2d4d6; --fond:#f7f7f7; --rouge:#b3261e; --orange:#8a5a00; --vert:#1e5e33;
-       color:var(--gris); font-size:13px; max-width:1100px; }
+#eng {
+    /* Couleurs : variables d'IANSEO (Common/Styles/colors.css), redéfinies par le module THEME pour chaque palette
+       et pour le mode sombre. États : --text-success / --text-danger / --text-warning mêlées à --black (texte) ou à
+       --row-background (fonds), lisibles dans les deux modes. */
+    --bleu:var(--header-dark); --sur-bleu:var(--row-main-text); --bleu-fonce:var(--main-text); --bleu-clair:var(--table-background);
+    --bleu-survol:color-mix(in srgb, var(--header-dark) 82%, var(--black)); --lien:var(--thm-link, var(--header-dark));
+    --gris:var(--text-dark); --sous:var(--text-muted); --bord:var(--input-border); --fond:var(--header-light);
+    --carte:var(--row-background); --champ:var(--text-white); --champ-texte:var(--black);
+    --vert:color-mix(in srgb, var(--text-success) 60%, var(--black)); --ok-fond:color-mix(in srgb, var(--text-success) 14%, var(--row-background)); --ok-bord:color-mix(in srgb, var(--text-success) 45%, var(--row-background));
+    --rouge:color-mix(in srgb, var(--text-danger) 70%, var(--black)); --err-fond:color-mix(in srgb, var(--text-danger) 14%, var(--row-background)); --err-bord:color-mix(in srgb, var(--text-danger) 45%, var(--row-background));
+    --orange:color-mix(in srgb, var(--text-warning) 50%, var(--black)); --warn-fond:color-mix(in srgb, var(--text-warning) 16%, var(--row-background)); --warn-bord:color-mix(in srgb, var(--text-warning) 55%, var(--row-background));
+    color:var(--gris); font-size:13px; max-width:1100px; }
 #eng .bar { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:14px; }
-#eng .bar a { display:inline-block; background:#fff; border:1px solid var(--bleu); color:var(--bleu); font-weight:600;
+#eng .bar a { display:inline-block; background:var(--carte); border:1px solid var(--bleu); color:var(--lien); font-weight:600;
               padding:6px 14px; border-radius:6px; text-decoration:none; }
 #eng .bar a:hover { background:var(--bleu-clair); }
-#eng .bar a.primary { background:var(--bleu); color:#fff; }
+#eng .bar a.primary { background:var(--bleu); color:var(--sur-bleu); }
 #eng .kpis { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:16px; }
-#eng .kpi { background:#fff; border:1px solid var(--bord); border-radius:6px; padding:8px 14px; min-width:140px; }
-#eng .kpi span { display:block; font-size:11px; color:#7d8183; }
+#eng .kpi { background:var(--carte); border:1px solid var(--bord); border-radius:6px; padding:8px 14px; min-width:140px; }
+#eng .kpi span { display:block; font-size:11px; color:var(--sous); }
 #eng .kpi b { font-size:20px; color:var(--bleu-fonce); }
 #eng .kpi.paid b { color:var(--vert); }
 #eng .kpi.left b { color:var(--rouge); }
 #eng .kpi.waived b, #eng .kpi.over b { color:var(--orange); }
 #eng .toc { font-size:12px; margin:0 0 14px; }
 #eng .toc a { margin-right:10px; }
-#eng .card { border:1px solid var(--bord); border-radius:6px; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.08); margin-bottom:16px; }
-#eng .card > h3 { margin:0; padding:9px 14px; font-size:14px; color:#fff; background:var(--bleu); border-radius:5px 5px 0 0; }
+#eng .card { border:1px solid var(--bord); border-radius:6px; background:var(--carte); box-shadow:0 1px 3px rgba(0,0,0,.08); margin-bottom:16px; }
+#eng .card > h3 { margin:0; padding:9px 14px; font-size:14px; color:var(--sur-bleu); background:var(--bleu); border-radius:5px 5px 0 0; }
 #eng .card > div { padding:10px 14px; overflow-x:auto; }
-#eng .note { font-size:11px; color:#7d8183; margin:0 0 8px; font-style:italic; }
+#eng .note { font-size:11px; color:var(--sous); margin:0 0 8px; font-style:italic; }
 #eng table.rep { border-collapse:collapse; width:100%; }
 #eng table.rep th { text-align:left; border-bottom:2px solid var(--bleu); padding:4px 8px; font-size:12px; color:var(--bleu-fonce); }
-#eng table.rep td { border-bottom:1px solid #e2e5ea; padding:4px 8px; }
+#eng table.rep td { border-bottom:1px solid var(--bleu-clair); padding:4px 8px; }
 #eng table.rep .R { text-align:right; white-space:nowrap; }
 #eng table.rep tr.total td { font-weight:bold; border-top:2px solid var(--bleu); border-bottom:0; }
 #eng table.rep tbody tr:hover td { background:var(--bleu-clair); }
-#eng .empty { color:#7d8183; }
-#eng .msg.warn { background:#fff8e1; border:1px solid #e0c46c; color:var(--orange); border-radius:6px; padding:10px 14px; margin-bottom:12px; }
+#eng .empty { color:var(--sous); }
+#eng .msg.warn { background:var(--warn-fond); border:1px solid var(--warn-bord); color:var(--orange); border-radius:6px; padding:10px 14px; margin-bottom:12px; }
 @media (min-width: 1000px) { #eng .two { display:grid; grid-template-columns:1fr 1fr; gap:16px; } }
 @media print { #eng .bar, #eng .toc { display:none; } }
 </style>
