@@ -3,9 +3,15 @@
 > **Sauvegardez les tarifs et paiements** avant et pendant la compétition : ils ne sont pas dans l'export de
 > compétition d'IANSEO. Voir [À lire avant d'utiliser le module](AVERTISSEMENT.md).
 
+Les captures d'écran viennent d'une compétition de démonstration : archers, clubs, licences et lieu sont fictifs.
+
 ## 1. Tarifs (Modules → Greffe → Tarifs)
 
 Une **règle** regroupe un libellé (« Jeunes », « Adultes »…), des divisions (armes), des classes (catégories), des clubs et une **grille de prix**.
+
+![Page Tarifs : deux règles (jeunes du club organisateur, jeunes) et l'aperçu qui calcule le prix d'un archer](img/tarifs-regles.png)
+
+*Les règles dans l'ordre où elles s'appliquent ; à droite, l'aperçu calcule le prix d'un archer avant l'enregistrement.*
 
 - **Divisions et classes :** si aucune case n'est cochée, la règle s'applique à toutes.
 - **Clubs :** tous les clubs (par défaut), le **club organisateur**, les **autres clubs**, ou des **clubs choisis**
@@ -20,9 +26,16 @@ Une **règle** regroupe un libellé (« Jeunes », « Adultes »…), des divisi
   défaut. Le bouton « Insérer la mention habituelle des associations » propose « Association loi 1901 — TVA non
   applicable, article 293 B du Code général des impôts » : ne l'utilisez que si elle s'applique à votre club.
 
+![Cadre « Reçus » de la page Tarifs : la mention en pied de reçu](img/tarifs-recus.png)
+
 ## 2. Paiements (Modules → Greffe → Paiements)
 
 Une ligne par archer, identifié par sa **licence** (un archer sans licence est repéré par son numéro d'inscription IANSEO). Le nombre de départs est le nombre d'inscriptions de cette licence dans la compétition.
+
+![Page Paiements : filtres, totaux, liste papier, règlement d'un club et liste des archers](img/paiements.png)
+
+*En haut, les filtres et les totaux de la sélection ; chaque ligne montre le montant dû, le statut et le bouton pour
+payer. BARBIER Nathan est en « Payé — écart » : un départ a été ajouté après son paiement.*
 
 - **Payer :** choisir le moyen (Espèces, Chèque, Carte bancaire, Virement, Exonéré), éventuellement une note, puis cliquer. Pour un chèque, la note sert au **numéro de chèque** : elle reste facultative, mais elle alimente l'état des chèques. Le paiement porte toujours sur la totalité du montant dû à cet instant.
 - **Annuler :** le compte repasse à « non payé ». Le paiement annulé reste dans l'historique.
@@ -46,6 +59,13 @@ Une ligne par archer, identifié par sa **licence** (un archer sans licence est 
   départ, déjà attendus à un départ précédent », pour ne pas le faire payer deux fois. La liste montre l'état au moment
   de l'édition : les paiements enregistrés ensuite n'y figurent pas.
 
+  ![Cadre « Liste papier du greffe » : départ, contenu, tri et bouton « Éditer la liste »](img/paiements-liste-papier.png)
+
+  ![Liste papier du départ 2 : archers à régler, total, puis rappel des archers déjà attendus au départ 1](img/liste-papier-depart.png)
+
+  *La feuille du départ 2 : six archers y règlent ; quatre autres, inscrits aussi au départ 1, sont rappelés en bas
+  avec ce qu'il leur restait à régler à l'impression.*
+
 Statuts possibles :
 
 | Statut | Signification |
@@ -62,6 +82,8 @@ Signalements ⚠ :
 - **« ne paie pas » coché sur une partie seulement des inscriptions.**
 
 ## 3. Rapport - Bilan (Modules → Greffe → Rapport - Bilan)
+
+![Page Rapport - Bilan : exports, synthèse, ventilations par moyen de paiement et par nombre de départs](img/rapport.png)
 
 - **Synthèse :** archers, inscriptions, total dû, encaissé, exonéré, reste à encaisser, et trop-perçu s'il y en a. On a toujours **dû = encaissé + exonéré + reste − trop-perçu**.
 - **Ventilations :** par moyen de paiement, par club, par règle, par nombre de départs et par départ (session).
@@ -83,11 +105,15 @@ Ce sont des **reçus, pas des factures** : il n'y a pas de numérotation légale
 
 La mention saisie sur la page Tarifs (cadre « Reçus ») s'imprime en bas de chacun.
 
+![Reçu d'inscription d'un archer réglé par chèque, avec la mention de reçu et le cadre pour le cachet](img/recu-archer.png)
+
 ## 5. Sauvegarde (Modules → Greffe → Sauvegarde)
 
 Les tarifs et paiements **ne sont pas dans l'export de compétition d'IANSEO** : cette page les met dans **deux
 fichiers `.json` séparés**, à garder avec l'export `.ianseo`, ou à importer sur un autre serveur (par exemple d'un
 serveur de test vers celui de la compétition).
+
+![Page Sauvegarde : téléchargement des tarifs et de l'historique des paiements](img/sauvegarde.png)
 
 - **Télécharger les tarifs :** règles, grilles, tarif de base, mention de reçu. Réutilisable d'une compétition à
   l'autre (mêmes tarifs chaque année, par exemple).
