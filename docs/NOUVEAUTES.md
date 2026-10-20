@@ -1,5 +1,15 @@
 # Nouveautés de chaque version
 
+## 1.3.3
+
+- **Liste papier du greffe** : la colonne « Pointage » est remplacée par une colonne par moyen de paiement (Espèces,
+  Chèque, CB, Virement, Exonéré), à cocher à la main. Un paiement déjà enregistré y figure par sa date, dans la
+  colonne de son moyen.
+- **Catégories** écrites classe puis arme, comme dans IANSEO : « S2HCL » au lieu de « CL S2H », partout dans le
+  module (page Paiements, Rapport - Bilan, exports CSV, reçus et récapitulatifs, liste papier). Le tri par catégorie
+  de la page Paiements suit donc la classe, puis l'arme.
+- **Liste papier du greffe** : en-têtes des colonnes centrés.
+
 ## 1.3.2
 
 - **Mise à jour du module sous Windows.** La mise à jour depuis IANSEO s'arrêtait sur « Écriture impossible :

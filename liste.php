@@ -9,9 +9,9 @@
  *   ?sort=club      tri par club puis nom (défaut : nom)
  *
  * Par départ, un archer figure au départ où il règle, son premier départ ; ses départs suivants
- * le rappellent dans un encadré « déjà attendu » (lib/report.php, eng_greffe_list). La colonne
- * « Pointage » reste vide pour noter le règlement à la main ; elle porte le moyen et la date d'un
- * paiement déjà enregistré.
+ * le rappellent dans un encadré « déjà attendu » (lib/report.php, eng_greffe_list). Une colonne
+ * par moyen de paiement, vide pour cocher le règlement à la main ; un paiement déjà enregistré y
+ * porte sa date, dans la colonne de son moyen.
  */
 define('ENG_ACCESS', 'read');
 require_once __DIR__ . '/lib/boot.php';
@@ -50,12 +50,18 @@ function eng_list_left(array $a)
     return $a['payment'] ? 'Réglé' : '—';
 }
 
-/** Pointage : vide si quelque chose reste dû, sinon le moyen et la date du paiement. */
+/**
+ * Colonnes des moyens de paiement : vides si quelque chose reste dû (à cocher à la main), sinon la
+ * date du paiement dans la colonne de son moyen.
+ */
 function eng_list_paid(array $a, array $methods)
 {
+    $cells = array_fill_keys(array_keys($methods), '');
     $p = $a['payment'];
-    if (!$p || eng_account_amounts($a)['left'] > 0 || $a['status'] === 'waived') return '';
-    return ($methods[$p['EpMethod']] ?? $p['EpMethod']) . ' ' . eng_local_time($p['EpCreated'], 'd/m');
+    if ($p && eng_account_amounts($a)['left'] <= 0 && isset($cells[$p['EpMethod']])) {
+        $cells[$p['EpMethod']] = eng_local_time($p['EpCreated'], 'd/m');
+    }
+    return array_values($cells);
 }
 
 $sections = eng_greffe_list($accounts, $scope, $only, $sort, $tour->Sessions);
@@ -83,7 +89,7 @@ foreach ($sections as $k => $sec) {
     } else {
         $rows = [];
         foreach ($sec['rows'] as $a) {
-            $rows[] = [
+            $rows[] = array_merge([
                 trim(mb_strtoupper($a['name']) . ' ' . $a['first']),
                 $a['code'],
                 trim($a['club_name'] . ($a['club_code'] !== '' ? ' (' . $a['club_code'] . ')' : '')),
@@ -91,13 +97,14 @@ foreach ($sections as $k => $sec) {
                 implode(' / ', $a['cats']),
                 eng_pdf_money($a['due']),
                 eng_list_left($a),
-                eng_list_paid($a, $methods),
-            ];
+            ], eng_list_paid($a, $methods));
         }
-        eng_pdf_table($pdf,
-            [['Archer', 25, 'L'], ['Licence', 10, 'L'], ['Club', 24, 'L'], ['Départ(s)', 8, 'C'], ['Catégorie', 12, 'L'],
-             ['Dû', 9, 'R'], ['Reste', 9, 'R'], ['Pointage', 16, 'L']],
-            $rows, ['Total', '', '', '', '', eng_pdf_money($sec['due']), eng_pdf_money($sec['left']), '']);
+        $cols = [['Archer', 22, 'L'], ['Licence', 10, 'L'], ['Club', 20, 'L'], ['Départ(s)', 8, 'C'], ['Catégorie', 11, 'L'],
+                 ['Dû', 9, 'R'], ['Reste', 9, 'R']];
+        $short = ['cb' => 'CB'];   // « Carte bancaire » ne tient pas dans une colonne étroite
+        foreach ($methods as $key => $label) $cols[] = [$short[$key] ?? $label, 8, 'C'];
+        eng_pdf_table($pdf, $cols, $rows,
+            array_merge(['Total', '', '', '', '', eng_pdf_money($sec['due']), eng_pdf_money($sec['left'])], array_fill(0, count($methods), '')), 'C');
     }
 
     if ($sec['also']) {
@@ -112,7 +119,7 @@ foreach ($sections as $k => $sec) {
                        trim($a['club_name'] . ($a['club_code'] !== '' ? ' (' . $a['club_code'] . ')' : '')),
                        'Départ ' . $x['first'], eng_list_left($a)];
         }
-        eng_pdf_table($pdf, [['Archer', 25, 'L'], ['Licence', 10, 'L'], ['Club', 24, 'L'], ['Attendu au', 12, 'L'], ['Reste', 12, 'R']], $rows);
+        eng_pdf_table($pdf, [['Archer', 25, 'L'], ['Licence', 10, 'L'], ['Club', 24, 'L'], ['Attendu au', 12, 'L'], ['Reste', 12, 'R']], $rows, null, 'C');
     }
 }
 

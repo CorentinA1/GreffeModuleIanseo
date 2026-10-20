@@ -47,8 +47,9 @@ payer. BARBIER Nathan est en « Payé — écart » : un départ a été ajouté
   date du paiement) ; un second clic inverse l'ordre. Le tri et les filtres restent en place après chaque paiement.
 - **Reçu / Récap. :** sous le montant de chaque archer, ce lien ouvre son reçu PDF.
 - **Liste papier du greffe (PDF)** : cadre « Liste papier du greffe », bouton « Éditer la liste ». Une ligne par archer :
-  licence, club, départ(s), catégorie, **montant dû**, **reste à régler** (ou « Réglé », « Exonéré »), et une colonne
-  **Pointage** vide pour noter le règlement à la main (elle indique le moyen et la date d'un paiement déjà enregistré).
+  licence, club, départ(s), catégorie (classe puis arme : « S2HCL »), **montant dû**, **reste à régler** (ou « Réglé », « Exonéré »), puis **une
+  colonne par moyen de paiement** (Espèces, Chèque, CB, Virement, Exonéré), vides pour cocher le règlement à la main.
+  Un paiement déjà enregistré y figure par sa date, dans la colonne de son moyen.
   Total en bas de chaque liste. Choix :
   - **Tous les départs confondus**, **Par départ** (une page par départ, puis les archers non placés) ou **un seul départ** ;
   - **Tous les archers** ou **seulement ceux qui doivent encore** ;

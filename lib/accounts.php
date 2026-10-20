@@ -77,7 +77,7 @@ function eng_reference_entry(array $entries)
  *               devient une clé entière ; utiliser $account['key']), triés par nom
  *               puis prénom. Chaque compte :
  *   key, code, name (nom de famille), first (prénom), club_id, club_code, club_name,
- *   entries (triées), n, sessions[], cats[] (« CL S1H » distincts), mixed,
+ *   entries (triées), n, sessions[], cats[] (« S1HCL » distincts), mixed,
  *   price (résultat eng_price), pays ('yes' | 'no' | 'partial'),
  *   due (tarif, y compris pour un exonéré), payment (ou null),
  *   status : unpaid | paid | diff | waived (paiement « exonere ») | exempt (EnPays = 0),
@@ -110,7 +110,7 @@ function eng_build_accounts(array $rows, array $payments, array $config)
         $cats = $sessions = [];
         $payN = 0;
         foreach ($entries as $e) {
-            $cat = trim($e['EnDivision']) . ' ' . trim($e['EnClass']);
+            $cat = trim($e['EnClass']) . trim($e['EnDivision']);   // « S2HCL » : classe puis arme, comme IANSEO
             if (!in_array($cat, $cats, true)) $cats[] = $cat;
             $sessions[] = intval($e['QuSession']);
             if (intval($e['EnPays']) === 1) $payN++;

@@ -260,7 +260,7 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
     </div>
 
     <form class="club print" method="get" action="<?= eng_h($ENG_ROOT . 'liste.php') ?>" target="_blank">
-        <b>Liste papier du greffe (PDF)</b> — les archers et ce qu'ils doivent, avec une colonne pour pointer à la main.<br><br>
+        <b>Liste papier du greffe (PDF)</b> — les archers et ce qu'ils doivent, avec une colonne par moyen de paiement pour pointer à la main.<br><br>
         <select name="depart">
             <option value="all">Tous les départs confondus</option>
             <option value="each">Par départ (une page par départ)</option>

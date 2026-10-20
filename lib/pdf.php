@@ -56,19 +56,21 @@ function eng_pdf_section(IanseoPdf $pdf, $title, $keep = 20)
  *                    texte contenant « \n » passe sur plusieurs lignes (et revient
  *                    à la ligne s'il est trop long) : la ligne entière s'agrandit.
  * @param array|null $total Ligne de total, en gras (facultative).
+ * @param string|null $headAlign Alignement des en-têtes ('C' : centrés) ; par défaut, celui de la
+ *                               colonne (à droite pour 'R', sinon à gauche).
  */
-function eng_pdf_table(IanseoPdf $pdf, array $cols, array $rows, $total = null)
+function eng_pdf_table(IanseoPdf $pdf, array $cols, array $rows, $total = null, $headAlign = null)
 {
     $w = eng_pdf_width($pdf);
     $sum = array_sum(array_column($cols, 1));
     $widths = array_map(function ($c) use ($w, $sum) { return $w * $c[1] / $sum; }, $cols);
 
-    $head = function () use ($pdf, $cols, $widths) {
+    $head = function () use ($pdf, $cols, $widths, $headAlign) {
         $pdf->SetFont($pdf->FontStd, 'B', 8);
         $pdf->SetFillColor(2, 84, 168);
         $pdf->SetTextColor(255, 255, 255);
         foreach ($cols as $i => $c) {
-            $pdf->Cell($widths[$i], 6, $c[0], 1, 0, $c[2] === 'R' ? 'R' : 'L', 1);
+            $pdf->Cell($widths[$i], 6, $c[0], 1, 0, $headAlign ?? ($c[2] === 'R' ? 'R' : 'L'), 1);
         }
         $pdf->Ln();
         $pdf->SetTextColor(0, 0, 0);
