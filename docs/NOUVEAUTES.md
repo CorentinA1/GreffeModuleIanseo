@@ -1,5 +1,12 @@
 # Nouveautés de chaque version
 
+## 1.3.2
+
+- **Mise à jour du module sous Windows.** La mise à jour depuis IANSEO s'arrêtait sur « Écriture impossible :
+  admin/update.php » : Windows refuse de remplacer la page en cours d'affichage. Le module écrit maintenant
+  directement dans ce fichier. Pour passer à cette version depuis une version précédente sous Windows, une seule
+  fois : décompresser le ZIP de la Release dans `Modules/Custom` en écrasant les fichiers ; les tarifs et paiements, en base, sont gardés.
+
 ## 1.3.1
 
 - **Liste papier du greffe** (page Paiements, bouton « Éditer la liste ») : PDF des archers avec le montant dû, le reste

@@ -247,8 +247,12 @@ function eng_upd_apply($dir, $force = false)
             return ['ok' => false, 'files' => $n, 'message' => 'Dossier impossible à créer : ' . dirname($rel) . ' (droits d\'écriture ?).'];
         }
         $tmp = $dest . '.tmp-' . bin2hex(random_bytes(4));
-        if (@file_put_contents($tmp, $content[$rel]) === false || !@rename($tmp, $dest)) {
-            @unlink($tmp);
+        // Windows refuse de remplacer par renommage un fichier ouvert, dont la page qui fait la mise à
+        // jour (admin/update.php) : on écrit alors directement dans le fichier.
+        $written = @file_put_contents($tmp, $content[$rel]) !== false
+            && (@rename($tmp, $dest) || @file_put_contents($dest, $content[$rel]) !== false);
+        if (is_file($tmp)) @unlink($tmp);
+        if (!$written) {
             return ['ok' => false, 'files' => $n, 'message' => 'Écriture impossible : ' . $rel . ' (droits d\'écriture sur le dossier du module ?). '
                 . $n . ' fichier(s) déjà remplacé(s) : relancez la mise à jour.'];
         }

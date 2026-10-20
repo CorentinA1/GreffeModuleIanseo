@@ -1,6 +1,6 @@
 # Greffe — frais d'inscription pour IANSEO
 
-**Version 1.3.1**
+**Version 1.3.2**
 
 Module IANSEO pour gérer les frais d'inscription d'une compétition :
 - **Tarifs** : les prix, selon la catégorie de l'archer, son club et son nombre de départs ;
