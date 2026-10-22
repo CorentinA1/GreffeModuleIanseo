@@ -1,5 +1,13 @@
 # Nouveautés de chaque version
 
+## 1.3.4
+
+- **Guide utilisateur illustré (PDF)** dans `docs/GUIDE-UTILISATEUR.pdf` : tarifs, paiements, liste papier, reçus,
+  rapport, sauvegarde et questions fréquentes, avec des captures sur une compétition fictive. Le lien **Mode d'emploi**
+  des onglets l'ouvre directement.
+- **Avertissement plus discret** : une ligne en pied de chaque page (module indépendant, sans garantie ; sauvegarder
+  les tarifs et paiements) remplace les deux bandeaux du haut de la page Tarifs.
+
 ## 1.3.3
 
 - **Liste papier du greffe** : la colonne « Pointage » est remplacée par une colonne par moyen de paiement (Espèces,

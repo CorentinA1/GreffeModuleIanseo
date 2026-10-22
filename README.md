@@ -1,6 +1,6 @@
 # Greffe — frais d'inscription pour IANSEO
 
-**Version 1.3.3**
+**Version 1.3.4**
 
 Module IANSEO pour gérer les frais d'inscription d'une compétition :
 - **Tarifs** : les prix, selon la catégorie de l'archer, son club et son nombre de départs ;
@@ -24,6 +24,7 @@ Le dossier s'appelle `ENGAGEMENT`, mais le module s'affiche sous le nom **Greffe
 
 ## Documentation
 
+- **[Guide utilisateur (PDF)](docs/GUIDE-UTILISATEUR.pdf)** : le mode d'emploi illustré, à lire ou à imprimer ; aussi dans le module, lien « Mode d'emploi »
 - [À lire avant d'utiliser le module](docs/AVERTISSEMENT.md) : module indépendant, sauvegardes, licences
 - [Installation, mise à jour et désinstallation](docs/INSTALLATION.md)
 - [Utilisation](docs/UTILISATION.md) : tarifs, paiements, rapport et bilan, reçus, sauvegarde, droits d'accès

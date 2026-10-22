@@ -353,6 +353,7 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
         </tbody>
     </table>
     <?php endif; ?>
+    <?= eng_footer() ?>
 </div>
 
 <script>

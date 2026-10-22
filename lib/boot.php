@@ -198,11 +198,29 @@ function eng_nav($current)
                   background:var(--carte); font-weight:600; font-size:13px; text-decoration:none; }
 #eng .eng-nav a:hover { background:var(--bleu-clair); }
 #eng .eng-nav a.on { background:var(--bleu); color:var(--sur-bleu); cursor:default; }
+#eng .eng-nav a.eng-help { border:none; background:none; font-weight:400; text-decoration:underline; }
+#eng .eng-foot { margin-top:22px; padding-top:8px; border-top:1px solid var(--input-border); color:var(--text-muted); font-size:12px; }
 </style><div class="eng-head"><h2>Greffe</h2><nav class="eng-nav">';
     foreach ($pages as $key => $p) {
         if (!$p[1]) continue;
         $h .= '<a href="' . eng_h($ENG_ROOT . $key . '.php') . '"' . ($key === $current ? ' class="on" aria-current="page"' : '')
             . '>' . eng_h($p[0]) . '</a>';
     }
+    $h .= '<a class="eng-help" href="' . eng_h($ENG_ROOT . 'docs/GUIDE-UTILISATEUR.pdf') . '" target="_blank" rel="noopener">Mode d\'emploi</a>';
     return $h . '</nav></div>';
+}
+
+/**
+ * Pied de page commun : l'avertissement, sur une ligne discrète (même présentation que les autres modules).
+ *
+ * @return string HTML, à placer à la fin du conteneur #eng.
+ */
+function eng_footer()
+{
+    global $ENG_ROOT;
+    $write = hasFullACL(AclParticipants, 'pEntries', AclReadWrite);
+    return '<p class="eng-foot">Module indépendant d\'IANSEO, sans garantie ni SAV : vérifiez les montants. <b>Sauvegardez les tarifs et paiements</b>'
+        . ($write ? ' (<a href="' . eng_h($ENG_ROOT . 'sauvegarde.php') . '">page Sauvegarde</a>)' : '')
+        . ' : ils ne sont pas dans l\'export de la compétition. '
+        . '<a href="https://github.com/CorentinA1/GreffeModuleIanseo/blob/main/docs/AVERTISSEMENT.md" target="_blank" rel="noopener">À lire avant d\'utiliser le module</a></p>';
 }

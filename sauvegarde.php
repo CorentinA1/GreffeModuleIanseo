@@ -310,6 +310,7 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
         </div>
     </div>
     <?php endif; ?>
+    <?= eng_footer() ?>
 </div>
 
 <script>

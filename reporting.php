@@ -436,5 +436,6 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
         if (!in_array($sec['id'], ['synthese', 'moyens', 'departs', 'clubs', 'regles', 'sessions'], true)) $render($sec);
     }
     ?>
+    <?= eng_footer() ?>
 </div>
 <?php include($CFG->DOCUMENT_PATH . 'Common/Templates/tail.php'); ?>

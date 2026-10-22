@@ -5,6 +5,9 @@
 
 Les captures d'écran viennent d'une compétition de démonstration : archers, clubs, licences et lieu sont fictifs.
 
+> Version illustrée, à lire ou à imprimer : le [guide utilisateur (PDF)](GUIDE-UTILISATEUR.pdf), ouvert aussi par le
+> lien **Mode d'emploi** du module.
+
 ## 1. Tarifs (Modules → Greffe → Tarifs)
 
 Une **règle** regroupe un libellé (« Jeunes », « Adultes »…), des divisions (armes), des classes (catégories), des clubs et une **grille de prix**.
