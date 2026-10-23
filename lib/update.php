@@ -186,6 +186,8 @@ function eng_upd_check($dir)
 {
     $local = eng_upd_local($dir);
     $remote = eng_upd_remote(eng_upd_config($dir));
+    // La page de mise à jour vient d'interroger GitHub : la pastille du menu suit tout de suite.
+    eng_upd_notify_save($dir, isset($remote['_error']) ? null : $remote['version']);
     $lv = $local['version'] ?? null;
     if (isset($remote['_error'])) {
         return ['local' => $lv, 'remote' => null, 'notes' => '', 'date' => '', 'update' => false,
@@ -200,6 +202,83 @@ function eng_upd_check($dir)
         'dev'    => is_dir($dir . '/.git'),
         'error'  => null,
     ];
+}
+
+// ── Pastille « mise à jour disponible » du menu ──────────────────────────────
+//
+// menu.php est inclus par IANSEO sur chaque page : il ne doit jamais interroger GitHub
+// (sans Internet, chaque page attendrait la fin du délai). Il lit seulement le fichier
+// gardé ici, dans le dossier temporaire du serveur (toujours accessible en écriture).
+// Ce fichier est rafraîchi en arrière-plan par admin/update-check.php, appelé au plus
+// une fois par jour par une image invisible du menu (administrateur seulement), et par
+// la page de mise à jour à chaque vérification.
+
+/** Délais avant la vérification suivante : réussie, échouée (hors ligne), en cours. */
+const ENG_NOTIFY_OK = 86400;
+const ENG_NOTIFY_FAIL = 3600;
+const ENG_NOTIFY_BUSY = 600;
+
+/** Fichier de l'état gardé, propre à ce dossier de module (même calcul que menu.php). */
+function eng_upd_notify_file($dir)
+{
+    $real = realpath($dir);
+    return sys_get_temp_dir() . '/ianseo-maj-' . md5($real !== false ? $real : $dir) . '.json';
+}
+
+/** État gardé : ['latest' => version|null, 'checked' => horodatage, 'next' => horodatage], ou null. */
+function eng_upd_notify_read($dir)
+{
+    $f = eng_upd_notify_file($dir);
+    $d = is_file($f) ? json_decode((string) @file_get_contents($f), true) : null;
+    return is_array($d) ? $d : null;
+}
+
+/**
+ * Garde le résultat d'une vérification. Échec (hors ligne) : la dernière version connue
+ * est gardée et la vérification sera retentée plus tôt.
+ *
+ * @param string|null $latest Version du dépôt, ou null si GitHub n'a pas répondu.
+ */
+function eng_upd_notify_save($dir, $latest, $busy = false)
+{
+    $old = eng_upd_notify_read($dir);
+    $ok = $latest !== null && preg_match('/^\d+\.\d+\.\d+$/', (string) $latest);
+    $now = time();
+    $state = [
+        'latest' => $ok ? (string) $latest : ($old['latest'] ?? null),
+        'checked' => $busy ? ($old['checked'] ?? 0) : $now,
+        'next' => $now + ($busy ? ENG_NOTIFY_BUSY : ($ok ? ENG_NOTIFY_OK : ENG_NOTIFY_FAIL)),
+    ];
+    $f = eng_upd_notify_file($dir);
+    $tmp = $f . '.' . bin2hex(random_bytes(4));
+    if (@file_put_contents($tmp, json_encode($state)) === false || !@rename($tmp, $f)) {
+        @unlink($tmp);
+        @file_put_contents($f, json_encode($state));   // Windows : renommage refusé si le fichier est ouvert
+    }
+    return $state;
+}
+
+/** Faut-il vérifier maintenant ? (fichier absent, ou délai écoulé) */
+function eng_upd_notify_due($dir, $now = null)
+{
+    $s = eng_upd_notify_read($dir);
+    return !$s || ($now ?? time()) >= (int) ($s['next'] ?? 0);
+}
+
+/**
+ * Vérification en arrière-plan, si le délai est écoulé. Marque d'abord « en cours » :
+ * plusieurs pages ouvertes en même temps ne lancent qu'une vérification.
+ *
+ * @return array|null Nouvel état, ou null si rien à faire.
+ */
+function eng_upd_notify_refresh($dir)
+{
+    if (!eng_upd_notify_due($dir)) return null;
+    eng_upd_notify_save($dir, null, true);
+    $remote = eng_upd_remote(eng_upd_config($dir));
+    // La page de mise à jour vient d'interroger GitHub : la pastille du menu suit tout de suite.
+    eng_upd_notify_save($dir, isset($remote['_error']) ? null : $remote['version']);
+    return eng_upd_notify_save($dir, isset($remote['_error']) ? null : $remote['version']);
 }
 
 /**

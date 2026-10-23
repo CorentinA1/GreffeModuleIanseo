@@ -38,6 +38,12 @@ Ouvrir une compétition dans IANSEO : le menu **Modules → Greffe** apparaît. 
 
 ## Mise à jour
 
+**Pastille dans le menu** (administrateur) : quand une version plus récente est publiée, un point rouge apparaît sur
+le titre **Modules** et sur le nom du module, et une pastille rouge **⬆** sur « Mise à jour du module » ; au survol, une
+bulle donne la version installée et la version disponible. La vérification se fait en arrière-plan, sans ralentir les
+pages, au plus une fois par jour (une heure après un échec) ; ouvrir la page de mise à jour vérifie tout de suite. Sans
+Internet, pas de pastille : la dernière information connue est gardée.
+
 **Depuis IANSEO** (à partir de la version 1.1.0) : **Modules → Greffe → Mise à jour du module**, réservé à l'administrateur.
 1. **Vérifier les mises à jour** compare la version installée à celle de GitHub et affiche les nouveautés.
 2. **Mettre à jour** télécharge et remplace les fichiers du module. Tous les fichiers sont récupérés avant d'en remplacer un seul : en cas d'échec, rien n'est modifié.
