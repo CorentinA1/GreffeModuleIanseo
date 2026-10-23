@@ -333,7 +333,7 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
     --vert:color-mix(in srgb, var(--text-success) 60%, var(--black)); --ok-fond:color-mix(in srgb, var(--text-success) 14%, var(--row-background)); --ok-bord:color-mix(in srgb, var(--text-success) 45%, var(--row-background));
     --rouge:color-mix(in srgb, var(--text-danger) 70%, var(--black)); --err-fond:color-mix(in srgb, var(--text-danger) 14%, var(--row-background)); --err-bord:color-mix(in srgb, var(--text-danger) 45%, var(--row-background));
     --orange:color-mix(in srgb, var(--text-warning) 50%, var(--black)); --warn-fond:color-mix(in srgb, var(--text-warning) 16%, var(--row-background)); --warn-bord:color-mix(in srgb, var(--text-warning) 55%, var(--row-background));
-    color:var(--gris); font-size:13px; max-width:1100px; }
+    color:var(--gris); font-size:13px; max-width:1100px; margin:0 auto; }
 #eng .bar { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:14px; }
 #eng .bar a { display:inline-block; background:var(--carte); border:1px solid var(--bleu); color:var(--lien); font-weight:600;
               padding:6px 14px; border-radius:6px; text-decoration:none; }

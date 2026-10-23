@@ -173,7 +173,7 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
     --vert:color-mix(in srgb, var(--text-success) 60%, var(--black)); --ok-fond:color-mix(in srgb, var(--text-success) 14%, var(--row-background)); --ok-bord:color-mix(in srgb, var(--text-success) 45%, var(--row-background));
     --rouge:color-mix(in srgb, var(--text-danger) 70%, var(--black)); --err-fond:color-mix(in srgb, var(--text-danger) 14%, var(--row-background)); --err-bord:color-mix(in srgb, var(--text-danger) 45%, var(--row-background));
     --orange:color-mix(in srgb, var(--text-warning) 50%, var(--black)); --warn-fond:color-mix(in srgb, var(--text-warning) 16%, var(--row-background)); --warn-bord:color-mix(in srgb, var(--text-warning) 55%, var(--row-background));
-       max-width:980px;
+       max-width:980px; margin:0 auto;
        color:var(--gris); font-size:13px; }
 #eng .card { border:1px solid var(--bord); border-radius:6px; background:var(--carte);
              box-shadow:0 1px 3px rgba(0,0,0,.08); margin-bottom:16px; }

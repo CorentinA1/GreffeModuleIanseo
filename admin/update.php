@@ -55,7 +55,7 @@ include $CFG->DOCUMENT_PATH . 'Common/Templates/head.php';
     --rouge:color-mix(in srgb, var(--text-danger) 70%, var(--black)); --err-fond:color-mix(in srgb, var(--text-danger) 14%, var(--row-background)); --err-bord:color-mix(in srgb, var(--text-danger) 45%, var(--row-background));
     --orange:color-mix(in srgb, var(--text-warning) 50%, var(--black)); --warn-fond:color-mix(in srgb, var(--text-warning) 16%, var(--row-background)); --warn-bord:color-mix(in srgb, var(--text-warning) 55%, var(--row-background));
 }
-#eng-upd { max-width:760px; color:var(--gris); font-size:13px; }
+#eng-upd { max-width:760px; margin:0 auto; color:var(--gris); font-size:13px; }
 #eng-upd h2 { color:var(--bleu-fonce); font-size:18px; margin:6px 0 14px; }
 #eng-upd .card { border:1px solid var(--bord); border-radius:6px; background:var(--carte); padding:14px 16px; margin-bottom:14px; }
 #eng-upd .card h3 { margin:0 0 10px; font-size:14px; color:var(--bleu-fonce); }

@@ -200,6 +200,7 @@ function eng_nav($current)
 #eng .eng-nav a.on { background:var(--bleu); color:var(--sur-bleu); cursor:default; }
 #eng .eng-nav a.eng-help { border:none; background:none; font-weight:400; text-decoration:underline; }
 #eng .eng-foot { margin-top:22px; padding-top:8px; border-top:1px solid var(--input-border); color:var(--text-muted); font-size:12px; }
+@media (max-width:760px) { #eng table { display:block; overflow-x:auto; } }
 </style><div class="eng-head"><h2>Greffe</h2><nav class="eng-nav">';
     foreach ($pages as $key => $p) {
         if (!$p[1]) continue;

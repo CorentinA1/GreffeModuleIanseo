@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'unins
         $gone = eng_uns_rrmdir($target);
         $PAGE_TITLE = 'Greffe - Désinstallation';
         include $CFG->DOCUMENT_PATH . 'Common/Templates/head.php';
-        echo '<div style="max-width:700px;font-size:13px;margin:10px">';
+        echo '<div style="max-width:700px;font-size:13px;margin:10px auto">';
         echo $gone
             ? '<h2 style="color:var(--vert)">Greffe est désinstallé.</h2><p>Le dossier du module a été supprimé.</p>'
             : '<h2 style="color:var(--rouge)">Suppression incomplète</h2><p>Supprimez à la main le dossier <code>' . $h($target) . '</code>.</p>';
@@ -87,7 +87,7 @@ include $CFG->DOCUMENT_PATH . 'Common/Templates/head.php';
     --rouge:color-mix(in srgb, var(--text-danger) 70%, var(--black)); --err-fond:color-mix(in srgb, var(--text-danger) 14%, var(--row-background)); --err-bord:color-mix(in srgb, var(--text-danger) 45%, var(--row-background));
     --orange:color-mix(in srgb, var(--text-warning) 50%, var(--black)); --warn-fond:color-mix(in srgb, var(--text-warning) 16%, var(--row-background)); --warn-bord:color-mix(in srgb, var(--text-warning) 55%, var(--row-background));
 }
-#eng-uns { max-width:760px; color:var(--gris); font-size:13px; }
+#eng-uns { max-width:760px; margin:0 auto; color:var(--gris); font-size:13px; }
 #eng-uns h2 { color:var(--rouge); font-size:18px; margin:6px 0 14px; }
 #eng-uns .box { border:1px solid var(--err-bord); background:var(--err-fond); border-radius:8px; padding:16px 20px; margin-bottom:14px; }
 #eng-uns ul { margin:6px 0 12px; padding-left:20px; line-height:1.8; }

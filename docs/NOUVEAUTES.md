@@ -1,5 +1,9 @@
 # Nouveautés de chaque version
 
+## 1.4.1
+
+- Pages centrées à l'écran et adaptées aux petits écrans (tableaux larges défilants), sans changement de présentation ni de fonctionnement.
+
 ## 1.4.0
 
 - **Pastille « mise à jour disponible » dans le menu** (administrateur) : un point rouge sur le titre **Modules** et sur
