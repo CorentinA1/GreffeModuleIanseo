@@ -36,14 +36,14 @@ if (!empty($on) && !empty($_SESSION['TourId'])
         if ($grHave !== '' && preg_match('/^\d+\.\d+\.\d+$/', $grLatest) && version_compare($grLatest, $grHave, '>')) {
             $grTip = htmlspecialchars('Mise à jour disponible : ' . $grHave . ' → ' . $grLatest, ENT_QUOTES, 'UTF-8');
             $grMaj = '<span class="maj-dot" title="' . $grTip . '" style="display:inline-block;min-width:15px;height:15px;line-height:15px;padding:0 3px;border-radius:8px;'
-                . 'background:var(--text-danger,#d6283a);color:#fff;font-size:10px;font-weight:bold;text-align:center;margin-left:6px;vertical-align:middle">⬆</span>';
+                . 'background:#f08c00;background:color-mix(in srgb,var(--text-warning,#ffc107) 60%,var(--text-danger,#dc3545));color:#fff;font-size:10px;font-weight:bold;text-align:center;margin-left:6px;vertical-align:middle">⬆</span>';
             $grDot = '<span class="maj-dot" title="' . $grTip . '" style="display:inline-block;width:8px;height:8px;border-radius:50%;'
-                . 'background:var(--text-danger,#d6283a);margin-left:5px;vertical-align:middle"></span>';
+                . 'background:#f08c00;background:color-mix(in srgb,var(--text-warning,#ffc107) 60%,var(--text-danger,#dc3545));margin-left:5px;vertical-align:middle"></span>';
             $ret['MODS']['Greffe'][0] .= $grDot;
             // Titre « Modules » de la barre : un seul point, quel que soit le nombre de modules concernés.
             if (isset($ret['MODS'][0]) && strpos($ret['MODS'][0], 'maj-dot') === false) {
                 $ret['MODS'][0] .= '<span class="maj-dot" title="Mise à jour disponible pour un module" style="display:inline-block;width:8px;height:8px;border-radius:50%;'
-                    . 'background:var(--text-danger,#d6283a);margin-left:4px;vertical-align:super"></span>';
+                    . 'background:#f08c00;background:color-mix(in srgb,var(--text-warning,#ffc107) 60%,var(--text-danger,#dc3545));margin-left:4px;vertical-align:super"></span>';
             }
         }
         if (!is_array($grState) || time() >= (int) ($grState['next'] ?? 0)) {

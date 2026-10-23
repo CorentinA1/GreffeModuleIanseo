@@ -1,5 +1,11 @@
 # Nouveautés de chaque version
 
+## 1.4.2
+
+- **Pastille de mise à jour orange**, moins alarmante que le rouge.
+- **Bouton « Mettre à jour » affiché d'office** : quand la pastille est là, la page « Mise à jour du module » vérifie
+  d'elle-même la version disponible à l'ouverture et montre ses nouveautés et le bouton, sans cliquer sur « Vérifier ».
+
 ## 1.4.1
 
 - Pages centrées à l'écran et adaptées aux petits écrans (tableaux larges défilants), sans changement de présentation ni de fonctionnement.
