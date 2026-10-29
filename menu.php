@@ -14,6 +14,7 @@ if (!empty($on) && !empty($_SESSION['TourId'])
         $ret['MODS']['Greffe'][] = 'Tarifs|' . $CFG->ROOT_DIR . 'Modules/Custom/ENGAGEMENT/tarifs.php';
         $ret['MODS']['Greffe'][] = 'Paiements|' . $CFG->ROOT_DIR . 'Modules/Custom/ENGAGEMENT/paiements.php';
     }
+    $ret['MODS']['Greffe'][] = 'Éditions|' . $CFG->ROOT_DIR . 'Modules/Custom/ENGAGEMENT/editions.php';
     $ret['MODS']['Greffe'][] = 'Rapport - Bilan|' . $CFG->ROOT_DIR . 'Modules/Custom/ENGAGEMENT/reporting.php';
     if (subFeatureAcl($acl, AclParticipants, 'pEntries') >= AclReadWrite) {
         $ret['MODS']['Greffe'][] = 'Sauvegarde|' . $CFG->ROOT_DIR . 'Modules/Custom/ENGAGEMENT/sauvegarde.php';

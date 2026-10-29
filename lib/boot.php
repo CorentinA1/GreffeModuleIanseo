@@ -175,9 +175,13 @@ function eng_db_now()
  * En-tête commun des pages : « GREFFE » suivi des onglets de navigation.
  *
  * Les onglets suivent les droits : Tarifs, Paiements et Sauvegarde demandent
- * l'écriture sur les participants, Reporting la lecture (comme menu.php).
+ * l'écriture sur les participants, Éditions et Reporting la lecture (comme menu.php).
  *
- * @param string $current Page affichée : 'tarifs' | 'paiements' | 'reporting' | 'sauvegarde'.
+ * L'en-tête occupe une bande de 980 px centrée, quelle que soit la largeur du contenu de la page
+ * (Paiements : toute la largeur, Rapport : 1100 px) : les onglets restent à la même place d'une page
+ * à l'autre. La place de la barre de défilement est réservée pour la même raison.
+ *
+ * @param string $current Page affichée : 'tarifs' | 'paiements' | 'editions' | 'reporting' | 'sauvegarde'.
  * @return string HTML (styles compris), à placer en tête du conteneur #eng.
  */
 function eng_nav($current)
@@ -187,11 +191,14 @@ function eng_nav($current)
     $pages = [
         'tarifs'    => ['Tarifs', $write],
         'paiements' => ['Paiements', $write],
+        'editions'  => ['Éditions', true],
         'reporting' => ['Rapport - Bilan', true],
         'sauvegarde' => ['Sauvegarde', $write],
     ];
     $h = '<style>
-#eng .eng-head { display:flex; flex-wrap:wrap; align-items:center; gap:6px 18px; margin:6px 0 14px; }
+html { scrollbar-gutter:stable; }
+#eng .eng-head { display:flex; flex-wrap:wrap; align-items:center; gap:6px 18px; box-sizing:border-box;
+                 width:min(980px, 100%); margin:6px auto 14px; }
 #eng .eng-head h2 { margin:0; color:var(--bleu-fonce); font-size:18px; }
 #eng .eng-nav { display:flex; gap:4px; flex-wrap:wrap; }
 #eng .eng-nav a { padding:5px 14px; border-radius:16px; border:1px solid var(--bleu); color:var(--lien);

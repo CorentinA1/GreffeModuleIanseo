@@ -35,7 +35,7 @@ Une **règle** regroupe un libellé (« Jeunes », « Adultes »…), des divisi
 
 Une ligne par archer, identifié par sa **licence** (un archer sans licence est repéré par son numéro d'inscription IANSEO). Le nombre de départs est le nombre d'inscriptions de cette licence dans la compétition.
 
-![Page Paiements : filtres, totaux, liste papier, règlement d'un club et liste des archers](img/paiements.png)
+![Page Paiements : filtres, totaux, lien vers les éditions, règlement d'un club et liste des archers](img/paiements.png)
 
 *En haut, les filtres et les totaux de la sélection ; chaque ligne montre le montant dû, le statut et le bouton pour
 payer. BARBIER Nathan est en « Payé — écart » : un départ a été ajouté après son paiement.*
@@ -49,46 +49,7 @@ payer. BARBIER Nathan est en « Payé — écart » : un départ a été ajouté
 - **Tri :** un clic sur l'en-tête d'une colonne trie la liste (archer, club, départ, catégorie, règle, dû, statut,
   date du paiement) ; un second clic inverse l'ordre. Le tri et les filtres restent en place après chaque paiement.
 - **Reçu / Récap. :** sous le montant de chaque archer, ce lien ouvre son reçu PDF.
-- **Liste papier du greffe (PDF)** : cadre « Liste papier du greffe », bouton « Éditer la liste ». Une ligne par archer :
-  licence, club, départ(s), catégorie (classe puis arme : « S2HCL »), **montant dû**, **reste à régler** (ou « Réglé », « Exonéré »), puis **une
-  colonne par moyen de paiement** (Espèces, Chèque, CB, Virement, Exonéré), vides pour cocher le règlement à la main.
-  Un paiement déjà enregistré y figure par sa date, dans la colonne de son moyen.
-  Total en bas de chaque liste. Choix :
-  - **Tous les départs confondus**, **Par départ** (une page par départ, puis les archers non placés) ou **un seul départ** ;
-  - **Tous les archers** ou **seulement ceux qui doivent encore** ;
-  - **tri par nom** ou **par club**.
-
-  **Par départ, chaque archer figure au départ où il règle : son premier départ.** Les totaux des départs
-  s'additionnent donc sans doublon. Sur la feuille de ses départs suivants, il est rappelé dans un encadré « Aussi à ce
-  départ, déjà attendus à un départ précédent », pour ne pas le faire payer deux fois. La liste montre l'état au moment
-  de l'édition : les paiements enregistrés ensuite n'y figurent pas.
-
-  ![Cadre « Liste papier du greffe » : départ, contenu, tri et bouton « Éditer la liste »](img/paiements-liste-papier.png)
-
-  ![Liste papier du départ 2 : archers à régler, total, puis rappel des archers déjà attendus au départ 1](img/liste-papier-depart.png)
-
-  *La feuille du départ 2 : six archers y règlent ; quatre autres, inscrits aussi au départ 1, sont rappelés en bas
-  avec ce qu'il leur restait à régler à l'impression.*
-
-- **Plan de cible avec blasons (PDF)** : cadre sous la liste papier, bouton « Éditer le plan », pour tous les départs
-  ou un seul. C'est le plan de cible d'IANSEO (Participants › Impressions › par cible « + Type de cible »), mais le
-  blason de chaque archer y est écrit en code court, d'après le blason à poser sur la butte :
-
-  | Code | Blason |
-  |---|---|
-  | 40, 60, 80, 122 | blason unique de ce diamètre (salle ou extérieur) |
-  | T40 (CL), T60 (CL) | trispot classique |
-  | T40 (CO) | trispot poulie |
-  | 80 (CO) | blason extérieur poulies |
-
-  Un autre type de blason garde son libellé. La légende, en fin de document, donne les libellés IANSEO derrière
-  chaque code : deux blasons identiques sur la butte (« Blason Unique 60cm » et « … Néo-licenciés ») ont le même code.
-
-  ![Cadre « Plan de cible avec blasons » : départ et bouton « Éditer le plan »](img/paiements-plan-blasons.png)
-
-  ![Plan de cible du départ 1 d'un concours extérieur, blasons en code court](img/plan-blasons.png)
-
-  *Le départ 1 d'un concours extérieur : 80 pour les jeunes, 122, et 80 (CO) pour les poulies.*
+- **Éditions :** une ligne sous les totaux mène à l'onglet **Éditions** (liste papier, plan de cible, récapitulatifs de clubs), avec le départ filtré déjà choisi.
 
 Statuts possibles :
 
@@ -105,7 +66,56 @@ Signalements ⚠ :
 - **grille plus courte que le nombre de départs :** le dernier prix saisi s'applique ;
 - **« ne paie pas » coché sur une partie seulement des inscriptions.**
 
-## 3. Rapport - Bilan (Modules → Greffe → Rapport - Bilan)
+## 3. Éditions (Modules → Greffe → Éditions)
+
+Toutes les éditions PDF du module sur une page, rangées par moment du concours. Accessible en **lecture** :
+un bénévole qui n'a que la lecture sur les participants peut imprimer.
+
+![Page Éditions : à la table de greffe, pour les clubs, après le concours](img/editions.png)
+
+- **Liste papier du greffe** (à la table de greffe), bouton « Éditer la liste ». Une ligne par archer :
+  licence, club, départ(s), catégorie (classe puis arme : « S2HCL »), **montant dû**, **reste à régler** (ou « Réglé », « Exonéré »), puis **une
+  colonne par moyen de paiement** (Espèces, Chèque, CB, Virement, Exonéré), vides pour cocher le règlement à la main.
+  Un paiement déjà enregistré y figure par sa date, dans la colonne de son moyen.
+  Total en bas de chaque liste. Choix :
+  - **Tous les départs confondus**, **Par départ** (une page par départ, puis les archers non placés) ou **un seul départ** ;
+  - **Tous les archers** ou **seulement ceux qui doivent encore** ;
+  - **tri par nom** ou **par club**.
+
+  **Par départ, chaque archer figure au départ où il règle : son premier départ.** Les totaux des départs
+  s'additionnent donc sans doublon. Sur la feuille de ses départs suivants, il est rappelé dans un encadré « Aussi à ce
+  départ, déjà attendus à un départ précédent », pour ne pas le faire payer deux fois. La liste montre l'état au moment
+  de l'édition : les paiements enregistrés ensuite n'y figurent pas.
+
+
+  ![Liste papier du départ 2 : archers à régler, total, puis rappel des archers déjà attendus au départ 1](img/liste-papier-depart.png)
+
+  *La feuille du départ 2 : six archers y règlent ; quatre autres, inscrits aussi au départ 1, sont rappelés en bas
+  avec ce qu'il leur restait à régler à l'impression.*
+
+- **Plan de cible avec blasons** (à la table de greffe), bouton « Éditer le plan », pour tous les départs ou un seul. C'est le plan de cible d'IANSEO (Participants › Impressions › par cible « + Type de cible »), mais le
+  blason de chaque archer y est écrit en code court, d'après le blason à poser sur la butte :
+
+  | Code | Blason |
+  |---|---|
+  | 40, 60, 80, 122 | blason unique de ce diamètre (salle ou extérieur) |
+  | T40 (CL), T60 (CL) | trispot classique |
+  | T40 (CO) | trispot poulie |
+  | 80 (CO) | blason extérieur poulies |
+
+  Un autre type de blason garde son libellé. La légende, en fin de document, donne les libellés IANSEO derrière
+  chaque code : deux blasons identiques sur la butte (« Blason Unique 60cm » et « … Néo-licenciés ») ont le même code.
+
+
+  ![Plan de cible du départ 1 d'un concours extérieur, blasons en code court](img/plan-blasons.png)
+
+  *Le départ 1 d'un concours extérieur : 80 pour les jeunes, 122, et 80 (CO) pour les poulies.*
+
+- **Récapitulatif d'un club** (pour les clubs) : le club se choisit dans la liste ; **Récapitulatifs de tous les clubs** : un par club, dans un seul PDF.
+- **Bilan financier**, **État des chèques** (s'il y a des chèques) et **État complet** (après le concours) : les mêmes PDF que dans Rapport - Bilan, qui garde ses boutons.
+- Le **reçu d'un archer** reste sur sa ligne, dans Paiements.
+
+## 4. Rapport - Bilan (Modules → Greffe → Rapport - Bilan)
 
 ![Page Rapport - Bilan : exports, synthèse, ventilations par moyen de paiement et par nombre de départs](img/rapport.png)
 
@@ -119,7 +129,7 @@ Signalements ⚠ :
   - **Récapitulatifs clubs (PDF)** : un par club ;
   - **État des chèques (PDF)** : bordereau de remise en banque, avec une ligne par chèque (numéro, date, club, archers, montant), le total et une zone « remis en banque le ». Un chèque de club réglé en une fois tient sur une seule ligne : regroupement par numéro, ou, sans numéro, par club et heure d'enregistrement.
 
-## 4. Reçus
+## 5. Reçus
 
 Ce sont des **reçus, pas des factures** : il n'y a pas de numérotation légale.
 
@@ -131,7 +141,7 @@ La mention saisie sur la page Tarifs (cadre « Reçus ») s'imprime en bas de ch
 
 ![Reçu d'inscription d'un archer réglé par chèque, avec la mention de reçu et le cadre pour le cachet](img/recu-archer.png)
 
-## 5. Sauvegarde (Modules → Greffe → Sauvegarde)
+## 6. Sauvegarde (Modules → Greffe → Sauvegarde)
 
 Les tarifs et paiements **ne sont pas dans l'export de compétition d'IANSEO** : cette page les met dans **deux
 fichiers `.json` séparés**, à garder avec l'export `.ianseo`, ou à importer sur un autre serveur (par exemple d'un
@@ -156,7 +166,7 @@ serveur de test vers celui de la compétition).
 ## Droits d'accès
 
 - **Tarifs, Paiements et Sauvegarde :** droit IANSEO « Participants » en **écriture**.
-- **Rapport - Bilan et reçus :** même droit, en **lecture**.
+- **Éditions, Rapport - Bilan et reçus :** même droit, en **lecture**.
 
 ---
 

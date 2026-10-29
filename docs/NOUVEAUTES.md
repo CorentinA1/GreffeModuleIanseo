@@ -1,5 +1,16 @@
 # Nouveautés de chaque version
 
+## 1.5.0
+
+- **Nouvel onglet « Éditions »** : tous les PDF du module sur une page, rangés par moment du concours. À la table de
+  greffe : liste papier et plan de cible avec blasons. Pour les clubs : récapitulatif d'un club (choisi dans une liste)
+  et de tous les clubs. Après le concours : bilan financier, état des chèques, état complet. Accessible en lecture :
+  un bénévole qui n'a que la lecture sur les participants peut imprimer.
+- **Paiements allégé** : les cadres de la liste papier et du plan de cible sont remplacés par un lien vers l'onglet
+  Éditions, qui garde le départ filtré. Le reçu d'un archer reste sur sa ligne ; Rapport - Bilan garde ses boutons.
+- **Barre d'onglets à la même place sur toutes les pages** : elle ne se décale plus quand on passe d'une page à
+  l'autre (les pages n'ont pas toutes la même largeur).
+
 ## 1.4.3
 
 - **Plan de cible avec blasons (PDF)**, page Paiements, sous la liste papier : le plan de cible d'IANSEO (Participants ›
