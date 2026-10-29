@@ -1,5 +1,12 @@
 # Nouveautés de chaque version
 
+## 1.4.3
+
+- **Plan de cible avec blasons (PDF)**, page Paiements, sous la liste papier : le plan de cible d'IANSEO (Participants ›
+  Impressions › par cible « + Type de cible »), avec le blason de chaque archer en code court, lisible dans sa colonne :
+  « 60 » pour un blason unique de 60 cm, « T40 (CL) » / « T40 (CO) » pour un trispot classique / poulie, « 80 (CO) »
+  pour le blason extérieur poulies. Légende des codes en fin de document. Tous les départs ou un seul.
+
 ## 1.4.2
 
 - **Pastille de mise à jour orange**, moins alarmante que le rouge.

@@ -70,6 +70,26 @@ payer. BARBIER Nathan est en « Payé — écart » : un départ a été ajouté
   *La feuille du départ 2 : six archers y règlent ; quatre autres, inscrits aussi au départ 1, sont rappelés en bas
   avec ce qu'il leur restait à régler à l'impression.*
 
+- **Plan de cible avec blasons (PDF)** : cadre sous la liste papier, bouton « Éditer le plan », pour tous les départs
+  ou un seul. C'est le plan de cible d'IANSEO (Participants › Impressions › par cible « + Type de cible »), mais le
+  blason de chaque archer y est écrit en code court, d'après le blason à poser sur la butte :
+
+  | Code | Blason |
+  |---|---|
+  | 40, 60, 80, 122 | blason unique de ce diamètre (salle ou extérieur) |
+  | T40 (CL), T60 (CL) | trispot classique |
+  | T40 (CO) | trispot poulie |
+  | 80 (CO) | blason extérieur poulies |
+
+  Un autre type de blason garde son libellé. La légende, en fin de document, donne les libellés IANSEO derrière
+  chaque code : deux blasons identiques sur la butte (« Blason Unique 60cm » et « … Néo-licenciés ») ont le même code.
+
+  ![Cadre « Plan de cible avec blasons » : départ et bouton « Éditer le plan »](img/paiements-plan-blasons.png)
+
+  ![Plan de cible du départ 1 d'un concours extérieur, blasons en code court](img/plan-blasons.png)
+
+  *Le départ 1 d'un concours extérieur : 80 pour les jeunes, 122, et 80 (CO) pour les poulies.*
+
 Statuts possibles :
 
 | Statut | Signification |

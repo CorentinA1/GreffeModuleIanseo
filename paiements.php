@@ -279,6 +279,16 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
             ses départs suivants le rappellent, pour ne pas le faire payer deux fois.</div>
     </form>
 
+    <form class="club print" method="get" action="<?= eng_h($ENG_ROOT . 'plan.php') ?>" target="_blank">
+        <b>Plan de cible avec blasons (PDF)</b> — le plan de cible d'IANSEO, blason de chaque archer en code court :
+        « 60 » pour un blason unique de 60 cm, « T40 (CL) » / « T40 (CO) » pour un trispot classique / poulie. Légende en fin de document.<br><br>
+        <select name="depart">
+            <option value="">Tous les départs</option>
+            <?php for ($s = 1; $s <= $tour->Sessions; $s++): ?><option value="<?= $s ?>"<?= $f['ses'] === $s ? ' selected' : '' ?>>Départ <?= $s ?> seulement</option><?php endfor; ?>
+        </select>
+        <button type="submit" class="pay">Éditer le plan</button>
+    </form>
+
     <?php if ($clubUnpaid): ?>
     <form class="club" method="post" action="<?= eng_h(eng_self_url($self, $f)) ?>" id="payclub">
         <?= eng_token_field() ?><input type="hidden" name="action" value="payclub">
