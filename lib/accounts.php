@@ -172,6 +172,12 @@ function eng_sessions_text(array $a)
     return implode(', ', array_map(function ($s) { return $s ? (string) $s : '?'; }, $a['sessions']));
 }
 
+/** Cibles d'un compte, dans l'ordre des départs : « 3B », « 3B, 12A » ; « ? » pour une inscription sans cible. */
+function eng_targets_text(array $a)
+{
+    return implode(', ', array_map(function ($e) { return ($e['Target'] ?? '') !== '' ? (string) $e['Target'] : '?'; }, $a['entries']));
+}
+
 /** Colonnes triables de la page des paiements : clé => libellé de l'en-tête. */
 function eng_sort_columns()
 {
@@ -179,6 +185,7 @@ function eng_sort_columns()
         'name'   => 'Archer',
         'club'   => 'Club',
         'dep'    => 'Départ(s)',
+        'tgt'    => 'Cible(s)',
         'cat'    => 'Catégorie',
         'rule'   => 'Règle',
         'due'    => 'Dû',
@@ -192,7 +199,8 @@ function eng_sort_columns()
  *
  * Tri stable : à valeur égale, l'ordre par nom (celui d'eng_build_accounts) est
  * gardé. Les comptes sans inscription restent en fin de liste. « Départ(s) » :
- * premier départ, archer non placé en dernier. « Statut » : ordre du pointage
+ * premier départ, archer non placé en dernier. « Cible(s) » : départ puis cible de
+ * la première inscription, archer sans cible en dernier. « Statut » : ordre du pointage
  * (non payé, écart, payé, exonéré). « Paiement » : date d'enregistrement, les
  * comptes sans paiement en dernier.
  *
@@ -210,6 +218,10 @@ function eng_sort_accounts(array $accounts, $key, $dir = 'asc')
         switch ($key) {
             case 'club':   return mb_strtolower($a['club_name'] . ' ' . $a['club_code']);
             case 'dep':    return $a['sessions'] ? (min($a['sessions']) ?: PHP_INT_MAX) : PHP_INT_MAX;
+            case 'tgt':
+                $e = $a['entries'][0] ?? [];
+                $t = (string) ($e['Target'] ?? '');
+                return $t === '' ? null : sprintf('%05d-%05d%s', intval($e['QuSession']), intval($t), preg_replace('/^\d+/', '', $t));
             case 'cat':    return mb_strtolower(implode(' / ', $a['cats']));
             case 'rule':   return mb_strtolower($a['price']['label']);
             case 'due':    return (float) $a['due'];

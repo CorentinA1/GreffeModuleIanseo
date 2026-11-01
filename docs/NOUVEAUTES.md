@@ -1,5 +1,13 @@
 # Nouveautés de chaque version
 
+## 1.5.1
+
+- **Paiements : colonne « Cible(s) »**, après Départ(s) : la cible de l'archer (« 3B »). Inscrit sur plusieurs départs,
+  ses cibles dans l'ordre des départs (« 3B, 12A »), comme la colonne Départ(s) ; une pastille rouge **Sans cible** signale un départ
+  où il n'a pas encore de cible. Triable comme les autres colonnes (départ, puis numéro de cible, puis lettre).
+- **Paiements : bouton « 📄 Reçu » / « 📄 Récap. »** dans la colonne Paiement, avec les autres actions de l'archer
+  (Payer, Régulariser, Annuler). Il remplace le petit lien gris sous le montant dû, peu visible.
+
 ## 1.5.0
 
 - **Nouvel onglet « Éditions »** : tous les PDF du module sur une page, rangés par moment du concours. À la table de

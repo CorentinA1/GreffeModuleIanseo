@@ -209,6 +209,9 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
 #eng button.pay { background:var(--bleu); border:1px solid var(--bleu); color:var(--sur-bleu); }
 #eng button.pay:hover { background:var(--bleu-survol); }
 #eng button.ghost { background:var(--carte); border:1px solid var(--bord); color:var(--gris); }
+#eng a.pdf { display:inline-block; border-radius:5px; padding:3px 9px; font-size:12px; font-weight:600; white-space:nowrap;
+             background:var(--carte); border:1px solid var(--bleu); color:var(--lien); text-decoration:none; }
+#eng a.pdf:hover { background:var(--bleu-clair); }
 #eng button.warn { background:var(--carte); border:1px solid var(--orange); color:var(--orange); }
 #eng .club { border:1px solid var(--bord); border-radius:6px; background:var(--carte); padding:10px 14px; margin:0 0 12px; }
 #eng .club b { color:var(--bleu-fonce); }
@@ -288,21 +291,24 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
         </tr></thead>
         <tbody>
         <?php foreach ($shown as $a):
-            $p = $a['payment']; ?>
+            $p = $a['payment'];
+            // Reçu (soldé) ou récapitulatif (reste à régler) PDF, avec les autres actions de la ligne.
+            $recap = in_array($a['status'], ['unpaid', 'diff'], true);
+            $recu = $a['n'] === 0 ? '' : '<a class="pdf" href="' . eng_h($ENG_ROOT . 'recu.php?account=' . rawurlencode($a['key'])) . '" target="_blank"'
+                . ' title="' . ($recap ? 'Récapitulatif PDF : ce qui reste à régler' : 'Reçu PDF') . '">📄 ' . ($recap ? 'Récap.' : 'Reçu') . '</a>'; ?>
             <tr id="a-<?= eng_h($a['key']) ?>">
                 <td><?php if ($a['n'] === 0): ?><i>Inscription supprimée</i>
                     <?php else: ?><b><?= eng_h(mb_strtoupper($a['name'])) ?></b> <?= eng_h($a['first']) ?><?php endif; ?>
                     <div class="sub"><?= eng_h($a['code'] !== '' ? $a['code'] : 'sans licence') ?></div></td>
                 <td><?= eng_h($a['club_name']) ?><div class="sub"><?= eng_h($a['club_code']) ?></div></td>
                 <td><?= eng_h(eng_sessions_text($a)) ?></td>
+                <td><?= str_replace('?', '<span class="badge unpaid" title="Pas encore de cible sur ce départ">Sans cible</span>', eng_h(eng_targets_text($a))) ?></td>
                 <td><?= eng_h(implode(' / ', $a['cats'])) ?>
                     <?php if ($a['mixed']): ?><span class="flag" title="Catégories différentes selon les départs : la règle est celle du premier départ.">⚠</span><?php endif; ?></td>
                 <td><?= $a['price']['source'] === 'rule' ? eng_h($a['price']['label']) : '<i>' . eng_h($a['price']['label']) . '</i>' ?>
                     <?php if ($a['price']['short']): ?><span class="flag" title="Grille plus courte que le nombre de départs : dernier total saisi appliqué.">⚠</span><?php endif; ?>
                     <?php if ($a['pays'] === 'partial'): ?><span class="flag" title="« Ne paie pas » coché dans IANSEO sur une partie seulement des inscriptions.">⚠</span><?php endif; ?></td>
-                <td class="num"><?= eng_money($a['due']) ?>
-                    <?php if ($a['n'] > 0): ?><div><a class="sub" href="<?= eng_h($ENG_ROOT . 'recu.php?account=' . rawurlencode($a['key'])) ?>" target="_blank"
-                        title="<?= in_array($a['status'], ['unpaid', 'diff'], true) ? 'Récapitulatif PDF' : 'Reçu PDF' ?>"><?= in_array($a['status'], ['unpaid', 'diff'], true) ? 'Récap.' : 'Reçu' ?></a></div><?php endif; ?></td>
+                <td class="num"><?= eng_money($a['due']) ?></td>
                 <td><span class="badge <?= $a['status'] ?>"><?= eng_h($statuses[$a['status']]) ?></span>
                     <?php if ($a['status'] === 'diff'): ?><div class="sub">écart <?= ($a['diff'] > 0 ? '+' : '') . eng_money($a['diff']) ?></div><?php endif; ?></td>
                 <td>
@@ -313,6 +319,7 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
                         <?= eng_method_select($methods, $lastMethod) ?>
                         <input type="text" name="note" maxlength="160" placeholder="note">
                         <button type="submit" class="pay">Payer</button>
+                        <?= $recu ?>
                     </form>
                 <?php elseif ($p): ?>
                     <div><?= eng_h($methods[$p['EpMethod']] ?? $p['EpMethod']) ?> · <?= eng_money($p['EpAmount']) ?>
@@ -326,9 +333,10 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
                         <?php endif; ?>
                         <button type="submit" name="action" value="cancel" class="ghost"
                             data-confirm="Annuler le paiement de <?= eng_h(trim($a['first'] . ' ' . $a['name']) ?: $a['key']) ?> ?">Annuler</button>
+                        <?= $recu ?>
                     </form>
                 <?php else: ?>
-                    <span class="sub">—</span>
+                    <?= $recu !== '' ? $recu : '<span class="sub">—</span>' ?>
                 <?php endif; ?>
                 </td>
             </tr>

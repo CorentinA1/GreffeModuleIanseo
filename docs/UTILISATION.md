@@ -46,9 +46,12 @@ payer. BARBIER Nathan est en « Payé — écart » : un départ a été ajouté
 - **Règlement d'un club en une fois :** tous les archers non payés du club passent à payé avec le même moyen.
 - **Filtres :** club, règle, statut, catégories mixtes, archers sans règle, **départ** (archers inscrits à ce départ,
   ou non placés), **nombre de départs**, plus une recherche par nom, licence ou club.
-- **Tri :** un clic sur l'en-tête d'une colonne trie la liste (archer, club, départ, catégorie, règle, dû, statut,
+- **Cible(s) :** la cible de l'archer (« 3B ») ; sur plusieurs départs, ses cibles dans l'ordre des départs
+  (« 3B, 12A »), comme la colonne Départ(s). Une pastille rouge **Sans cible** signale un départ où il n'a pas encore de cible.
+- **Tri :** un clic sur l'en-tête d'une colonne trie la liste (archer, club, départ, cible, catégorie, règle, dû, statut,
   date du paiement) ; un second clic inverse l'ordre. Le tri et les filtres restent en place après chaque paiement.
-- **Reçu / Récap. :** sous le montant de chaque archer, ce lien ouvre son reçu PDF.
+- **📄 Reçu / 📄 Récap. :** dans la colonne Paiement, à côté de Payer ou d'Annuler, ce bouton ouvre le PDF de l'archer :
+  son reçu s'il est soldé, son récapitulatif s'il lui reste quelque chose à régler.
 - **Éditions :** une ligne sous les totaux mène à l'onglet **Éditions** (liste papier, plan de cible, récapitulatifs de clubs), avec le départ filtré déjà choisi.
 
 Statuts possibles :
