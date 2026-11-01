@@ -11,6 +11,7 @@
  */
 define('ENG_ACCESS', 'read');
 require_once __DIR__ . '/lib/boot.php';
+require_once __DIR__ . '/lib/faces.php';
 require_once $CFG->DOCUMENT_PATH . 'Common/pdf/ResultPDF.inc.php';
 require_once $CFG->DOCUMENT_PATH . 'Common/Fun_FormatText.inc.php';
 require_once $CFG->DOCUMENT_PATH . 'Common/OrisFunctions.php';
@@ -24,25 +25,6 @@ $scope  = ctype_digit($depart) && (int) $depart >= 1 && (int) $depart <= $tour->
 unset($_REQUEST['Session'], $_REQUEST['Empty'], $_REQUEST['Filled'], $_REQUEST['EnCodes']);
 if ($scope) $_REQUEST['Session'] = $scope;
 $_REQUEST['tf'] = 1;
-
-/**
- * Code court d'un blason, d'après son type (table Targets) et son diamètre :
- * blason unique → diamètre seul (« 60 ») ; trispot → « T40 (CL) » ou « T40 (CO) » ;
- * blason extérieur poulies → « 80 (CO) ». Autre type ou diamètre inconnu : le libellé.
- */
-function eng_face_code($type, $diam, $name)
-{
-    $type = intval($type);
-    $diam = intval($diam);
-    if ($diam <= 0) return $name;
-    switch ($type) {
-        case 1: case 3: case 5: case 7: return (string) $diam;   // TrgIndComplete, TrgCOIndComplete, TrgOutdoor, TrgHMOutComplete
-        case 2: return 'T' . $diam . ' (CL)';                    // TrgIndSmall
-        case 4: return 'T' . $diam . ' (CO)';                    // TrgCOIndSmall
-        case 9: return $diam . ' (CO)';                          // TrgCOOutdoor
-    }
-    return $name;
-}
 
 // Blason de chaque place (départ, cible, lettre) : la requête de l'état ne donne que le libellé.
 $faces = [];

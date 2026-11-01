@@ -114,6 +114,24 @@ un bénévole qui n'a que la lecture sur les participants peut imprimer.
 
   *Le départ 1 d'un concours extérieur : 80 pour les jeunes, 122, et 80 (CO) pour les poulies.*
 
+- **Plan de cible illustré** (à la table de greffe), bouton « Éditer le plan illustré », pour tous les départs ou un
+  seul : A4 paysage, **une page par départ**, avec l'en-tête et le pied de page des PDF d'IANSEO. Chaque cible est une
+  butte carrée, à l'échelle, avec les **blasons à y poser dessinés** d'après leur définition dans IANSEO : un grand
+  blason pour les 4 archers (122, 80), un par colonne pour un 60, un par archer pour un 40 ou un trispot. Disposition
+  du plan de cible visuel d'IANSEO : colonne A/C à gauche, B/D à droite ; la lettre de l'archer au-dessus de son
+  blason, et sous un trispot **CL** (classique) ou **CO** (poulie) en gras. Sous chaque butte, en gras, ses blasons en code court et leurs archers (« 122 : A B C D », « T40 (CL) : A C »).
+  Dans l'en-tête, en gras, la **distance** des archers de la butte, d'après Participants › Distances : « 10 m » pour
+  des U11, « 70 m » en TAE, « 50 / 30 m » pour deux distances ou une butte qui en mélange. En discipline de parcours
+  (campagne, nature, 3D), pas de distance : elle change à chaque cible. Comme dans le plan de cible visuel, une **place libre** dans une colonne qui a déjà un archer
+  reçoit le blason de cette colonne **en pâle** : il faut le poser quand même. Une colonne sans archer reste vide, une
+  cible sans archer aussi. Pas de nom d'archer. **Au plus 18 cibles par page**, pour rester lisible : un départ plus grand continue sur les
+  pages suivantes (38 cibles : 3 pages de 13, 13 et 12 cibles), avec des buttes de même taille ; le titre indique
+  « cibles 1 à 13 (page 1/3) ».
+
+  ![Plan de cible illustré du départ 1 d'un concours extérieur](img/plan-illustre.png)
+
+  *Le départ 1 du concours de démonstration : 80 pour les jeunes, 122, 80 (CO) pour les poulies ; cibles 8 à 12 libres.*
+
 - **Récapitulatif d'un club** (pour les clubs) : le club se choisit dans la liste ; **Récapitulatifs de tous les clubs** : un par club, dans un seul PDF.
 - **Bilan financier**, **État des chèques** (s'il y a des chèques) et **État complet** (après le concours) : les mêmes PDF que dans Rapport - Bilan, qui garde ses boutons.
 - Le **reçu d'un archer** reste sur sa ligne, dans Paiements.

@@ -2,9 +2,9 @@
 /**
  * editions.php — GREFFE : toutes les éditions PDF du module sur une page.
  *
- * Rangées par moment du concours : à la table de greffe (liste papier, plan de cible avec blasons),
+ * Rangées par moment du concours : à la table de greffe (liste papier, plan de cible avec blasons, illustré),
  * pour les clubs (récapitulatif d'un club, de tous les clubs), après le concours (bilan, état des
- * chèques, état complet). La page ne fait que des liens vers les PDF existants (liste.php, plan.php,
+ * chèques, état complet). La page ne fait que des liens vers les PDF existants (liste.php, plan.php, plan-illustre.php,
  * recu.php, reporting.php) ; lecture seule, comme eux. Le reçu d'un archer reste sur sa ligne,
  * dans Paiements ; les PDF et CSV restent aussi dans Rapport - Bilan.
  */
@@ -95,6 +95,18 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
                         <?php for ($s = 1; $s <= $tour->Sessions; $s++): ?><option value="<?= $s ?>"<?= $ses === $s ? ' selected' : '' ?>>Départ <?= $s ?> seulement</option><?php endfor; ?>
                     </select>
                     <button type="submit">Éditer le plan</button>
+                </div>
+            </form>
+            <form class="card" method="get" action="<?= eng_h($ENG_ROOT . 'plan-illustre.php') ?>" target="_blank">
+                <b>Plan de cible illustré</b>
+                <p>Les buttes dessinées avec les blasons à y poser, une page par départ (18 cibles au plus par page), en paysage. Une cible sans archer
+                    reste une butte vide.</p>
+                <div class="row">
+                    <select name="depart">
+                        <option value="">Tous les départs</option>
+                        <?php for ($s = 1; $s <= $tour->Sessions; $s++): ?><option value="<?= $s ?>"<?= $ses === $s ? ' selected' : '' ?>>Départ <?= $s ?> seulement</option><?php endfor; ?>
+                    </select>
+                    <button type="submit">Éditer le plan illustré</button>
                 </div>
             </form>
         </div>

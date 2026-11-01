@@ -1,5 +1,14 @@
 # Nouveautés de chaque version
 
+## 1.6.0
+
+- **Plan de cible illustré (PDF)**, onglet Éditions, à la table de greffe : A4 paysage, une page par départ (au plus 18 cibles par page, un grand départ continue sur les suivantes), avec
+  l'en-tête et le pied de page d'IANSEO. Chaque cible est une butte dessinée à l'échelle avec les blasons à y poser,
+  en couleur, d'après leur définition dans IANSEO (tous les types, y compris un blason créé pour la compétition) :
+  grand blason pour 4 archers, un par colonne pour un 60, un par archer pour un 40 ou un trispot ; lettre de l'archer
+  au-dessus de son blason, **CL** ou **CO** en gras sous chaque trispot, blasons de la butte en légende, distance en en-tête (aucune en campagne, nature et 3D). Place libre d'une colonne occupée : blason en pâle, à poser quand même (comme le plan de cible visuel).
+  Pas de nom d'archer ; cible sans archer : butte vide. Tous les départs ou un seul.
+
 ## 1.5.1
 
 - **Paiements : colonne « Cible(s) »**, après Départ(s) : la cible de l'archer (« 3B »). Inscrit sur plusieurs départs,
