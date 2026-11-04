@@ -39,12 +39,15 @@ while ($r = safe_fetch($rs)) {
 
 $PdfData = getStartList();
 
-// Libellés remplacés par les codes ; la légende garde chaque libellé derrière son code.
+// Libellés remplacés par les codes ; la légende garde chaque libellé derrière son code. Archers comptés par départ.
 $legend = [];
+$count = [];
 foreach ($PdfData->Data['Items'] as $ev => $rows) {
     foreach ($rows as $i => $row) {
         $f = $faces[$row->Session . '|' . intval(substr($row->TargetNo, 0, -1)) . '|' . substr($row->TargetNo, -1)] ?? null;
-        if (!$f || !$row->Athlete) continue;
+        if (!$row->Athlete) continue;
+        $count[intval($row->Session)] = ($count[intval($row->Session)] ?? 0) + 1;
+        if (!$f) continue;
         $name = get_text($f->TfName, 'Tournament', '', true);
         $code = eng_face_code($f->TfT1, $f->TfW1, $name);
         $PdfData->Data['Items'][$ev][$i]->TfName = $code;
@@ -54,6 +57,18 @@ foreach ($PdfData->Data['Items'] as $ev => $rows) {
 
 $pdf = new ResultPDF($PdfData->Description);
 require_once(PdfChunkLoader('StartList.inc.php'));
+
+// Total des archers placés, après le plan : par départ s'il y en a plusieurs.
+if ($count) {
+    ksort($count);
+    $total = array_sum($count);
+    $parts = [];
+    if (count($count) > 1) foreach ($count as $s => $n) $parts[] = 'Départ ' . $s . ' : ' . $n;
+    if (!$pdf->SamePage(10)) $pdf->AddPage();
+    $pdf->SetY($pdf->GetY() + 4);
+    $pdf->SetFont($pdf->FontStd, 'B', 10);
+    $pdf->Cell(190, 5, 'Total : ' . $total . ' archer' . ($total > 1 ? 's' : '') . ($parts ? ' (' . implode(' · ', $parts) . ')' : ''), 0, 1, 'L');
+}
 
 if ($legend) {
     uksort($legend, 'strnatcmp');

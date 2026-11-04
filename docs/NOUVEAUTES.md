@@ -1,5 +1,11 @@
 # Nouveautés de chaque version
 
+## 1.6.1
+
+- **Total des archers** : sur la liste papier du greffe, dans la ligne Total de chaque liste (« Total : 22 archers ») ;
+  sur le plan de cible avec blasons, après le plan, avec le détail par départ quand il y en a plusieurs
+  (un archer inscrit à deux départs y compte à chacun).
+
 ## 1.6.0
 
 - **Plan de cible illustré (PDF)**, onglet Éditions, à la table de greffe : A4 paysage, une page par départ (au plus 18 cibles par page, un grand départ continue sur les suivantes), avec

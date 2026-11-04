@@ -104,7 +104,7 @@ foreach ($sections as $k => $sec) {
         $short = ['cb' => 'CB'];   // « Carte bancaire » ne tient pas dans une colonne étroite
         foreach ($methods as $key => $label) $cols[] = [$short[$key] ?? $label, 8, 'C'];
         eng_pdf_table($pdf, $cols, $rows,
-            array_merge(['Total', '', '', '', '', eng_pdf_money($sec['due']), eng_pdf_money($sec['left'])], array_fill(0, count($methods), '')), 'C');
+            array_merge(['Total : ' . $n . ' archer' . ($n > 1 ? 's' : ''), '', '', '', '', eng_pdf_money($sec['due']), eng_pdf_money($sec['left'])], array_fill(0, count($methods), '')), 'C');
     }
 
     if ($sec['also']) {
