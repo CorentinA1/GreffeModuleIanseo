@@ -1,5 +1,13 @@
 # Nouveautés de chaque version
 
+## 1.6.3
+
+- **Liste des participants par clubs (PDF)**, onglet Éditions, à côté de la liste papier du greffe : la liste des
+  participants par club d'IANSEO, en plus lisible. Un bandeau par club avec son **logo** (s'il y en a un, comme sur
+  les feuilles de marque) et son nombre d'archers ; **une ligne par départ** (un archer sur deux départs : deux
+  lignes), avec licence, catégorie (« S1HCL »), départ, cible et blason en code court. En fin de liste, le nombre
+  d'archers par départ et le total. Tous les départs ou un seul ; une page par club au choix.
+
 ## 1.6.2
 
 - **Liste papier du greffe : colonne « Cible(s) »**, comme la page Paiements : « 3B » ; tous départs confondus, ses

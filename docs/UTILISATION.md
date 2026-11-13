@@ -91,6 +91,14 @@ un bénévole qui n'a que la lecture sur les participants peut imprimer.
   départ, déjà attendus à un départ précédent », pour ne pas le faire payer deux fois. La liste montre l'état au moment
   de l'édition : les paiements enregistrés ensuite n'y figurent pas.
 
+- **Liste des Participants par Clubs** (à côté de la liste papier) : la liste des participants par club d'IANSEO
+  (Participants › Impressions, avec le type de cible), en plus lisible. Un bandeau par club avec son **logo** (s'il a
+  été chargé dans IANSEO, comme sur les feuilles de marque) et son nombre d'archers, puis **une ligne par départ** :
+  nom, licence, catégorie (« S1HCL »), départ (« D1 »), cible (« — » sans cible), **blason** en code court (« 122 »,
+  « 80 (CO) », « T40 (CL) ») ; un archer inscrit à deux départs a deux lignes. Clubs et archers par ordre
+  alphabétique. En fin de liste, le **nombre d'archers par départ** et le total (un archer sur deux départs compte à
+  chacun). Tous les départs ou un seul ; case **Une page par club** pour remettre sa page à chaque club.
+
 
   ![Liste papier du départ 2 : archers à régler, total, puis rappel des archers déjà attendus au départ 1](img/liste-papier-depart.png)
 

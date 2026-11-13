@@ -2,10 +2,11 @@
 /**
  * editions.php — GREFFE : toutes les éditions PDF du module sur une page.
  *
- * Rangées par moment du concours : à la table de greffe (liste papier, plan de cible avec blasons, illustré),
+ * Rangées par moment du concours : à la table de greffe (liste papier, participants par clubs, plan de cible avec
+ * blasons, illustré),
  * pour les clubs (récapitulatif d'un club, de tous les clubs), après le concours (bilan, état des
  * chèques, état complet). La page ne fait que des liens vers les PDF existants (liste.php, plan.php, plan-illustre.php,
- * recu.php, reporting.php) ; lecture seule, comme eux. Le reçu d'un archer reste sur sa ligne,
+ * clubs.php, recu.php, reporting.php) ; lecture seule, comme eux. Le reçu d'un archer reste sur sa ligne,
  * dans Paiements ; les PDF et CSV restent aussi dans Rapport - Bilan.
  */
 define('ENG_ACCESS', 'read');
@@ -84,6 +85,19 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
                 </div>
                 <div class="sub">Par départ, chaque archer figure au départ où il règle (son premier départ) ;
                     ses départs suivants le rappellent, pour ne pas le faire payer deux fois.</div>
+            </form>
+            <form class="card" method="get" action="<?= eng_h($ENG_ROOT . 'clubs.php') ?>" target="_blank">
+                <b>Liste des Participants par Clubs</b>
+                <p>La liste des participants par club d'IANSEO, en plus lisible : logo et nombre d'archers de chaque club,
+                    une ligne par départ avec la catégorie, la cible et le blason ; le total par départ en fin de liste.</p>
+                <div class="row">
+                    <select name="depart">
+                        <option value="">Tous les départs</option>
+                        <?php for ($s = 1; $s <= $tour->Sessions; $s++): ?><option value="<?= $s ?>"<?= $ses === $s ? ' selected' : '' ?>>Départ <?= $s ?> seulement</option><?php endfor; ?>
+                    </select>
+                    <button type="submit">Éditer la liste</button>
+                </div>
+                <label class="sub"><input type="checkbox" name="page" value="1"> Une page par club (à remettre à chaque club)</label>
             </form>
             <form class="card" method="get" action="<?= eng_h($ENG_ROOT . 'plan.php') ?>" target="_blank">
                 <b>Plan de cible avec blasons</b>
