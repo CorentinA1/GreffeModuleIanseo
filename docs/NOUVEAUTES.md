@@ -1,5 +1,11 @@
 # Nouveautés de chaque version
 
+## 1.6.2
+
+- **Liste papier du greffe : colonne « Cible(s) »**, comme la page Paiements : « 3B » ; tous départs confondus, ses
+  cibles dans l'ordre des départs (« 3B, 12A ») ; sur la feuille d'un départ, sa cible à ce départ, aussi dans
+  l'encadré des archers déjà attendus ; « — » pour un archer sans cible.
+
 ## 1.6.1
 
 - **Total des archers** : sur la liste papier du greffe, dans la ligne Total de chaque liste (« Total : 22 archers ») ;

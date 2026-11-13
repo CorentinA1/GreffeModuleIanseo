@@ -77,7 +77,8 @@ un bénévole qui n'a que la lecture sur les participants peut imprimer.
 ![Page Éditions : à la table de greffe, pour les clubs, après le concours](img/editions.png)
 
 - **Liste papier du greffe** (à la table de greffe), bouton « Éditer la liste ». Une ligne par archer :
-  licence, club, départ(s), catégorie (classe puis arme : « S2HCL »), **montant dû**, **reste à régler** (ou « Réglé », « Exonéré »), puis **une
+  licence, club, départ(s), **cible** (« 3B » ; tous départs : ses cibles dans l'ordre des départs, « 3B, 12A » ;
+  sur la feuille d'un départ, sa cible à ce départ ; « — » sans cible), catégorie (classe puis arme : « S2HCL »), **montant dû**, **reste à régler** (ou « Réglé », « Exonéré »), puis **une
   colonne par moyen de paiement** (Espèces, Chèque, CB, Virement, Exonéré), vides pour cocher le règlement à la main.
   Un paiement déjà enregistré y figure par sa date, dans la colonne de son moyen.
   Total en bas de chaque liste. Choix :

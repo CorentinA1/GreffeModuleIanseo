@@ -51,6 +51,21 @@ function eng_list_left(array $a)
 }
 
 /**
+ * Cible(s) d'un archer, comme la colonne de la page Paiements : « 3B », « 3B, 12A » dans l'ordre des départs ;
+ * sur la feuille d'un départ, seulement sa cible à ce départ. « — » : pas encore de cible.
+ */
+function eng_list_target(array $a, $session)
+{
+    if ($session) {
+        foreach ($a['entries'] as $e) {
+            if (intval($e['QuSession']) === $session) return ($e['Target'] ?? '') !== '' ? (string) $e['Target'] : '—';
+        }
+        return '—';
+    }
+    return str_replace('?', '—', eng_targets_text($a));
+}
+
+/**
  * Colonnes des moyens de paiement : vides si quelque chose reste dû (à cocher à la main), sinon la
  * date du paiement dans la colonne de son moyen.
  */
@@ -94,17 +109,18 @@ foreach ($sections as $k => $sec) {
                 $a['code'],
                 trim($a['club_name'] . ($a['club_code'] !== '' ? ' (' . $a['club_code'] . ')' : '')),
                 eng_sessions_text($a),
+                eng_list_target($a, $sec['session']),
                 implode(' / ', $a['cats']),
                 eng_pdf_money($a['due']),
                 eng_list_left($a),
             ], eng_list_paid($a, $methods));
         }
-        $cols = [['Archer', 22, 'L'], ['Licence', 10, 'L'], ['Club', 20, 'L'], ['Départ(s)', 8, 'C'], ['Catégorie', 11, 'L'],
-                 ['Dû', 9, 'R'], ['Reste', 9, 'R']];
+        $cols = [['Archer', 21, 'L'], ['Licence', 10, 'L'], ['Club', 18, 'L'], ['Départ(s)', 8, 'C'],
+                 [$sec['session'] ? 'Cible' : 'Cible(s)', 8, 'C'], ['Catégorie', 11, 'L'], ['Dû', 9, 'R'], ['Reste', 9, 'R']];
         $short = ['cb' => 'CB'];   // « Carte bancaire » ne tient pas dans une colonne étroite
         foreach ($methods as $key => $label) $cols[] = [$short[$key] ?? $label, 8, 'C'];
         eng_pdf_table($pdf, $cols, $rows,
-            array_merge(['Total : ' . $n . ' archer' . ($n > 1 ? 's' : ''), '', '', '', '', eng_pdf_money($sec['due']), eng_pdf_money($sec['left'])], array_fill(0, count($methods), '')), 'C');
+            array_merge(['Total : ' . $n . ' archer' . ($n > 1 ? 's' : ''), '', '', '', '', '', eng_pdf_money($sec['due']), eng_pdf_money($sec['left'])], array_fill(0, count($methods), '')), 'C');
     }
 
     if ($sec['also']) {
@@ -117,9 +133,9 @@ foreach ($sections as $k => $sec) {
             $a = $x['account'];
             $rows[] = [trim(mb_strtoupper($a['name']) . ' ' . $a['first']), $a['code'],
                        trim($a['club_name'] . ($a['club_code'] !== '' ? ' (' . $a['club_code'] . ')' : '')),
-                       'Départ ' . $x['first'], eng_list_left($a)];
+                       eng_list_target($a, $sec['session']), 'Départ ' . $x['first'], eng_list_left($a)];
         }
-        eng_pdf_table($pdf, [['Archer', 25, 'L'], ['Licence', 10, 'L'], ['Club', 24, 'L'], ['Attendu au', 12, 'L'], ['Reste', 12, 'R']], $rows, null, 'C');
+        eng_pdf_table($pdf, [['Archer', 25, 'L'], ['Licence', 10, 'L'], ['Club', 22, 'L'], ['Cible', 8, 'C'], ['Attendu au', 12, 'L'], ['Reste', 12, 'R']], $rows, null, 'C');
     }
 }
 
