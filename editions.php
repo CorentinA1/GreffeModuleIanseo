@@ -2,11 +2,11 @@
 /**
  * editions.php — GREFFE : toutes les éditions PDF du module sur une page.
  *
- * Rangées par moment du concours : à la table de greffe (liste papier, participants par clubs, plan de cible avec
- * blasons, illustré),
+ * Rangées par moment du concours : à la table de greffe (liste papier, participants par clubs, par catégories, par
+ * ordre alphabétique, plan de cible avec blasons, illustré),
  * pour les clubs (récapitulatif d'un club, de tous les clubs), après le concours (bilan, état des
  * chèques, état complet). La page ne fait que des liens vers les PDF existants (liste.php, plan.php, plan-illustre.php,
- * clubs.php, recu.php, reporting.php) ; lecture seule, comme eux. Le reçu d'un archer reste sur sa ligne,
+ * clubs.php, categories.php, alphabetique.php, recu.php, reporting.php) ; lecture seule, comme eux. Le reçu d'un archer reste sur sa ligne,
  * dans Paiements ; les PDF et CSV restent aussi dans Rapport - Bilan.
  */
 define('ENG_ACCESS', 'read');
@@ -98,6 +98,31 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
                     <button type="submit">Éditer la liste</button>
                 </div>
                 <label class="sub"><input type="checkbox" name="page" value="1"> Une page par club (à remettre à chaque club)</label>
+            </form>
+            <form class="card" method="get" action="<?= eng_h($ENG_ROOT . 'categories.php') ?>" target="_blank">
+                <b>Liste des Participants par Catégories</b>
+                <p>La liste des participants groupés par catégorie d'IANSEO, au même format : nombre d'archers de chaque
+                    catégorie, une ligne par départ avec le club, la cible et le blason ; le total par départ en fin de liste.</p>
+                <div class="row">
+                    <select name="depart">
+                        <option value="">Tous les départs</option>
+                        <?php for ($s = 1; $s <= $tour->Sessions; $s++): ?><option value="<?= $s ?>"<?= $ses === $s ? ' selected' : '' ?>>Départ <?= $s ?> seulement</option><?php endfor; ?>
+                    </select>
+                    <button type="submit">Éditer la liste</button>
+                </div>
+                <label class="sub"><input type="checkbox" name="page" value="1"> Une page par catégorie (à afficher)</label>
+            </form>
+            <form class="card" method="get" action="<?= eng_h($ENG_ROOT . 'alphabetique.php') ?>" target="_blank">
+                <b>Liste des Participants par Ordre Alphabétique</b>
+                <p>La liste alphabétique d'IANSEO, au même format : un groupe par initiale, une ligne par départ avec le club,
+                    la catégorie, la cible et le blason ; le total par départ en fin de liste.</p>
+                <div class="row">
+                    <select name="depart">
+                        <option value="">Tous les départs</option>
+                        <?php for ($s = 1; $s <= $tour->Sessions; $s++): ?><option value="<?= $s ?>"<?= $ses === $s ? ' selected' : '' ?>>Départ <?= $s ?> seulement</option><?php endfor; ?>
+                    </select>
+                    <button type="submit">Éditer la liste</button>
+                </div>
             </form>
             <form class="card" method="get" action="<?= eng_h($ENG_ROOT . 'plan.php') ?>" target="_blank">
                 <b>Plan de cible avec blasons</b>

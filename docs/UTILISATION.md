@@ -98,6 +98,13 @@ un bénévole qui n'a que la lecture sur les participants peut imprimer.
   « 80 (CO) », « T40 (CL) ») ; un archer inscrit à deux départs a deux lignes. Clubs et archers par ordre
   alphabétique. En fin de liste, le **nombre d'archers par départ** et le total (un archer sur deux départs compte à
   chacun). Tous les départs ou un seul ; case **Une page par club** pour remettre sa page à chaque club.
+- **Liste des Participants par Catégories** : la liste des participants groupés par catégorie d'IANSEO, au même
+  format. Un bandeau par catégorie (« S1HCL — Arc Classique Senior 1 Hommes ») avec son nombre d'archers, dans
+  l'ordre de l'état d'IANSEO (code arme puis classe), puis une ligne par départ : nom, licence, club, départ, cible,
+  blason. Même total en fin de liste. Tous les départs ou un seul ; case **Une page par catégorie** pour l'affichage.
+- **Liste des Participants par Ordre Alphabétique** : la liste alphabétique d'IANSEO, au même format. Un bandeau
+  par initiale du nom (« A », « B »…, accents ignorés), puis une ligne par départ : nom, licence, club, catégorie,
+  départ, cible, blason. Même total en fin de liste. Tous les départs ou un seul.
 
 
   ![Liste papier du départ 2 : archers à régler, total, puis rappel des archers déjà attendus au départ 1](img/liste-papier-depart.png)

@@ -1,5 +1,12 @@
 # Nouveautés de chaque version
 
+## 1.6.4
+
+- **Liste des Participants par Catégories** et **par Ordre Alphabétique (PDF)**, onglet Éditions, à côté de la liste
+  par clubs : les deux autres listes d'IANSEO au même format (bandeau par catégorie ou par initiale, une ligne par
+  départ avec le club, total par départ en fin de liste). Catégories dans l'ordre de l'état d'IANSEO ; une page par
+  catégorie au choix.
+
 ## 1.6.3
 
 - **Liste des participants par clubs (PDF)**, onglet Éditions, à côté de la liste papier du greffe : la liste des
