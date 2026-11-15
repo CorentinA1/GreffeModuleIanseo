@@ -4,9 +4,9 @@
  *
  * Rangées par moment du concours : à la table de greffe (liste papier, participants par clubs, par catégories, par
  * ordre alphabétique, plan de cible avec blasons, illustré),
- * pour les clubs (récapitulatif d'un club, de tous les clubs), après le concours (bilan, état des
+ * pour les clubs (récapitulatif d'un club, de tous les clubs), pour la remise des prix (médailles à prévoir), après le concours (bilan, état des
  * chèques, état complet). La page ne fait que des liens vers les PDF existants (liste.php, plan.php, plan-illustre.php,
- * clubs.php, categories.php, alphabetique.php, recu.php, reporting.php) ; lecture seule, comme eux. Le reçu d'un archer reste sur sa ligne,
+ * clubs.php, categories.php, alphabetique.php, medailles.php, recu.php, reporting.php) ; lecture seule, comme eux. Le reçu d'un archer reste sur sa ligne,
  * dans Paiements ; les PDF et CSV restent aussi dans Rapport - Bilan.
  */
 define('ENG_ACCESS', 'read');
@@ -170,6 +170,24 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
                 <b>Récapitulatifs de tous les clubs</b>
                 <p>Un récapitulatif par club, à la suite, dans un seul PDF.</p>
                 <div class="row"><button type="submit"<?= $clubs ? '' : ' disabled' ?>>Éditer les récapitulatifs</button></div>
+            </form>
+        </div>
+    </div>
+
+    <div class="group">
+        <h3>Pour la remise des prix <small>à préparer avant le concours</small></h3>
+        <div class="cards">
+            <form class="card" method="get" action="<?= eng_h($ENG_ROOT . 'medailles.php') ?>" target="_blank">
+                <b>Médailles à prévoir</b>
+                <p>Le nombre de médailles or, argent et bronze à commander, d'après le nombre d'archers de chaque catégorie :
+                    l'or dès un archer, l'argent dès deux, le bronze dès trois. Détail par catégorie et total.</p>
+                <div class="row">
+                    <select name="seul">
+                        <option value="1">Archer seul dans sa catégorie : médaille d'or</option>
+                        <option value="0">Archer seul dans sa catégorie : pas de médaille</option>
+                    </select>
+                    <button type="submit">Éditer</button>
+                </div>
             </form>
         </div>
     </div>

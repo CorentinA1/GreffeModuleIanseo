@@ -149,6 +149,11 @@ un bénévole qui n'a que la lecture sur les participants peut imprimer.
   *Le départ 1 du concours de démonstration : 80 pour les jeunes, 122, 80 (CO) pour les poulies ; cibles 8 à 12 libres.*
 
 - **Récapitulatif d'un club** (pour les clubs) : le club se choisit dans la liste ; **Récapitulatifs de tous les clubs** : un par club, dans un seul PDF.
+- **Médailles à prévoir** (pour la remise des prix) : le nombre de médailles or, argent et bronze à commander. Chaque
+  catégorie d'IANSEO (classe et arme) reçoit une médaille par place sur le podium, dans la limite de ses archers :
+  l'or dès un archer, l'argent dès deux, le bronze dès trois. Tous les départs comptent, placés ou non ; un archer
+  inscrit à deux départs compte une fois. Au choix, pas de médaille pour un archer seul dans sa catégorie. Les
+  égalités au classement ne sont pas prévues : garder quelques médailles de réserve.
 - **Bilan financier**, **État des chèques** (s'il y a des chèques) et **État complet** (après le concours) : les mêmes PDF que dans Rapport - Bilan, qui garde ses boutons.
 - Le **reçu d'un archer** reste sur sa ligne, dans Paiements.
 

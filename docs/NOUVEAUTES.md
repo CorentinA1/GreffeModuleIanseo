@@ -1,5 +1,12 @@
 # Nouveautés de chaque version
 
+## 1.6.5
+
+- **Médailles à prévoir (PDF)**, onglet Éditions, nouvelle rubrique « Pour la remise des prix » : le nombre de
+  médailles or, argent et bronze à commander, d'après le nombre d'archers de chaque catégorie (l'or dès un archer,
+  l'argent dès deux, le bronze dès trois), détail par catégorie et total. Au choix, pas de médaille pour un archer
+  seul dans sa catégorie.
+
 ## 1.6.4
 
 - **Liste des Participants par Catégories** et **par Ordre Alphabétique (PDF)**, onglet Éditions, à côté de la liste
