@@ -15,7 +15,8 @@
  */
 
 // v2 (1.3.0) : EngagementConfig.EcReceiptNote, mention en pied de reçu.
-if (!defined('ENG_SCHEMA_VERSION')) define('ENG_SCHEMA_VERSION', 2);
+// v3 : EngagementConfig.EcPayMethod, mode de paiement proposé par défaut.
+if (!defined('ENG_SCHEMA_VERSION')) define('ENG_SCHEMA_VERSION', 3);
 
 /**
  * Crée les tables si besoin.
@@ -41,6 +42,7 @@ function eng_schema()
         EcDefault    TEXT          NULL,
         EcRules      TEXT          NULL,
         EcReceiptNote TEXT         NULL,
+        EcPayMethod  VARCHAR(16)   NOT NULL DEFAULT 'especes',
         EcUpdated    TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
@@ -49,6 +51,11 @@ function eng_schema()
     $rs = safe_r_sql("SHOW COLUMNS FROM EngagementConfig LIKE 'EcReceiptNote'");
     if (!safe_num_rows($rs)) {
         safe_w_sql("ALTER TABLE EngagementConfig ADD COLUMN EcReceiptNote TEXT NULL AFTER EcRules");
+    }
+    // Avant la v3 : mode de paiement par défaut, espèces comme avant.
+    $rs = safe_r_sql("SHOW COLUMNS FROM EngagementConfig LIKE 'EcPayMethod'");
+    if (!safe_num_rows($rs)) {
+        safe_w_sql("ALTER TABLE EngagementConfig ADD COLUMN EcPayMethod VARCHAR(16) NOT NULL DEFAULT 'especes' AFTER EcReceiptNote");
     }
 
     // Historique des paiements. Le paiement actif d'un compte est sa dernière

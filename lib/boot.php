@@ -85,7 +85,7 @@ function eng_org_code()
 function eng_load_config()
 {
     global $ENG_TOUR;
-    $rs = safe_r_sql("SELECT EcBase, EcDefault, EcRules, EcReceiptNote FROM EngagementConfig
+    $rs = safe_r_sql("SELECT EcBase, EcDefault, EcRules, EcReceiptNote, EcPayMethod FROM EngagementConfig
         WHERE EcTournament = " . StrSafe_DB($ENG_TOUR));
     return eng_config_from_row(safe_fetch_assoc($rs), eng_tournament()->Sessions, eng_org_code());
 }
@@ -98,10 +98,11 @@ function eng_save_config(array $config)
     $default = StrSafe_DB(eng_grid_to_json($config['default']));
     $rules   = StrSafe_DB(eng_rules_to_json($config['rules']));
     $note    = StrSafe_DB($config['note'] ?? '');
-    safe_w_sql("INSERT INTO EngagementConfig (EcTournament, EcBase, EcDefault, EcRules, EcReceiptNote)
-        VALUES (" . StrSafe_DB($ENG_TOUR) . ", $base, $default, $rules, $note)
+    $method  = StrSafe_DB(eng_clean_method($config['method'] ?? ''));
+    safe_w_sql("INSERT INTO EngagementConfig (EcTournament, EcBase, EcDefault, EcRules, EcReceiptNote, EcPayMethod)
+        VALUES (" . StrSafe_DB($ENG_TOUR) . ", $base, $default, $rules, $note, $method)
         ON DUPLICATE KEY UPDATE EcBase = VALUES(EcBase), EcDefault = VALUES(EcDefault), EcRules = VALUES(EcRules),
-            EcReceiptNote = VALUES(EcReceiptNote)");
+            EcReceiptNote = VALUES(EcReceiptNote), EcPayMethod = VALUES(EcPayMethod)");
 }
 
 /**

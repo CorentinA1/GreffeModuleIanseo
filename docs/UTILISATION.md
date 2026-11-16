@@ -25,6 +25,9 @@ Une **règle** regroupe un libellé (« Jeunes », « Adultes »…), des divisi
 - **Choix de la règle :** pour chaque archer, **la première règle qui correspond** s'applique. L'ordre compte : placez les règles les plus précises en haut (boutons ▲ ▼).
 - **Si aucune règle ne correspond :** la **grille par défaut** s'applique. Si elle est vide, c'est le **tarif de base**, multiplié par le nombre de départs.
 - **Aperçu :** le cadre « Aperçu » calcule le prix d'une catégorie, d'un club et d'un nombre de départs sur la saisie en cours, avant même l'enregistrement.
+- **Mode de paiement par défaut :** le moyen proposé d'office sur chaque ligne de la page Paiements et pour le
+  règlement d'un club (cadre « Paiements ») ; espèces si rien n'est réglé. Il se change archer par archer, sans
+  toucher aux autres lignes.
 - **Mention en pied de reçu :** texte libre imprimé en bas des reçus et récapitulatifs (cadre « Reçus »). Vide par
   défaut. Le bouton « Insérer la mention habituelle des associations » propose « Association loi 1901 — TVA non
   applicable, article 293 B du Code général des impôts » : ne l'utilisez que si elle s'applique à votre club.
@@ -40,7 +43,7 @@ Une ligne par archer, identifié par sa **licence** (un archer sans licence est 
 *En haut, les filtres et les totaux de la sélection ; chaque ligne montre le montant dû, le statut et le bouton pour
 payer. BARBIER Nathan est en « Payé — écart » : un départ a été ajouté après son paiement.*
 
-- **Payer :** choisir le moyen (Espèces, Chèque, Carte bancaire, Virement, Exonéré), éventuellement une note, puis cliquer. Pour un chèque, la note sert au **numéro de chèque** : elle reste facultative, mais elle alimente l'état des chèques. Le paiement porte toujours sur la totalité du montant dû à cet instant.
+- **Payer :** choisir le moyen (Espèces, Chèque, Carte bancaire, Virement, Exonéré ; le mode par défaut de la page Tarifs est proposé), éventuellement une note, puis cliquer. Pour un chèque, la note sert au **numéro de chèque** : elle reste facultative, mais elle alimente l'état des chèques. Le paiement porte toujours sur la totalité du montant dû à cet instant.
 - **Annuler :** le compte repasse à « non payé ». Le paiement annulé reste dans l'historique.
 - **Payé — écart :** le montant dû a changé après le paiement (départ ajouté ou retiré, tarifs modifiés). « Régulariser » réenregistre le paiement au nouveau montant, avec le même moyen.
 - **Règlement d'un club en une fois :** tous les archers non payés du club passent à payé avec le même moyen.
@@ -191,7 +194,7 @@ serveur de test vers celui de la compétition).
 
 ![Page Sauvegarde : téléchargement des tarifs et de l'historique des paiements](img/sauvegarde.png)
 
-- **Télécharger les tarifs :** règles, grilles, tarif de base, mention de reçu. Réutilisable d'une compétition à
+- **Télécharger les tarifs :** règles, grilles, tarif de base, mention de reçu, mode de paiement par défaut. Réutilisable d'une compétition à
   l'autre (mêmes tarifs chaque année, par exemple).
 - **Télécharger l'historique :** **toutes les lignes** de paiement de la compétition, annulations comprises, avec
   leurs dates et auteurs.

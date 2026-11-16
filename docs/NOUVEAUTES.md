@@ -1,5 +1,12 @@
 # Nouveautés de chaque version
 
+## 1.6.6
+
+- **Page Paiements : le mode choisi sur une ligne ne s'impose plus à toutes les autres.** Le dernier mode utilisé
+  était repris d'office sur chaque ligne (après un chèque, tout le monde passait en chèque).
+- **Tarifs : mode de paiement par défaut** (cadre « Paiements »), proposé sur chaque ligne et pour le règlement d'un
+  club ; espèces si rien n'est réglé. Repris dans la sauvegarde des tarifs.
+
 ## 1.6.5
 
 - **Médailles à prévoir (PDF)**, onglet Éditions, nouvelle rubrique « Pour la remise des prix » : le nombre de

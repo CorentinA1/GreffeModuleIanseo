@@ -12,6 +12,7 @@
  */
 define('ENG_ACCESS', 'write');
 require_once __DIR__ . '/lib/boot.php';
+require_once __DIR__ . '/lib/accounts.php';   // eng_methods() : mode de paiement par défaut
 
 $tour     = eng_tournament();
 $sessions = $tour->Sessions;
@@ -61,6 +62,7 @@ if ($action === 'save') {
         'default' => is_array($_POST['default'] ?? null) ? $_POST['default'] : [],
         'rules'   => eng_posted_rules($_POST),
         'note'    => (string) ($_POST['note'] ?? ''),
+        'method'  => eng_clean_method($_POST['method'] ?? ''),
     ];
 } else {
     $config = eng_load_config();
@@ -72,6 +74,7 @@ if ($action === 'save') {
             return $r;
         }, $config['rules']),
         'note'    => $config['note'],
+        'method'  => $config['method'],
     ];
     if (!empty($config['rules']) || !eng_grid_is_empty($config['default'])) {
         $warnings = eng_validate_config($config)['warnings'];
@@ -279,6 +282,18 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
                             <small>utilisé seulement si la grille par défaut est vide : total = tarif × nombre de départs</small>
                             <div class="grid"><label><span>&nbsp;</span>
                                 <input type="text" inputmode="decimal" name="base" value="<?= eng_h($form['base']) ?>" placeholder="0"></label></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Paiements</h3>
+                    <div>
+                        <div class="field"><b>Mode de paiement par défaut</b>
+                            <small>proposé sur chaque ligne de la page Paiements et pour le règlement d'un club ; il se change archer par archer</small>
+                            <select name="method">
+                                <?php foreach (eng_methods() as $k => $l): ?><option value="<?= eng_h($k) ?>"<?= $k === $form['method'] ? ' selected' : '' ?>><?= eng_h($l) ?></option><?php endforeach; ?>
+                            </select>
                         </div>
                     </div>
                 </div>

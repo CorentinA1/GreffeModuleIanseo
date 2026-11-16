@@ -107,6 +107,7 @@ function eng_export_build($what, array $tour, array $config, array $payments, ar
             'default' => json_decode(eng_grid_to_json($config['default']), true) ?: new stdClass(),
             'rules'   => json_decode(eng_rules_to_json($config['rules']), true),
             'note'    => $config['note'],
+            'method'  => $config['method'] ?? 'especes',
         ];
     } else {
         $out['payments'] = $rows;
@@ -202,6 +203,7 @@ function eng_import_parse($json)
             'default' => is_array($config['default'] ?? null) ? $config['default'] : [],
             'rules'   => is_array($config['rules'] ?? null) ? $config['rules'] : [],
             'note'    => $config['note'] ?? '',
+            'method'  => $config['method'] ?? '',   // absent des fichiers d'avant : espèces
         ] : null,
         'payments'    => $rows,
     ]];

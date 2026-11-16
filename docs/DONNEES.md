@@ -5,7 +5,8 @@ Le module **ne modifie aucune table d'IANSEO** : il se contente de les lire. Il 
 Depuis la version 1.3.0, `EngagementConfig` a une colonne `EcReceiptNote` (mention en pied de reçu), ajoutée
 automatiquement à la première ouverture d'une page du module. Les règles tarifaires (`EcRules`, JSON) portent leur
 critère de club (`club` : `all`, `org`, `other` ou `list`, et `clubs` : codes de club) ; une règle enregistrée avant
-la 1.3.0 vaut « tous les clubs ».
+la 1.3.0 vaut « tous les clubs ». Colonne `EcPayMethod` (mode de paiement proposé par défaut, `especes` au départ),
+ajoutée de la même façon par la version suivant la 1.6.5.
 
 La page **Sauvegarde** écrit deux fichiers JSON (format `greffe-ianseo`, version 1), chacun avec la compétition
 d'origine et un champ `content` :

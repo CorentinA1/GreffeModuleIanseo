@@ -22,6 +22,7 @@
  *          'grid'  => [1 => 7.0, 2 => 12.0, 3 => 15.0]],
  *       ],
  *       'note'     => '',                       // mention en pied de reçu
+ *       'method'   => 'especes',                // mode de paiement proposé par défaut (clé de eng_methods)
  *     ]
  *
  * Une grille donne le prix TOTAL selon le nombre de départs (pas un prix par
@@ -138,10 +139,20 @@ function eng_clean_note($note)
 }
 
 /**
+ * Mode de paiement par défaut : une clé de eng_methods() (lib/accounts.php), sinon espèces. La liste est rappelée
+ * ici pour que ce fichier reste sans dépendance.
+ */
+function eng_clean_method($method)
+{
+    $method = is_scalar($method) ? (string) $method : '';
+    return in_array($method, ['especes', 'cheque', 'cb', 'virement', 'exonere'], true) ? $method : 'especes';
+}
+
+/**
  * Normalise une configuration, quelle que soit sa provenance (formulaire,
  * JSON décodé, ligne de base, fichier de sauvegarde).
  *
- * @param array $raw Clés 'base', 'default', 'rules', 'note', 'org' ; toutes facultatives.
+ * @param array $raw Clés 'base', 'default', 'rules', 'note', 'method', 'org' ; toutes facultatives.
  * @param int $sessions Nombre de sessions de la compétition (ToNumSession).
  * @return array Configuration normalisée (voir en tête de fichier).
  */
@@ -175,6 +186,7 @@ function eng_normalize_config(array $raw, $sessions)
         'default'  => eng_clean_grid($raw['default'] ?? [], $sessions),
         'rules'    => $rules,
         'note'     => eng_clean_note($raw['note'] ?? ''),
+        'method'   => eng_clean_method($raw['method'] ?? ''),
     ];
 }
 
@@ -182,7 +194,7 @@ function eng_normalize_config(array $raw, $sessions)
  * Configuration à partir d'une ligne EngagementConfig (ou null si la
  * compétition n'a encore rien saisi).
  *
- * @param array|object|null $row Colonnes EcBase, EcDefault, EcRules, EcReceiptNote.
+ * @param array|object|null $row Colonnes EcBase, EcDefault, EcRules, EcReceiptNote, EcPayMethod.
  * @param int $sessions Nombre de sessions de la compétition.
  * @param string $org Code du club organisateur de la compétition (ToCommitee).
  * @return array Configuration normalisée.
@@ -198,6 +210,7 @@ function eng_config_from_row($row, $sessions, $org = '')
         'default' => is_array($default) ? $default : [],
         'rules'   => is_array($rules) ? $rules : [],
         'note'    => $row['EcReceiptNote'] ?? '',
+        'method'  => $row['EcPayMethod'] ?? '',
         'org'     => $org,
     ], $sessions);
 }
@@ -346,6 +359,7 @@ function eng_config_from_post(array $post, $sessions, $org = '')
         'default' => $post['default'] ?? [],
         'rules'   => eng_posted_rules($post),
         'note'    => $post['note'] ?? '',
+        'method'  => $post['method'] ?? '',
         'org'     => $org,
     ], $sessions);
 }

@@ -67,8 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $who      = $acc ? trim($acc['first'] . ' ' . $acc['name']) : '';
     $msg      = ['err', 'Action impossible : la page n\'était plus à jour. Vérifiez la ligne.'];
 
-    if (isset($methods[$method])) $_SESSION['ENG_LAST_METHOD'] = $method;
-
     if ($act === 'pay' && $acc && eng_pay($ENG_TOUR, $acc, $method, $note)) {
         $msg = ['ok', $who . ' : ' . eng_money($acc['due']) . ' — ' . $methods[$method] . '.'];
     } elseif ($act === 'cancel' && $acc && eng_cancel($ENG_TOUR, $acc)) {
@@ -100,7 +98,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $accounts = eng_load_accounts($ENG_TOUR, $config);
 $flash = $_SESSION['ENG_FLASH_PAY'] ?? null;
 unset($_SESSION['ENG_FLASH_PAY']);
-$lastMethod = $_SESSION['ENG_LAST_METHOD'] ?? 'especes';
+// Mode proposé sur chaque ligne : celui réglé dans Tarifs (le dernier mode utilisé s'imposait à toutes les lignes).
+$defaultMethod = isset($methods[$config['method']]) ? $config['method'] : 'especes';
 
 // Listes des filtres, et clubs ayant des comptes non payés (règlement groupé).
 $clubs = $rulesSeen = $clubUnpaid = [];
@@ -276,7 +275,7 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
                     <?= eng_h($l . ' (' . $u['n'] . ' · ' . eng_money($u['sum']) . ')') ?></option>
             <?php endforeach; ?>
         </select>
-        <?= eng_method_select($methods, $lastMethod) ?>
+        <?= eng_method_select($methods, $defaultMethod) ?>
         <input type="text" name="note" maxlength="160" placeholder="note (ex. n° de chèque)">
         <button type="submit" class="pay">Régler le club</button>
     </form>
@@ -316,7 +315,7 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
                     <form class="inline" method="post" action="<?= eng_h(eng_self_url($self, $f)) ?>">
                         <?= eng_token_field() ?><input type="hidden" name="action" value="pay">
                         <input type="hidden" name="account" value="<?= eng_h($a['key']) ?>">
-                        <?= eng_method_select($methods, $lastMethod) ?>
+                        <?= eng_method_select($methods, $defaultMethod) ?>
                         <input type="text" name="note" maxlength="160" placeholder="note">
                         <button type="submit" class="pay">Payer</button>
                         <?= $recu ?>
