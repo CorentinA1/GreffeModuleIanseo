@@ -1,7 +1,7 @@
 <?php
 // ── Menu ianseo — module GREFFE (dossier ENGAGEMENT) ─────────────────────────
-// Inclus sur toutes les pages par Common/Menu.php : aucune requête ici, et
-// surtout pas eng_schema() (les tables se créent à l'ouverture d'une page).
+// Inclus sur toutes les pages par Common/Menu.php : aucune requête ici (sauf le
+// paramètre ISK-NG Mode, lu et mis en cache par IANSEO), et surtout pas eng_schema() (les tables se créent à l'ouverture d'une page).
 // Entrées visibles seulement si une compétition est ouverte et que
 // l'utilisateur a au moins la lecture sur les participants.
 if (!empty($on) && !empty($_SESSION['TourId'])
@@ -16,6 +16,12 @@ if (!empty($on) && !empty($_SESSION['TourId'])
     }
     $ret['MODS']['Greffe'][] = 'Éditions|' . $CFG->ROOT_DIR . 'Modules/Custom/ENGAGEMENT/editions.php';
     $ret['MODS']['Greffe'][] = 'Rapport - Bilan|' . $CFG->ROOT_DIR . 'Modules/Custom/ENGAGEMENT/reporting.php';
+    // Feuilles de marque : seulement avec ScoreKeeper NG, NG PRO ou NG Live activé et la lecture sur les
+    // qualifications (même test que eng_scorecards_tab(), lib/boot.php). Un paramètre lu, mis en cache par IANSEO.
+    if (in_array((string) getModuleParameter('ISK-NG', 'Mode', ''), ['ng-lite', 'ng-pro', 'ng-live'], true)
+        && subFeatureAcl($acl, AclQualification) >= AclReadOnly) {
+        $ret['MODS']['Greffe'][] = 'Feuilles de marque|' . $CFG->ROOT_DIR . 'Modules/Custom/ENGAGEMENT/feuilles.php';
+    }
     if (subFeatureAcl($acl, AclParticipants, 'pEntries') >= AclReadWrite) {
         $ret['MODS']['Greffe'][] = 'Sauvegarde|' . $CFG->ROOT_DIR . 'Modules/Custom/ENGAGEMENT/sauvegarde.php';
     }
@@ -34,7 +40,8 @@ if (!empty($on) && !empty($_SESSION['TourId'])
         $grLocal = @json_decode((string) @file_get_contents(__DIR__ . '/version.json'), true);
         $grHave = is_array($grLocal) ? (string) ($grLocal['version'] ?? '') : '';
         $grLatest = is_array($grState) ? (string) ($grState['latest'] ?? '') : '';
-        if ($grHave !== '' && preg_match('/^\d+\.\d+\.\d+$/', $grLatest) && version_compare($grLatest, $grHave, '>')) {
+        // 3 ou 4 nombres (1.7.0, 1.7.0.1), comme eng_upd_valid_version() (lib/update.php).
+        if ($grHave !== '' && preg_match('/^\d+\.\d+\.\d+(?:\.\d+)?$/', $grLatest) && version_compare($grLatest, $grHave, '>')) {
             $grTip = htmlspecialchars('Mise à jour disponible : ' . $grHave . ' → ' . $grLatest, ENT_QUOTES, 'UTF-8');
             $grMaj = '<span class="maj-dot" title="' . $grTip . '" style="display:inline-block;min-width:15px;height:15px;line-height:15px;padding:0 3px;border-radius:8px;'
                 . 'background:#f08c00;background:color-mix(in srgb,var(--text-warning,#ffc107) 60%,var(--text-danger,#dc3545));color:#fff;font-size:10px;font-weight:bold;text-align:center;margin-left:6px;vertical-align:middle">⬆</span>';

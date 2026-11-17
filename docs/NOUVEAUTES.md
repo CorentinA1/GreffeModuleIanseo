@@ -1,5 +1,23 @@
 # Nouveautés de chaque version
 
+## 1.7.0
+
+- **Nouvel onglet « Feuilles de marque »**, après Rapport - Bilan. Il n'apparaît que si **Ianseo ScoreKeeper**
+  (NG, NG PRO ou NG Live) est activé sur la compétition, pour qui peut lire les qualifications.
+  - La feuille est celle d'IANSEO « **toutes les distances sur une seule page** », **remplie des flèches saisies**
+    (totaux, 10 et 9 / X) : une page par archer.
+  - Les feuilles apparaissent quand **toutes les flèches de la compétition** sont saisies ; avant, la page indique
+    le nombre de feuilles complètes et la liste des archers à compléter.
+  - **PDF d'un archer, d'un club, ou de toute la compétition** ; affichage par club, ou par archer regroupés par
+    club. **Archive ZIP** : un PDF par club ou par archer, construite par étapes (barre de progression).
+  - Départs et mise en page au choix (en-tête et pied de page, en-tête et logos de la compétition, drapeaux).
+  - Fichiers légers : les images de la compétition sont réduites à leur taille d'impression (environ 80 Ko par
+    archer au lieu de 290 Ko).
+  - Fonctionnalité inspirée du module « Feuilles de marque par club ou archer » de Steph
+    ([IanseoModules](https://github.com/Steph-Krs/IanseoModules)).
+- **Mise à jour du module : numéros à 4 nombres** (1.7.0.1, 1.7.0.2…) acceptés, pour les ajouts très mineurs. Ils se
+  rangent entre 1.7.0 et 1.7.1.
+
 ## 1.6.6
 
 - **Page Paiements : le mode choisi sur une ligne ne s'impose plus à toutes les autres.** Le dernier mode utilisé

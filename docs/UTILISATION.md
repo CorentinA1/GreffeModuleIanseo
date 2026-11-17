@@ -186,7 +186,37 @@ La mention saisie sur la page Tarifs (cadre « Reçus ») s'imprime en bas de ch
 
 ![Reçu d'inscription d'un archer réglé par chèque, avec la mention de reçu et le cadre pour le cachet](img/recu-archer.png)
 
-## 6. Sauvegarde (Modules → Greffe → Sauvegarde)
+## 6. Feuilles de marque (Modules → Greffe → Feuilles de marque)
+
+L'onglet n'apparaît que si **Ianseo ScoreKeeper** (NG, NG PRO ou NG Live) est activé sur la compétition (fiche de
+la compétition, « Activer Ianseo ScoreKeeper »). Ces feuilles ne s'appliquent pas aux parcours (campagne, nature, 3D).
+
+La feuille est celle d'IANSEO « **Feuille de marque de l'archer avec toutes les distances sur une seule page** »,
+**remplie des flèches saisies** (ScoreKeeper ou saisie manuelle) : flèches, sommes, cumul, total, 10 et 9 / X.
+Une page par archer.
+
+![Feuille de marque complétée d'un archer, ses deux distances sur une page (nom et club floutés)](img/feuilles-feuille.png)
+
+- **Tant que la saisie n'est pas finie**, la page indique le nombre de feuilles complètes et la liste des archers
+  à compléter (flèches saisies sur flèches attendues). Un archer marqué non partant, abandon ou disqualifié (IRM)
+  n'est pas attendu.
+- **Quand toutes les flèches de la compétition sont saisies**, les feuilles apparaissent :
+  - **Départs** (s'il y en a plusieurs) et **mise en page** : en-tête et pied de page sur la page entière, en-tête
+    et logos de la compétition, drapeaux des clubs ;
+  - **Archive ZIP** : un PDF par club ou par archer, construite par étapes avec une barre de progression ;
+  - **Affichage par club** (un PDF par club) ou **par archer**, regroupés par club (un PDF par archer, et celui de
+    son club) ; **Toutes les feuilles** : un seul PDF, rangé par club.
+
+![Page Feuilles de marque, affichage par club (codes et noms des clubs floutés)](img/feuilles-clubs.png)
+
+![Affichage par archer, regroupés par club (noms, licences et clubs floutés)](img/feuilles-archers.png)
+
+Les captures de cette section viennent d'une compétition réelle : noms, licences et clubs y sont floutés.
+
+Fonctionnalité inspirée du module « Feuilles de marque par club ou archer » de Steph
+([IanseoModules](https://github.com/Steph-Krs/IanseoModules)).
+
+## 7. Sauvegarde (Modules → Greffe → Sauvegarde)
 
 Les tarifs et paiements **ne sont pas dans l'export de compétition d'IANSEO** : cette page les met dans **deux
 fichiers `.json` séparés**, à garder avec l'export `.ianseo`, ou à importer sur un autre serveur (par exemple d'un
@@ -212,6 +242,8 @@ serveur de test vers celui de la compétition).
 
 - **Tarifs, Paiements et Sauvegarde :** droit IANSEO « Participants » en **écriture**.
 - **Éditions, Rapport - Bilan et reçus :** même droit, en **lecture**.
+- **Feuilles de marque :** même droit en **lecture**, plus la **lecture sur les qualifications** (comme
+  l'impression des feuilles de marque d'IANSEO).
 
 ---
 

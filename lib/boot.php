@@ -172,17 +172,34 @@ function eng_db_now()
     return $r ? (string) $r->Now : '';
 }
 
+/** Modes de « Activer Ianseo ScoreKeeper » (fiche de la compétition) qui ouvrent l'onglet Feuilles de marque. */
+const ENG_SC_ISK_MODES = ['ng-lite', 'ng-pro', 'ng-live'];
+
+/**
+ * Onglet « Feuilles de marque » proposé ? ScoreKeeper NG, NG PRO ou NG Live activé sur la compétition ouverte, et
+ * lecture sur les qualifications (comme l'impression des feuilles de marque d'IANSEO). Même test dans menu.php.
+ *
+ * @return bool
+ */
+function eng_scorecards_tab()
+{
+    return !empty($_SESSION['TourId'])
+        && in_array((string) getModuleParameter('ISK-NG', 'Mode', ''), ENG_SC_ISK_MODES, true)
+        && hasFullACL(AclQualification, '', AclReadOnly);
+}
+
 /**
  * En-tête commun des pages : « GREFFE » suivi des onglets de navigation.
  *
  * Les onglets suivent les droits : Tarifs, Paiements et Sauvegarde demandent
- * l'écriture sur les participants, Éditions et Reporting la lecture (comme menu.php).
+ * l'écriture sur les participants, Éditions et Reporting la lecture (comme menu.php) ;
+ * Feuilles de marque n'apparaît que si ScoreKeeper est activé (eng_scorecards_tab()).
  *
  * L'en-tête occupe une bande de 980 px centrée, quelle que soit la largeur du contenu de la page
  * (Paiements : toute la largeur, Rapport : 1100 px) : les onglets restent à la même place d'une page
  * à l'autre. La place de la barre de défilement est réservée pour la même raison.
  *
- * @param string $current Page affichée : 'tarifs' | 'paiements' | 'editions' | 'reporting' | 'sauvegarde'.
+ * @param string $current Page affichée : 'tarifs' | 'paiements' | 'editions' | 'reporting' | 'feuilles' | 'sauvegarde'.
  * @return string HTML (styles compris), à placer en tête du conteneur #eng.
  */
 function eng_nav($current)
@@ -194,6 +211,7 @@ function eng_nav($current)
         'paiements' => ['Paiements', $write],
         'editions'  => ['Éditions', true],
         'reporting' => ['Rapport - Bilan', true],
+        'feuilles'  => ['Feuilles de marque', eng_scorecards_tab()],
         'sauvegarde' => ['Sauvegarde', $write],
     ];
     $h = '<style>

@@ -142,7 +142,7 @@ function eng_upd_remote(array $cfg)
         return ['_error' => 'GitHub injoignable, ou version.json introuvable sur le dépôt.'];
     }
     $d = json_decode($raw, true);
-    if (!is_array($d) || !isset($d['version']) || !preg_match('/^\d+\.\d+\.\d+$/', (string) $d['version'])) {
+    if (!is_array($d) || !isset($d['version']) || !eng_upd_valid_version($d['version'])) {
         return ['_error' => 'version.json du dépôt illisible.'];
     }
     $files = is_array($d['files'] ?? null) ? $d['files'] : [];
@@ -155,9 +155,20 @@ function eng_upd_remote(array $cfg)
 }
 
 /**
+ * Numéro de version accepté : MAJEUR.MINEUR.CORRECTIF (1.7.0), ou avec un 4e nombre pour un
+ * ajout très mineur (1.7.0.1). version_compare() les range dans le bon ordre :
+ * 1.7.0 < 1.7.0.1 < 1.7.0.2 < 1.7.1. Pas de lettre (1.7.0a passerait AVANT 1.7.0 : version_compare
+ * la lit comme une pré-version) ni de nombre collé (1.7.01 passerait après 1.7.9). Fonction pure.
+ */
+function eng_upd_valid_version($v)
+{
+    return is_string($v) && preg_match('/^\d+\.\d+\.\d+(?:\.\d+)?$/', $v) === 1;
+}
+
+/**
  * Nouveautés d'une seule version, extraites des notes de version.json. Les notes
- * enchaînent toutes les versions, la plus récente d'abord : « 1.3.2 — … 1.3.1 — … ».
- * Fonction pure.
+ * enchaînent toutes les versions, la plus récente d'abord : « 1.3.2 — … 1.3.1 — … »
+ * (numéro à 3 ou 4 nombres). Fonction pure.
  *
  * @return string La partie de $version (sans le numéro), sinon la première ; tout le
  *                texte s'il n'a pas ce format.
@@ -165,7 +176,7 @@ function eng_upd_remote(array $cfg)
 function eng_upd_version_notes($notes, $version)
 {
     $notes = trim((string) $notes);
-    if (!preg_match_all('/(?:^|\s)(\d+\.\d+\.\d+) — /u', $notes, $m, PREG_OFFSET_CAPTURE)) return $notes;
+    if (!preg_match_all('/(?:^|\s)(\d+\.\d+\.\d+(?:\.\d+)?) — /u', $notes, $m, PREG_OFFSET_CAPTURE)) return $notes;
     $parts = [];
     foreach ($m[1] as $i => [$v, $pos]) {
         $start = $pos + strlen($v . ' — ');
@@ -242,7 +253,7 @@ function eng_upd_notify_read($dir)
 function eng_upd_notify_save($dir, $latest, $busy = false)
 {
     $old = eng_upd_notify_read($dir);
-    $ok = $latest !== null && preg_match('/^\d+\.\d+\.\d+$/', (string) $latest);
+    $ok = $latest !== null && eng_upd_valid_version((string) $latest);
     $now = time();
     $state = [
         'latest' => $ok ? (string) $latest : ($old['latest'] ?? null),
@@ -274,7 +285,7 @@ function eng_upd_notify_pending($dir)
     $s = eng_upd_notify_read($dir);
     $have = (string) (eng_upd_local($dir)['version'] ?? '');
     $latest = $s ? (string) ($s['latest'] ?? '') : '';
-    return $have !== '' && preg_match('/^\d+\.\d+\.\d+$/', $latest) && version_compare($latest, $have, '>') ? $latest : null;
+    return $have !== '' && eng_upd_valid_version($latest) && version_compare($latest, $have, '>') ? $latest : null;
 }
 
 /**

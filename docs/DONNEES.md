@@ -17,6 +17,11 @@ d'origine et un champ `content` :
 Ces deux tables ne font pas partie de l'export de compétition d'IANSEO : voir les sauvegardes dans
 [À lire avant d'utiliser le module](AVERTISSEMENT.md).
 
+L'onglet **Feuilles de marque** ne fait que lire (inscriptions, placements, flèches et scores de qualification).
+Son archive ZIP se construit dans le répertoire temporaire du serveur (dossier `ianseo-greffe-feuilles`, jamais
+sous `Modules/Custom/`) ; elle appartient à la session qui l'a demandée et est supprimée une fois téléchargée, ou
+au bout d'un jour.
+
 ---
 
 [← Retour au README](../README.md)
