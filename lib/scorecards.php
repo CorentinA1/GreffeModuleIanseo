@@ -190,39 +190,104 @@ function eng_sc_card_progress(array $card, $numDist)
 }
 
 /**
- * Ce que la page affiche : clubs et leurs archers, et l'avancement de la saisie de toute la compétition.
- * Un archer marqué par un IRM (non partant, abandon, disqualifié…) n'est pas attendu.
+ * État de la saisie d'un départ, d'après ses archers attendus (sans IRM). Fonction pure.
+ *
+ * Un départ peut être tiré sur feuilles de marque papier même quand ScoreKeeper est activé (téléphones en panne…) :
+ * seuls les totaux sont alors saisis dans IANSEO, sans aucune flèche. Ce départ n'a pas de feuille à sortir, et il
+ * ne doit pas bloquer les départs saisis flèche par flèche.
+ *
+ * @param int $archers Archers attendus (placés, sans IRM).
+ * @param int $complete Archers dont toutes les flèches sont saisies.
+ * @param int $withArrows Archers ayant au moins une flèche saisie.
+ * @param int $withScore Archers ayant un score (total) saisi.
+ * @return string 'complete' (feuilles disponibles), 'paper' (totaux sans flèches : pas de feuille),
+ *                'pending' (saisie en cours ou pas commencée), 'empty' (aucun archer attendu).
+ */
+function eng_sc_session_status($archers, $complete, $withArrows, $withScore)
+{
+    if ($archers <= 0) return 'empty';
+    if ($complete >= $archers) return 'complete';
+    if ($withArrows === 0 && $withScore > 0) return 'paper';
+    return 'pending';
+}
+
+/**
+ * Ce que la page affiche : l'état de la saisie de chaque départ, et les clubs et archers des départs dont les
+ * feuilles sont disponibles (saisis flèche par flèche). Un archer marqué par un IRM (non partant, abandon,
+ * disqualifié…) n'est pas attendu.
+ *
+ * Deux contrôles : l'onglet n'existe qu'avec ScoreKeeper activé (eng_scorecards_tab()) ; puis, départ par départ,
+ * les feuilles ne sont proposées que pour les départs dont toutes les flèches sont remontées. Un départ saisi sur
+ * papier (totaux sans flèches) est mis de côté ; un départ en cours fait attendre, comme avant.
  *
  * @param array $sessions eng_sc_sessions().
  * @param int $numDist
- * @return array [clubs => code => [code, name, archers, sessions], archers, scoring => [complete, done, todo, missing]].
+ * @return array [clubs => code => [code, name, archers, sessions] (départs complets seulement), archers,
+ *               sessions => ordre => [status, archers, complete], scoring => [complete, ready, done, todo, missing]].
  */
 function eng_sc_summary(array $sessions, $numDist)
 {
-    $out = ['clubs' => [], 'archers' => 0, 'scoring' => ['complete' => false, 'done' => 0, 'todo' => 0, 'missing' => []]];
-    foreach (eng_sc_read_cards(array_keys($sessions)) as $c) {
+    $cards = eng_sc_read_cards(array_keys($sessions));
+    $stats = array_fill_keys(array_keys($sessions), ['archers' => 0, 'complete' => 0, 'arrows' => 0, 'score' => 0]);
+    $prog  = [];
+    foreach ($cards as $i => $c) {
+        $prog[$i] = eng_sc_card_progress($c, $numDist);
+        if ((int) $c['Irm'] !== 0) continue;
+        $s = (int) $c['Session'];
+        $stats[$s]['archers']++;
+        if ($prog[$i]['complete']) $stats[$s]['complete']++;
+        if ($prog[$i]['shot'] > 0) $stats[$s]['arrows']++;
+        if ((int) $c['Score'] > 0) $stats[$s]['score']++;
+    }
+    $out = ['clubs' => [], 'archers' => 0, 'sessions' => [],
+            'scoring' => ['complete' => false, 'ready' => [], 'done' => 0, 'todo' => 0, 'missing' => []]];
+    foreach ($stats as $s => $st) {
+        $out['sessions'][$s] = ['status' => eng_sc_session_status($st['archers'], $st['complete'], $st['arrows'], $st['score']),
+            'archers' => $st['archers'], 'complete' => $st['complete']];
+        if ($out['sessions'][$s]['status'] === 'complete') $out['scoring']['ready'][] = $s;
+    }
+
+    foreach ($cards as $i => $c) {
+        $s      = (int) $c['Session'];
+        $status = $out['sessions'][$s]['status'];
+        $irm    = (int) $c['Irm'] !== 0;
+        if ($status === 'pending' && !$irm) {
+            if ($prog[$i]['complete']) {
+                $out['scoring']['done']++;
+            } else {
+                $out['scoring']['todo']++;
+                $out['scoring']['missing'][] = ['club' => (string) $c['CoCode'], 'name' => $c['Ath'], 'session' => $s,
+                    'target' => $c['AtTarget'] . $c['Letter'], 'shot' => $prog[$i]['shot'], 'expected' => $prog[$i]['expected']];
+            }
+        }
+        if ($status !== 'complete') continue;
         $code = (string) $c['CoCode'];
         if (!isset($out['clubs'][$code])) {
             $out['clubs'][$code] = ['code' => $code, 'name' => $c['CoName'], 'archers' => [], 'sessions' => array_fill_keys(array_keys($sessions), 0)];
         }
-        $p   = eng_sc_card_progress($c, $numDist);
-        $irm = (int) $c['Irm'] !== 0;
         $out['clubs'][$code]['archers'][] = ['id' => (int) $c['EnId'], 'name' => (string) $c['Ath'], 'licence' => (string) $c['EnCode'],
-            'cat' => trim($c['Cls'] . $c['Div']), 'session' => (int) $c['Session'], 'target' => $c['AtTarget'] . $c['Letter'],
+            'cat' => trim($c['Cls'] . $c['Div']), 'session' => $s, 'target' => $c['AtTarget'] . $c['Letter'],
             'score' => (int) $c['Score'], 'irm' => $irm];
-        $out['clubs'][$code]['sessions'][(int) $c['Session']]++;
+        $out['clubs'][$code]['sessions'][$s]++;
         $out['archers']++;
-        if ($irm) continue;
-        if ($p['complete']) {
-            $out['scoring']['done']++;
-        } else {
-            $out['scoring']['todo']++;
-            $out['scoring']['missing'][] = ['club' => $code, 'name' => $c['Ath'], 'session' => (int) $c['Session'],
-                'target' => $c['AtTarget'] . $c['Letter'], 'shot' => $p['shot'], 'expected' => $p['expected']];
-        }
     }
-    $out['scoring']['complete'] = $out['scoring']['done'] > 0 && $out['scoring']['todo'] === 0;
+    // Feuilles proposées dès qu'un départ est saisi flèche par flèche, même si d'autres sont encore en cours.
+    $out['scoring']['complete'] = (bool) $out['scoring']['ready'];
     return $out;
+}
+
+/**
+ * Départs dont les feuilles peuvent sortir : ceux saisis flèche par flèche, quel que soit l'état des autres. Pour
+ * les PDF et l'archive, qui ne font pas confiance aux départs demandés par l'adresse.
+ *
+ * @param array $sessions eng_sc_sessions().
+ * @param int $numDist
+ * @return array Ordre => libellé.
+ */
+function eng_sc_ready_sessions(array $sessions, $numDist)
+{
+    $sum = eng_sc_summary($sessions, $numDist);
+    return array_intersect_key($sessions, array_flip($sum['scoring']['ready']));
 }
 
 /**

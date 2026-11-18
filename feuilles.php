@@ -24,6 +24,40 @@ $comp      = eng_sc_competition();
 $sessions  = $available ? eng_sc_sessions() : [];
 $summary   = ($available && !$comp['field']) ? eng_sc_summary($sessions, $comp['distances']) : null;
 $pdfUrl    = $ENG_ROOT . 'feuilles-pdf.php';
+$placed    = $summary ? array_filter($summary['sessions'], function ($x) { return $x['status'] !== 'empty'; }) : [];
+$ready     = $summary ? array_intersect_key($sessions, array_flip($summary['scoring']['ready'])) : [];
+
+/** État de la saisie de chaque départ, en liste (départs sans archer attendu omis). */
+function eng_sc_sessions_state(array $sessions, array $states)
+{
+    $labels = [
+        'complete' => ['✔', 'flèches saisies : feuilles disponibles'],
+        'paper'    => ['✎', 'saisi sur papier (totaux sans flèches) : pas de feuille'],
+        'pending'  => ['…', 'saisie des flèches en cours'],
+    ];
+    $h = '<ul class="states">';
+    foreach ($states as $o => $st) {
+        if (!isset($labels[$st['status']])) continue;
+        [$icon, $text] = $labels[$st['status']];
+        $h .= '<li class="' . $st['status'] . '"><b>' . $icon . ' ' . eng_h($sessions[$o] ?? ('Départ ' . $o)) . '</b> — ' . $text
+            . ($st['status'] === 'pending' ? ' (' . $st['complete'] . ' sur ' . $st['archers'] . ' archers complets)' : '') . '</li>';
+    }
+    return $h . '</ul>';
+}
+
+/** Liste repliée des archers des départs en cours à qui il manque des flèches ('' s'il n'y en a pas). */
+function eng_sc_missing_html(array $missing)
+{
+    if (!$missing) return '';
+    $h = '<details><summary>Archers à compléter (' . count($missing) . ')</summary><table class="lst"><thead><tr>'
+        . '<th>Club</th><th>Archer</th><th class="num">Départ</th><th class="num">Cible</th><th class="num">Flèches saisies</th>'
+        . '</tr></thead><tbody>';
+    foreach ($missing as $m) {
+        $h .= '<tr><td>' . eng_h($m['club']) . '</td><td>' . eng_h($m['name']) . '</td><td class="num">' . (int) $m['session'] . '</td>'
+            . '<td class="num">' . eng_h($m['target']) . '</td><td class="num">' . (int) $m['shot'] . ' / ' . ($m['expected'] ?: '?') . '</td></tr>';
+    }
+    return $h . '</tbody></table></details>';
+}
 
 $PAGE_TITLE = 'Greffe - Feuilles de marque';
 include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
@@ -51,6 +85,10 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
 #eng table.lst tr.club td { background:var(--bleu-clair); font-weight:700; color:var(--bleu-fonce); }
 #eng table.lst td.pdf { text-align:right; width:1%; }
 #eng details summary { cursor:pointer; color:var(--lien); }
+#eng ul.states { list-style:none; margin:4px 0 8px; padding:0; }
+#eng ul.states li { padding:2px 0; }
+#eng ul.states li.complete b { color:var(--text-success, #198754); }
+#eng ul.states li.paper b { color:var(--sous); }
 </style>
 
 <div id="eng">
@@ -61,31 +99,28 @@ include($CFG->DOCUMENT_PATH . 'Common/Templates/head.php');
         (fiche de la compétition, « Activer Ianseo ScoreKeeper »), et demande la lecture sur les qualifications.</div>
 <?php elseif ($comp['field']): ?>
     <div class="msg">Les parcours (campagne, nature, 3D) ont leurs propres feuilles de marque : cet onglet ne s'y applique pas.</div>
-<?php elseif (!$summary['archers']): ?>
+<?php elseif (!$placed): ?>
     <div class="msg">Aucun archer placé sur une cible.</div>
 <?php elseif (!$summary['scoring']['complete']): $sc = $summary['scoring']; ?>
     <div class="card">
         <h3>Feuilles de marque complétées</h3>
-        <p>Les feuilles apparaissent quand <b>toutes les flèches de la compétition</b> sont saisies.
-            Feuilles complètes pour l'instant : <b><?= $sc['done'] ?></b> sur <b><?= $sc['done'] + $sc['todo'] ?></b>.</p>
-        <?php if ($sc['missing']): ?>
-            <details><summary>Archers à compléter (<?= count($sc['missing']) ?>)</summary>
-                <table class="lst"><thead><tr><th>Club</th><th>Archer</th><th class="num">Départ</th><th class="num">Cible</th><th class="num">Flèches saisies</th></tr></thead><tbody>
-                <?php foreach ($sc['missing'] as $m): ?>
-                    <tr><td><?= eng_h($m['club']) ?></td><td><?= eng_h($m['name']) ?></td><td class="num"><?= $m['session'] ?></td>
-                        <td class="num"><?= eng_h($m['target']) ?></td><td class="num"><?= $m['shot'] ?> / <?= $m['expected'] ?: '?' ?></td></tr>
-                <?php endforeach; ?>
-                </tbody></table>
-            </details>
+        <p>Les feuilles d'un départ apparaissent dès que <b>toutes ses flèches</b> sont remontées, sans attendre les autres
+            départs. Un départ tiré sur feuilles papier (totaux saisis, aucune flèche) n'a pas de feuille.</p>
+        <?= eng_sc_sessions_state($sessions, $summary['sessions']) ?>
+        <?php if (!$sc['missing']): ?>
+            <p class="sub">Aucun départ n'a de flèches saisies : pas de feuille à sortir.</p>
         <?php endif; ?>
+        <?= eng_sc_missing_html($sc['missing']) ?>
         <p class="sub">Un archer marqué non partant, abandon ou disqualifié (IRM) n'est pas attendu.</p>
     </div>
 <?php else: ?>
     <form id="sc-form" class="card" autocomplete="off" onsubmit="return false">
         <h3>Feuilles de marque complétées <span class="sub">une page par archer, toutes ses distances, scores remplis</span></h3>
-        <?php if (count($sessions) > 1): ?>
+        <?php if (count($summary['sessions']) > 1): ?><?= eng_sc_sessions_state($sessions, $summary['sessions']) ?><?php endif; ?>
+        <?= eng_sc_missing_html($summary['scoring']['missing']) ?>
+        <?php if (count($ready) > 1): ?>
             <div class="opts"><b>Départs</b>
-                <?php foreach ($sessions as $o => $label): ?>
+                <?php foreach ($ready as $o => $label): ?>
                     <label><input type="checkbox" name="Sessions[]" value="<?= $o ?>" checked> <?= eng_h($label) ?></label>
                 <?php endforeach; ?>
             </div>

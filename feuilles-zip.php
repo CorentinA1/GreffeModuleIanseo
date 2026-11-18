@@ -55,7 +55,9 @@ if ($do === 'start') {
     $comp = eng_sc_competition();
     if ($comp['field']) eng_sc_json(['error' => 1, 'msg' => 'Pas pour les parcours (campagne, nature, 3D).']);
     if (!class_exists('ZipArchive')) eng_sc_json(['error' => 1, 'msg' => 'L\'extension « zip » de PHP manque sur ce serveur.']);
-    $opts  = eng_sc_options($_POST, eng_sc_sessions());
+    $ready = eng_sc_ready_sessions(eng_sc_sessions(), $comp['distances']);   // départs saisis flèche par flèche
+    if (!$ready) eng_sc_json(['error' => 1, 'msg' => 'Feuilles pas encore disponibles : saisie des flèches en cours.']);
+    $opts  = eng_sc_options($_POST, $ready);
     $mode  = ($_POST['Mode'] ?? '') === 'archer' ? 'archer' : 'club';
     $files = eng_sc_split(eng_sc_read_cards($opts['sessions']), $mode);
     if (!$files) eng_sc_json(['error' => 1, 'msg' => 'Aucune feuille de marque sur les départs choisis.']);

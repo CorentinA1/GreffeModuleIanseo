@@ -19,7 +19,10 @@ if (!eng_sc_available()) {
 $comp = eng_sc_competition();
 if ($comp['field']) exit('Feuilles de marque : pas pour les parcours (campagne, nature, 3D).');
 
-$opts = eng_sc_options($_GET, eng_sc_sessions());
+// Seulement les départs saisis flèche par flèche, et seulement quand plus aucun départ n'est en cours.
+$ready = eng_sc_ready_sessions(eng_sc_sessions(), $comp['distances']);
+if (!$ready) exit('Feuilles de marque : pas encore disponibles (saisie des flèches en cours, ou aucun départ saisi par ScoreKeeper).');
+$opts = eng_sc_options($_GET, $ready);
 if (isset($_GET['archer'])) {
     $filter = ['archer' => (int) $_GET['archer']];
 } elseif (isset($_GET['club'])) {

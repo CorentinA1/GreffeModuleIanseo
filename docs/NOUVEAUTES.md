@@ -1,5 +1,14 @@
 # Nouveautés de chaque version
 
+## 1.7.0.1
+
+- **Feuilles de marque départ par départ.** Les feuilles d'un départ sortent dès que toutes ses flèches sont
+  remontées (toutes les flèches de tous ses archers ; une saisie partielle ne suffit pas), sans attendre les autres
+  départs. La page indique l'état de chaque départ (✔ flèches saisies,
+  ✎ saisi sur papier, … en cours).
+- **Un départ tiré sur papier ne bloque plus rien.** Avec ScoreKeeper activé, un départ peut quand même se faire sur
+  feuilles papier (téléphones en panne…) : seuls les totaux sont saisis, sans flèche. Pas de feuille pour ce départ.
+
 ## 1.7.0
 
 - **Nouvel onglet « Feuilles de marque »**, après Rapport - Bilan. Il n'apparaît que si **Ianseo ScoreKeeper**

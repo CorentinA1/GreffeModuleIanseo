@@ -197,10 +197,17 @@ Une page par archer.
 
 ![Feuille de marque complétée d'un archer, ses deux distances sur une page (nom et club floutés)](img/feuilles-feuille.png)
 
-- **Tant que la saisie n'est pas finie**, la page indique le nombre de feuilles complètes et la liste des archers
-  à compléter (flèches saisies sur flèches attendues). Un archer marqué non partant, abandon ou disqualifié (IRM)
-  n'est pas attendu.
-- **Quand toutes les flèches de la compétition sont saisies**, les feuilles apparaissent :
+- **Deux contrôles** : l'onglet n'apparaît qu'avec ScoreKeeper activé ; puis la page regarde **chaque départ** :
+  - ✔ **flèches saisies** : **toutes** les flèches de **tous** les archers du départ sont saisies (volées × flèches
+    de chaque distance tirée) ; les feuilles de ce départ sont disponibles. Une saisie partielle (un départ arrêté
+    après la première distance, une flèche oubliée…) laisse le départ « en cours » ;
+  - ✎ **saisi sur papier** (totaux saisis, aucune flèche : téléphones en panne, feuilles papier…) : pas de feuille
+    pour ce départ, mais il **ne bloque pas** les autres ;
+  - … **saisie en cours** : pas encore de feuille pour ce départ ; la liste des archers à compléter donne les
+    flèches saisies sur les flèches attendues. Les autres départs n'attendent pas.
+
+  Un archer marqué non partant, abandon ou disqualifié (IRM) n'est pas attendu.
+- **Dès qu'un départ est saisi flèche par flèche**, ses feuilles apparaissent :
   - **Départs** (s'il y en a plusieurs) et **mise en page** : en-tête et pied de page sur la page entière, en-tête
     et logos de la compétition, drapeaux des clubs ;
   - **Archive ZIP** : un PDF par club ou par archer, construite par étapes avec une barre de progression ;
